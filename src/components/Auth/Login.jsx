@@ -3,7 +3,7 @@ import InputField from "./InputField";
 import PasswordField from "./PasswordField";
 import Divider from "./Divider";
 import GoogleButton from "./GoogleButton";
-import Button from "../Buttons/Button";
+import Button from "../ui/Button/Button";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -46,9 +46,7 @@ export default function Login() {
         </div>
 
         <Button type="submit" text="Masuk" />
-
         <Divider />
-
         <GoogleButton text="Masuk Dengan Google" />
 
         <div className="text-center text-xs text-gray-500">

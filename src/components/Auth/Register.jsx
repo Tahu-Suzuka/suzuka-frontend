@@ -3,7 +3,7 @@ import InputField from "./InputField";
 import PasswordField from "./PasswordField";
 import Divider from "./Divider";
 import GoogleButton from "./GoogleButton";
-import Button from "../Buttons/Button";
+import Button from "../ui/button/Button";
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);

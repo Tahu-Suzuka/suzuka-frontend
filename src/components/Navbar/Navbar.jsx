@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Menu, X, ShoppingCart } from "lucide-react";
-import Button from "../Buttons/Button";
+import Button from "../ui/button/Button";
 
 export const NavbarLinks = [
   { name: "Beranda", link: "/" },
@@ -19,7 +19,7 @@ const ResponsiveNavbar = () => {
   return (
     <nav className="bg-white text-black px-6 lg:px-16 py-3 flex justify-between items-center shadow-md relative">
       <div className="flex items-center gap-2">
-        <img src="/Images/logo.png" alt="Logo" className="w-10 h-10" />
+        <img src="/images/logo/logo.png" alt="Logo" className="w-10 h-10" />
       </div>
 
       <div className="md:hidden" onClick={toggleMenu}>

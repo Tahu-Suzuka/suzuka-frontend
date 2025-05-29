@@ -1,9 +1,9 @@
 import React from "react";
-import Register from "../components/Auth/Register";
+import Register from "../../components/Auth/Register";
 
 export default function RegisterPage() {
   return (
-    <div className=" ">
+    <div>
       <div className="flex flex-col md:flex-row h-screen -translate-y-2 bg-white">
         {/* Right */}
         <div className="hidden md:block md:w-1/2 relative">
