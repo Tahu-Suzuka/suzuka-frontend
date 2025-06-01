@@ -22,7 +22,7 @@ const WaveFooter = () => {
         <img
           src="/images/footer/footer.png"
           alt="Tahu Suzuka"
-          className="mx-auto w-32 h-32 rounded-full -mt-40 object-cover"
+          className="mx-auto w-32 h-32 rounded-full -mt-40 object-cover animate-spin-slow"
         />
 
         <p className="mt-16 text-white text-xl lg:text-2xl max-w-2xl mx-12 leading-relaxed text-left">

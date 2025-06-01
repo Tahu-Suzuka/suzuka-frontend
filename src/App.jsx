@@ -8,6 +8,8 @@ import HomePage from "./pages/HomePage";
 import DashboardPage from "./pages/Dashboard/DashboardPage";
 import DashboardLayout from "./layout/dashboard/DashboardLayout";
 import AuthLayout from "./layout/AuthLayout";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const App = () => {
   return (
