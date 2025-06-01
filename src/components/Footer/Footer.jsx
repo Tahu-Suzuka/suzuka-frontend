@@ -4,7 +4,7 @@ import Button from "../ui/button/Button";
 
 const WaveFooter = () => {
   return (
-    <div className="relative text-white">
+    <div className="relative text-white mt-10">
       <Wavify
         fill="#dc2626"
         paused={true}

@@ -23,7 +23,8 @@ const Hero = () => {
   }, []);
 
   return (
-    <div className="relative w-full h-[450px] pb-[80px] overflow-visible">
+    <div className="relative w-full h-[500px]">
+      {/* Background Slider */}
       {images.map((image, index) => (
         <img
           key={index}
@@ -35,7 +36,7 @@ const Hero = () => {
         />
       ))}
 
-      <div className="absolute inset-0 bg-black bg-opacity-40" />
+      <div className="absolute inset-0 bg-black bg-opacity-40 z-0" />
       <div className="absolute inset-0 flex items-center px-6 md:px-16 font-montserrat z-10">
         <div className="text-white max-w-xl">
           <h1 className="text-5xl font-bold mb-2">Tahu</h1>
@@ -53,29 +54,31 @@ const Hero = () => {
         </div>
       </div>
 
-      <div className="lg:p-4 p-6 md:p-10">
-        <div className="absolute left-0 right-0 bottom-[-40px] w-full max-w-screen-xl mx-auto bg-primary rounded-2xl shadow-lg px-4 sm:px-6 py-4 sm:py-5 z-20">
-          <div className="flex flex-col sm:flex-row justify-around items-center text-white gap-6 sm:gap-4 font-semibold text-center sm:text-left">
-            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
-              <div className="bg-white p-3 rounded-full">
-                <FaTruck className="text-red-600 text-2xl" />
-              </div>
-              <span>Siap Diantar</span>
+      {/* Feature Box */}
+      <div className="absolute inset-x-0 bottom-[-40px] z-20 px-6 lg:px-0">
+        <div className="max-w-screen-xl mx-auto bg-red-600 text-white rounded-2xl shadow-lg px-5 lg:px-32 py-6 flex flex-row justify-between items-center gap-4 font-semibold text-center lg:text-left">
+          {/* Feature 1 */}
+          <div className="flex flex-col items-center lg:flex-row lg:items-center gap-2">
+            <div className="bg-white p-3 rounded-full">
+              <FaTruck className="text-red-600 text-2xl" />
             </div>
+            <span className="text-sm lg:ml-2">Siap Diantar</span>
+          </div>
 
-            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
-              <div className="bg-white p-3 rounded-full">
-                <FaStore className="text-red-600 text-2xl" />
-              </div>
-              <span>Khas Cibuntu</span>
+          {/* Feature 2 */}
+          <div className="flex flex-col items-center lg:flex-row lg:items-center gap-2">
+            <div className="bg-white p-3 rounded-full">
+              <FaStore className="text-red-600 text-2xl" />
             </div>
+            <span className="text-sm lg:ml-2">Khas Cibuntu</span>
+          </div>
 
-            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
-              <div className="bg-white p-3 rounded-full">
-                <FaCheckCircle className="text-red-600 text-2xl" />
-              </div>
-              <span>Tanpa Pengawet</span>
+          {/* Feature 3 */}
+          <div className="flex flex-col items-center lg:flex-row lg:items-center gap-2">
+            <div className="bg-white p-3 rounded-full">
+              <FaCheckCircle className="text-red-600 text-2xl" />
             </div>
+            <span className="text-sm lg:ml-2">Tanpa Pengawet</span>
           </div>
         </div>
       </div>
