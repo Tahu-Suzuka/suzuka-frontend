@@ -4,7 +4,7 @@ import Title from "../ui/Text/Title";
 const AboutShort = () => {
   return (
     <div>
-      <Title subtitle="Tentang Kami" title="Dari Cibuntu, untuk Anda," />
+      <Title subtitle="Tentang Kami" title="Dari Cibuntu, untuk Anda." />
     </div>
   );
 };

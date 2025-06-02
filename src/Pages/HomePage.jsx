@@ -2,6 +2,7 @@ import React from "react";
 import Hero from "../components/Hero/Hero";
 import Category from "../components/home/Category";
 import AboutShort from "../components/home/AboutShort";
+import Review from "../components/home/Review";
 
 const HomePage = () => {
   return (
@@ -11,6 +12,8 @@ const HomePage = () => {
       <Category />
       <div className="mt-20"></div>
       <AboutShort />
+      <div className="mt-20"></div>
+      <Review />
     </div>
   );
 };

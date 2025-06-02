@@ -44,8 +44,7 @@ export default function Login() {
             Lupa Kata Sandi?
           </a>
         </div>
-
-        <Button type="submit" text="Masuk" />
+        <Button to="/home" text="Masuk" />
         <Divider />
         <GoogleButton text="Masuk Dengan Google" />
 

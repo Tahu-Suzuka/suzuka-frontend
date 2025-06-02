@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+
 import { Menu, X, ShoppingCart } from "lucide-react";
 import Button from "../ui/button/Button";
 
@@ -19,7 +21,9 @@ const ResponsiveNavbar = () => {
   return (
     <nav className="bg-white text-black px-6 lg:px-16 py-3 flex justify-between items-center shadow-md relative">
       <div className="flex items-center gap-2">
-        <img src="/images/logo/logo.png" alt="Logo" className="w-10 h-10" />
+        <Link to="/">
+          <img src="/images/logo/logo.png" alt="Logo" className="w-10 h-10" />
+        </Link>
       </div>
 
       <div className="md:hidden" onClick={toggleMenu}>
@@ -43,7 +47,7 @@ const ResponsiveNavbar = () => {
 
       <div className="flex items-center gap-4">
         <ShoppingCart className="w-6 h-6 cursor-pointer" />
-        <Button type="submit" text="Masuk" width="w-32" py="py-2" />
+        <Button text="Masuk" width="w-32" py="py-2" />
       </div>
     </nav>
   );

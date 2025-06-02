@@ -62,7 +62,7 @@ const Hero = () => {
             <div className="bg-white p-3 rounded-full">
               <FaTruck className="text-red-600 text-2xl" />
             </div>
-            <span className="text-sm lg:ml-2">Siap Diantar</span>
+            <span className="text-sm lg:text-lg lg:ml-2">Siap Diantar</span>
           </div>
 
           {/* Feature 2 */}
@@ -70,7 +70,7 @@ const Hero = () => {
             <div className="bg-white p-3 rounded-full">
               <FaStore className="text-red-600 text-2xl" />
             </div>
-            <span className="text-sm lg:ml-2">Khas Cibuntu</span>
+            <span className="text-sm lg:text-lg lg:ml-2">Khas Cibuntu</span>
           </div>
 
           {/* Feature 3 */}
@@ -78,7 +78,7 @@ const Hero = () => {
             <div className="bg-white p-3 rounded-full">
               <FaCheckCircle className="text-red-600 text-2xl" />
             </div>
-            <span className="text-sm lg:ml-2">Tanpa Pengawet</span>
+            <span className="text-sm lg:text-lg lg:ml-2">Tanpa Pengawet</span>
           </div>
         </div>
       </div>
