@@ -8,6 +8,7 @@ import HomePage from "./pages/HomePage";
 import DashboardPage from "./pages/Dashboard/DashboardPage";
 import DashboardLayout from "./layout/dashboard/DashboardLayout";
 import AuthLayout from "./layout/AuthLayout";
+import AboutPage from "./pages/AboutPage";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -18,6 +19,7 @@ const App = () => {
         {/* Public Layout */}
         <Route path="/" element={<AppLayout />}>
           <Route index element={<HomePage />} />
+          <Route path="/AboutPage" element={<AboutPage />} />
         </Route>
 
         {/* Dashboard Layout */}
