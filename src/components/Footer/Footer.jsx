@@ -1,8 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Wavify from "react-wavify";
 import Button from "../ui/button/Button";
 
 const WaveFooter = () => {
+  const [rotation, setRotation] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setRotation(scrollY * 0.3);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <div className="relative text-white mt-10">
       <Wavify
@@ -18,38 +30,40 @@ const WaveFooter = () => {
         style={{ display: "block", margin: 0, padding: 0 }}
       />
 
-      <div className="bg-red-600 relative z-10 px-6 pt-10 pb-10 -mt-1 font-bebas font-normal tracking-wider">
+      <div className="bg-primary relative z-10 px-6 pt-10 pb-10 -mt-1 font-bebas font-normal tracking-wider">
         <img
           src="/images/footer/footer.png"
           alt="Tahu Suzuka"
-          className="mx-auto w-32 h-32 rounded-full -mt-40 object-cover animate-spin-slow"
+          className="mx-auto w-48 h-44 lg:w-52 lg:h-44 rounded-full -mt-40 object-cover"
+          style={{
+            transform: `rotate(${rotation}deg)`,
+            transition: "transform 0.1s linear",
+          }}
         />
 
-        <p className="mt-16 text-white text-xl lg:text-2xl max-w-2xl mx-12 leading-relaxed text-left">
-          PESAN SEKARANG DAN NIKMATI BERBAGAI VARIAN
-          <br /> TAHU KAMI YANG DIBUAT DENGAN BAHAN YANG
-          <br /> BERKUALITAS DAN PROSES HIGIENIS CIRI KHAS
-          <br /> BANDUNG CIBUTU
-        </p>
+        <h1 className="mt-16 text-white text-xl lg:text-2xl max-w-2xl mx-6 lg:mx-12 leading-relaxed text-center lg:text-left">
+          PESAN SEKARANG DAN NIKMATI BERBAGAI VARIAN TAHU KAMI YANG DIBUAT
+          DENGAN BAHAN YANG BERKUALITAS DAN PROSES HIGIENIS CIRI KHAS BANDUNG
+          CIBUNTU
+        </h1>
 
-        <div className="text-right mx-12 -mt-6 lg:-mt-16">
+        <div className="text-center lg:text-right mt-3 mx-9 lg:mx-12 lg:-mt-16">
           <Button
-            type="submit"
             text="Pesan Sekarang"
-            width="w-32"
+            width="w-40"
             py="py-2"
             bgColor="bg-white"
-            textColor="text-primary"
+            textColor="text-black"
           />
         </div>
 
-        <div className="mx-12 ">
+        <div className="mx-12">
           <hr className="border-white/40 mb-10 mt-3 lg:my-10 max-w-6xl" />
-          <div className="flex flex-col sm:flex-row justify-between gap-8 text-left text-sm -mt-6">
+          <div className="flex flex-col sm:flex-row justify-between gap-5 lg:gap-8 text-left text-sm -mt-6">
             <div>
-              <h4 className="font-semibold text-white mb-2 text-xl lg:text-2xl">
+              <h1 className="font-semibold text-white mb-2 text-xl lg:text-2xl">
                 INFORMASI UMUM
-              </h4>
+              </h1>
               <ul className="space-y-1 lg:text-base">
                 <li>Tentang Kami</li>
                 <li>Syarat dan Ketentuan</li>
@@ -57,9 +71,9 @@ const WaveFooter = () => {
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold text-white mb-2 text-xl lg:text-2xl">
+              <h1 className="font-semibold text-white mb-2 text-xl lg:text-2xl">
                 LOKASI
-              </h4>
+              </h1>
               <p className="lg:text-base">
                 Jl. Cibuntu No. 123,
                 <br />
@@ -67,9 +81,9 @@ const WaveFooter = () => {
               </p>
             </div>
             <div>
-              <h4 className="font-semibold text-white mb-2 text-xl lg:text-2xl">
+              <h1 className="font-semibold text-white mb-2 text-xl lg:text-2xl">
                 KONTAK KAMI
-              </h4>
+              </h1>
               <p className="lg:text-base">
                 08xxxxxxxxx
                 <br />
@@ -77,6 +91,10 @@ const WaveFooter = () => {
               </p>
             </div>
           </div>
+        </div>
+
+        <div className="text-center text-sm text-white/80 mt-10 lg:mt-5">
+          Copyright © Tahu Suzuka 2025
         </div>
 
         <img

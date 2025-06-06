@@ -37,17 +37,17 @@ const Hero = () => {
       ))}
 
       <div className="absolute inset-0 bg-black bg-opacity-40 z-0" />
-      <div className="absolute inset-0 flex items-center px-6 md:px-16 font-montserrat z-10">
+
+      {/* Centered Text & Buttons */}
+      <div className="absolute inset-0 flex items-center justify-center text-center px-6 z-10">
         <div className="text-white max-w-xl">
-          <h1 className="text-5xl font-bold mb-2">Tahu</h1>
-          <h2 className="text-2xl md:text-3xl font-semibold mb-4">
-            Cibuntu Suzuka
-          </h2>
-          <p className="text-sm md:text-base leading-relaxed mb-6">
+          <p className="text-secondary font-bold mb-4">SEJAK TAHUN 1989</p>
+          <h1 className="text-5xl font-bold mb-3 ">Tahu Cibuntu Suzuka</h1>
+          <p className="text-sm md:text-base leading-relaxed mb-6 font-roboto">
             Nikmati berbagai varian tahu kami yang dibuat dengan bahan yang
             berkualitas dan proses higienis ciri khas Bandung Cibuntu.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-col sm:flex-row gap-2 justify-center">
             <Button text="Pesan Sekarang" />
             <Button text="Tentang Kami" />
           </div>
@@ -55,12 +55,12 @@ const Hero = () => {
       </div>
 
       {/* Feature Box */}
-      <div className="absolute inset-x-0 bottom-[-40px] z-20 px-6 lg:px-0">
-        <div className="max-w-screen-xl mx-auto bg-red-600 text-white rounded-2xl shadow-lg px-5 lg:px-32 py-6 flex flex-row justify-between items-center gap-4 font-semibold text-center lg:text-left">
+      <div className="absolute inset-x-0 bottom-[-60px] lg:bottom-[-40px] z-20 px-6 lg:px-0">
+        <div className="max-w-screen-xl mx-auto bg-primary text-white rounded-2xl shadow-lg px-5 lg:px-32 py-4 lg:py-6 flex flex-row justify-between items-center gap-4 font-semibold text-center lg:text-left">
           {/* Feature 1 */}
           <div className="flex flex-col items-center lg:flex-row lg:items-center gap-2">
             <div className="bg-white p-3 rounded-full">
-              <FaTruck className="text-red-600 text-2xl" />
+              <FaTruck className="text-primary text-2xl" />
             </div>
             <span className="text-sm lg:text-lg lg:ml-2">Siap Diantar</span>
           </div>
@@ -68,7 +68,7 @@ const Hero = () => {
           {/* Feature 2 */}
           <div className="flex flex-col items-center lg:flex-row lg:items-center gap-2">
             <div className="bg-white p-3 rounded-full">
-              <FaStore className="text-red-600 text-2xl" />
+              <FaStore className="text-primary text-2xl" />
             </div>
             <span className="text-sm lg:text-lg lg:ml-2">Khas Cibuntu</span>
           </div>
@@ -76,7 +76,7 @@ const Hero = () => {
           {/* Feature 3 */}
           <div className="flex flex-col items-center lg:flex-row lg:items-center gap-2">
             <div className="bg-white p-3 rounded-full">
-              <FaCheckCircle className="text-red-600 text-2xl" />
+              <FaCheckCircle className="text-primary text-2xl" />
             </div>
             <span className="text-sm lg:text-lg lg:ml-2">Tanpa Pengawet</span>
           </div>

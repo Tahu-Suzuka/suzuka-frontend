@@ -33,8 +33,8 @@ export default {
       },
 
       fontFamily: {
-        bebas: ['"Bebas Neue"', "sans-serif"],
-        montserrat: ["Montserrat", "sans-serif"],
+        raleway: ["Raleway", "sans-serif"],
+        roboto: ["Roboto", "sans-serif"],
       },
     },
   },
