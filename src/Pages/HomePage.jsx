@@ -12,7 +12,7 @@ const HomePage = () => {
       <Category />
       <div className="mt-20"></div>
       <AboutShort />
-      <div className="mt-20"></div>
+      <div className="mt-14"></div>
       <Review />
     </div>
   );

@@ -58,7 +58,7 @@ const settings = {
 
 const Review = () => {
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10">
+    <div className="max-w-6xl mx-auto px-6">
       <Title subtitle="Ulasan" title="Apa Kata Pelanggan Kami" />
       <Slider {...settings}>
         {testimonials.map((item, index) => {
