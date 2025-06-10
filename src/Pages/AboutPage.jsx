@@ -1,21 +1,11 @@
 import React from "react";
 import Wavify from "react-wavify";
+import Header from "../components/ui/header/Header";
 
 const AboutPage = () => {
   return (
     <div>
-      <div className="relative w-full h-[200px] lg:h-[300px]">
-        <img
-          src="/images/about/hero.png"
-          className="absolute inset-0 w-full h-full object-cover"
-          alt="Tentang Kami"
-        />
-        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-          <h1 className="text-white text-3xl lg:text-5xl font-bold">
-            Tentang Kami
-          </h1>
-        </div>
-      </div>
+      <Header imageSrc="/images/about/hero.png" title="Tentang Kami" />
 
       <div className="relative bg-red-600 text-white text-center px-6 pt-10 pb-32">
         <div className="max-w-4xl mx-auto">
