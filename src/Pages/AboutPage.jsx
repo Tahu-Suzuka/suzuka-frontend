@@ -5,7 +5,7 @@ import Header from "../components/ui/header/Header";
 const AboutPage = () => {
   return (
     <div>
-      <Header imageSrc="/images/about/hero.png" title="Tentang Kami" />
+      <Header imageSrc="/images/about/header.png" title="Tentang Kami" />
 
       <div className="relative bg-red-600 text-white text-center px-6 pt-10 pb-32">
         <div className="max-w-4xl mx-auto">

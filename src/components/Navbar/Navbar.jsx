@@ -6,7 +6,7 @@ import Button from "../ui/button/Button";
 export const NavbarLinks = [
   { name: "Beranda", link: "/" },
   { name: "Tentang Kami", link: "/AboutPage" },
-  { name: "Produk", link: "/#Product" },
+  { name: "Produk", link: "/ProductPage" },
   { name: "Kontak", link: "/#Contact" },
 ];
 
@@ -34,13 +34,15 @@ const ResponsiveNavbar = () => {
           : "bg-gradient-to-b from-black/60 via-black/30 to-transparent text-white"
       } px-6 lg:px-20 py-3 flex justify-between items-center`}
     >
-      <div className="flex items-center gap-2">
+      {/* Logo */}
+      <div className="flex items-center gap-2 z-50 w-32">
         <Link to="/">
           <img src="/images/logo/logo.png" alt="Logo" className="w-10 h-10" />
         </Link>
       </div>
 
-      <div className="md:hidden" onClick={toggleMenu}>
+      {/* Menu Toggle Mobile */}
+      <div className="md:hidden z-50" onClick={toggleMenu}>
         {isOpen ? (
           <X className={`w-6 h-6 ${scrolled ? "text-black" : "text-white"}`} />
         ) : (
@@ -50,28 +52,32 @@ const ResponsiveNavbar = () => {
         )}
       </div>
 
-      <ul
-        className={`flex-col md:flex md:flex-row md:gap-12 absolute md:static w-full md:w-auto left-0 top-16 md:top-auto transition-all duration-300 ease-in-out ${
-          isOpen ? "block" : "hidden md:flex"
-        } ${
-          isOpen
-            ? "bg-white bg-opacity-90 backdrop-blur-md md:bg-transparent"
-            : ""
-        }`}
-      >
-        {NavbarLinks.map((link, index) => (
-          <li
-            key={index}
-            className={`p-2 md:p-0 font-montserrat font-semibold hover:text-primary hover:font-bold ${
-              scrolled ? "text-black" : "text-white"
-            }`}
-          >
-            <a href={link.link}>{link.name}</a>
-          </li>
-        ))}
-      </ul>
+      {/* Navbar links */}
+      <div className="flex-1 flex justify-center">
+        <ul
+          className={`flex-col md:flex md:flex-row md:gap-12 absolute md:static w-full md:w-auto left-0 top-16 md:top-auto transition-all duration-300 ease-in-out ${
+            isOpen ? "block" : "hidden md:flex"
+          } ${
+            isOpen
+              ? "bg-white bg-opacity-90 backdrop-blur-md md:bg-transparent"
+              : ""
+          }`}
+        >
+          {NavbarLinks.map((link, index) => (
+            <li
+              key={index}
+              className={`p-2 md:p-0 font-montserrat font-semibold hover:text-primary hover:font-bold ${
+                scrolled ? "text-black" : "text-white"
+              }`}
+            >
+              <a href={link.link}>{link.name}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
 
-      <div className="flex items-center gap-4">
+      {/* Cart & Button */}
+      <div className="flex items-center gap-4 z-50 w-32 justify-end">
         <ShoppingCart
           className={`w-6 h-6 cursor-pointer ${
             scrolled ? "text-black" : "text-white"
