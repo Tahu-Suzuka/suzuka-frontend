@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom"; // pastikan kamu pakai react-router
+import { Link } from "react-router-dom";
 
 const AboutShort = () => {
   return (

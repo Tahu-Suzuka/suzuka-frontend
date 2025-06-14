@@ -6,17 +6,17 @@ import "slick-carousel/slick/slick-theme.css";
 // Auth
 import LoginPage from "./pages/Auth/LoginPage";
 import RegisterPage from "./pages/Auth/RegisterPage";
-import AuthLayout from "./layout/AuthLayout";
+import AuthLayout from "./layouts/AuthLayout";
 
 // Home
-import AppLayout from "./layout/AppLayout";
+import AppLayout from "./layouts/AppLayout";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import ProductPage from "./pages/ProductPage";
 
 // Dashboard
 import DashboardPage from "./pages/Dashboard/DashboardPage";
-import DashboardLayout from "./layout/dashboard/DashboardLayout";
+import DashboardLayout from "./layouts/dashboard/DashboardLayout";
 
 const App = () => {
   return (

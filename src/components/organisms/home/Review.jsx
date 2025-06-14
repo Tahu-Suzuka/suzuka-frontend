@@ -1,7 +1,7 @@
 import React from "react";
 import Slider from "react-slick";
 import { FaStar } from "react-icons/fa";
-import Title from "../ui/Text/Title";
+import Title from "../../atoms/Title";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 

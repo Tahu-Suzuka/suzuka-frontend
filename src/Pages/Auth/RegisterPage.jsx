@@ -1,5 +1,5 @@
 import React from "react";
-import Register from "../../components/Auth/Register";
+import Register from "../../components/organisms/Auth/Register";
 
 export default function RegisterPage() {
   return (

@@ -1,5 +1,5 @@
 import React from "react";
-import Title from "../ui/Text/Title.jsx";
+import Title from "../../atoms/Title.jsx";
 import CardSlider from "./CardSlider.jsx";
 const Category = () => {
   return (

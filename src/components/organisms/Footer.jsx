@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Wavify from "react-wavify";
-import Button from "../ui/button/Button";
+import Button from "../atoms/Button";
 
 const WaveFooter = () => {
   const [rotation, setRotation] = useState(0);

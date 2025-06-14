@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Button from "../ui/button/Button";
+import Button from "../atoms/Button";
 import { FaTruck, FaStore, FaCheckCircle } from "react-icons/fa";
 
 const images = [

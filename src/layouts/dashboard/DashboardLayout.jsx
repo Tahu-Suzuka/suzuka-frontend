@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Header from "../../components/dashboard/header/Header";
-import Sidebar from "../../components/dashboard/sidebar/Sidebar";
+import Header from "../../components/organisms/dashboard/header/Header";
+import Sidebar from "../../components/organisms/dashboard/sidebar/Sidebar";
 
 export default function DashboardLayout({ children }) {
   const [open, setOpen] = useState(true);

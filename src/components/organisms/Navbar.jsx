@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, ShoppingCart } from "lucide-react";
-import Button from "../ui/button/Button";
+import Button from "../atoms/Button";
 
 export const NavbarLinks = [
   { name: "Beranda", link: "/" },

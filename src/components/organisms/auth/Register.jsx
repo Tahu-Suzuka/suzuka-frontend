@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import InputField from "./InputField";
-import PasswordField from "./PasswordField";
-import Divider from "./Divider";
-import GoogleButton from "./GoogleButton";
-import Button from "../ui/button/Button";
+import InputField from "../../atoms/auth/InputField";
+import PasswordField from "../../atoms/auth/PasswordField";
+import Divider from "../../atoms/auth/Divider";
+import GoogleButton from "../../atoms/auth/GoogleButton";
+import Button from "../../atoms/Button";
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);

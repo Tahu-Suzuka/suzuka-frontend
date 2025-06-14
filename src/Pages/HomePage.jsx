@@ -1,8 +1,8 @@
 import React from "react";
-import Hero from "../components/Hero/Hero";
-import Category from "../components/home/Category";
-import AboutShort from "../components/home/AboutShort";
-import Review from "../components/home/Review";
+import Hero from "../components/organisms/Hero";
+import Category from "../components/organisms/home/Category";
+import AboutShort from "../components/organisms/home/AboutShort";
+import Review from "../components/organisms/home/Review";
 
 const HomePage = () => {
   return (

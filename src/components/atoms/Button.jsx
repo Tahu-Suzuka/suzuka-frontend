@@ -4,7 +4,7 @@ export default function Button({
   type = "button",
   text,
   onClick,
-  to, // <== Tambahan
+  to,
   width = "w-full",
   py = "py-3",
   bgColor = "bg-primary",

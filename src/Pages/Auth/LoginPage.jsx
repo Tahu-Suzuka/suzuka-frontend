@@ -1,5 +1,5 @@
 import React from "react";
-import Login from "../../components/auth/Login";
+import Login from "../../components/organisms/auth/Login";
 
 export default function LoginPage() {
   return (

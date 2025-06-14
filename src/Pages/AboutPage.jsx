@@ -1,6 +1,6 @@
 import React from "react";
 import Wavify from "react-wavify";
-import Header from "../components/ui/header/Header";
+import Header from "../components/atoms/Header";
 
 const AboutPage = () => {
   return (

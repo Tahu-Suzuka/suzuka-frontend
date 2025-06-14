@@ -1,5 +1,5 @@
 // pages/DashboardPage.jsx
-import DashboardLayout from "../../layout/dashboard/DashboardLayout";
+import DashboardLayout from "../../layouts/dashboard/DashboardLayout";
 
 export default function DashboardPage() {
   return (
