@@ -10,7 +10,6 @@ const Filter = ({ filter, setFilter }) => {
         className="border border-gray-300 rounded-md px-3 py-1 text-sm"
       >
         <option value="all">Semua</option>
-        <option value="terbaru">Terbaru</option>
         <option value="termurah">Termurah</option>
         <option value="termahal">Termahal</option>
       </select>

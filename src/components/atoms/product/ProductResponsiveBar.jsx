@@ -5,7 +5,6 @@ const BarIcon = ({ bars = 3 }) => {
   const heights = {
     2: ["h-5", "h-5"],
     3: ["h-5", "h-5", "h-5"],
-    5: ["h-5", "h-5", "h-5", "h-5"],
   };
 
   return (
@@ -20,7 +19,7 @@ const BarIcon = ({ bars = 3 }) => {
 const ProductResponsiveBar = ({ active, setActive }) => {
   return (
     <div className="flex items-center gap-2 hidden lg:flex">
-      {[2, 3, 5].map((bars, i) => (
+      {[2, 3].map((bars, i) => (
         <button
           key={i}
           onClick={() => setActive(i)}

@@ -24,6 +24,13 @@ const products = [
     originalPrice: 16000,
     rating: 5,
   },
+  {
+    name: "Tahu Stik",
+    image: "/images/hero/slider3.png",
+    price: 14000,
+    originalPrice: 16000,
+    rating: 5,
+  },
 ];
 
 const ProductCard = () => {

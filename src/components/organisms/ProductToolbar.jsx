@@ -1,17 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import ProductInfoText from "../atoms/product/ProductInfoText";
 import ProductResponsiveBar from "../atoms/product/ProductResponsiveBar";
-import Filter from "../atoms/Filter";
+import ProductFilter from "../atoms/Filter";
 
-const ProductToolbar = () => {
-  const [activeView, setActiveView] = useState(0);
-  const [filter, setFilter] = useState("all");
-
+const ProductToolbar = ({ active, setActive }) => {
   return (
-    <div className="flex flex-col md:flex-row justify-between items-center px-6 lg:px-20 pt-4 gap-4">
-      <ProductInfoText current={7} total={10} />
-      <ProductResponsiveBar active={activeView} setActive={setActiveView} />
-      <Filter filter={filter} setFilter={setFilter} />
+    <div className="flex items-center justify-between px-6 lg:px-20 py-4">
+      <ProductInfoText current={1} total={10} />
+      <ProductResponsiveBar active={active} setActive={setActive} />
+      <ProductFilter />
     </div>
   );
 };
