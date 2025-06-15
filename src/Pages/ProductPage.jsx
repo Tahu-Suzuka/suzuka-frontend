@@ -4,7 +4,7 @@ import ProductCard from "../components/organisms/ProductCard";
 import ProductToolbar from "../components/organisms/ProductToolbar";
 
 const ProductPage = () => {
-  const [activeLayout, setActiveLayout] = useState(1); // 0 = 2 col, 1 = 3 col, 2 = 4 col
+  const [activeLayout, setActiveLayout] = useState(1);
 
   const getGridCols = () => {
     switch (activeLayout) {

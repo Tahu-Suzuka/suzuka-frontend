@@ -13,6 +13,7 @@ import AppLayout from "./layouts/AppLayout";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import ProductPage from "./pages/ProductPage";
+import DetailProductPage from "./pages/DetailProductPage";
 
 // Dashboard
 import DashboardPage from "./pages/Dashboard/DashboardPage";
@@ -27,6 +28,7 @@ const App = () => {
           <Route index element={<HomePage />} />
           <Route path="/AboutPage" element={<AboutPage />} />
           <Route path="/ProductPage" element={<ProductPage />} />
+          <Route path="/DetailProductPage" element={<DetailProductPage />} />
         </Route>
 
         {/* Dashboard Layout */}

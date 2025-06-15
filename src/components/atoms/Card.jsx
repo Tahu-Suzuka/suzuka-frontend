@@ -1,7 +1,14 @@
 import React from "react";
 import { FaStar } from "react-icons/fa";
 
-const Card = ({ name, image, rating, price, originalPrice, children }) => {
+const Card = ({
+  name,
+  image,
+  rating,
+  price,
+  children,
+  priceClassName = "",
+}) => {
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden text-center">
       <img
@@ -21,14 +28,9 @@ const Card = ({ name, image, rating, price, originalPrice, children }) => {
             ))}
         </div>
         <div className="mt-4 flex justify-between items-center">
-          <div className="text-left">
-            <p className="text-gray-400 text-sm line-through">
-              Rp. {originalPrice.toLocaleString("id-ID")}
-            </p>
-            <p className="text-red-500 font-semibold text-lg">
-              Rp. {price.toLocaleString("id-ID")}
-            </p>
-          </div>
+          <p className={`text-red-500 font-semibold text-lg ${priceClassName}`}>
+            Rp. {price.toLocaleString("id-ID")}
+          </p>
           {children}
         </div>
       </div>

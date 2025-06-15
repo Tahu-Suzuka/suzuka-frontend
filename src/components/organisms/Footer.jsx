@@ -30,7 +30,7 @@ const WaveFooter = () => {
         style={{ display: "block", margin: 0, padding: 0 }}
       />
 
-      <div className="bg-primary relative z-10 px-6 pt-10 pb-10 -mt-1 font-bebas font-normal tracking-wider">
+      <div className="bg-primary relative z-10 px-6 pt-10 pb-10 font-bebas font-normal tracking-wider">
         <img
           src="/images/footer/footer.png"
           alt="Tahu Suzuka"
@@ -93,7 +93,7 @@ const WaveFooter = () => {
           </div>
         </div>
 
-        <div className="text-center text-sm text-white/80 mt-10 lg:mt-5">
+        <div className="text-center text-sm text-white/80 mt-10 lg:mt-7">
           Copyright © Tahu Suzuka 2025
         </div>
 

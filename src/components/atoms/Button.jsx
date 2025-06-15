@@ -11,7 +11,7 @@ export default function Button({
   textColor = "text-white",
   className = "",
 }) {
-  const baseClass = `${width} ${py} ${bgColor} ${textColor} rounded-full font-semibold hover:bg-secondary transition duration-300 ${className}`;
+  const baseClass = `${width} ${py} ${bgColor} ${textColor} rounded-md font-semibold hover:bg-secondary transition duration-300 ${className}`;
 
   if (to) {
     return (

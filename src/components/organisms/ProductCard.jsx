@@ -7,28 +7,24 @@ const products = [
     name: "Tahu Kuning",
     image: "/images/hero/slider1.png",
     price: 12000,
-    originalPrice: 15000,
     rating: 5,
   },
   {
     name: "Tahu Putih",
     image: "/images/hero/slider2.png",
     price: 10000,
-    originalPrice: 13000,
     rating: 4,
   },
   {
     name: "Tahu Stik",
     image: "/images/hero/slider3.png",
     price: 14000,
-    originalPrice: 16000,
     rating: 5,
   },
   {
     name: "Tahu Stik",
     image: "/images/hero/slider3.png",
     price: 14000,
-    originalPrice: 16000,
     rating: 5,
   },
 ];
@@ -43,7 +39,6 @@ const ProductCard = () => {
           image={product.image}
           rating={product.rating}
           price={product.price}
-          originalPrice={product.originalPrice}
         >
           <Button
             to="/cart"
