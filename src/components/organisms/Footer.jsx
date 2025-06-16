@@ -16,7 +16,7 @@ const WaveFooter = () => {
   }, []);
 
   return (
-    <div className="relative text-white mt-10">
+    <div className="relative text-white">
       <Wavify
         fill="#dc2626"
         paused={true}

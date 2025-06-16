@@ -9,7 +9,9 @@ const AppLayout = () => {
       <main id="maincontent" className="flex-grow">
         <Outlet />
       </main>
-      <WaveFooter />
+      <div className="-mt-28">
+        <WaveFooter />
+      </div>
     </div>
   );
 };
