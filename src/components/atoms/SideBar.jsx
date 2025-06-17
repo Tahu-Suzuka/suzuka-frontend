@@ -2,15 +2,21 @@ import React from "react";
 import { CgProfile } from "react-icons/cg";
 import { LuNotebookText } from "react-icons/lu";
 import { RiLockPasswordLine } from "react-icons/ri";
+import { useNavigate, useLocation } from "react-router-dom";
 
-const Sidebar = ({ activeMenu, setActiveMenu }) => {
+const Sidebar = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const currentPath = location.pathname;
+
   return (
     <div className="bg-white rounded-md shadow-md p-6 col-span-1">
-      <ul className="space-y-4">
+      <ul className="space-y-6">
         <li
-          onClick={() => setActiveMenu("profil")}
+          onClick={() => navigate("/profil")}
           className={`flex items-center gap-2 font-semibold cursor-pointer transition-colors ${
-            activeMenu === "profil"
+            currentPath === "/profil"
               ? "text-primary font-bold"
               : "text-gray-700 hover:text-primary"
           }`}
@@ -18,10 +24,15 @@ const Sidebar = ({ activeMenu, setActiveMenu }) => {
           <CgProfile className="text-xl" />
           Profil Saya
         </li>
+
         <li
-          onClick={() => setActiveMenu("Ubah Kata Sandi")}
+          onClick={() => navigate("/security-check")}
           className={`flex items-center gap-2 font-semibold cursor-pointer transition-colors ${
-            activeMenu === "Ubah Kata Sandi"
+            [
+              "/security-check",
+              "/security-password",
+              "/change-password",
+            ].includes(currentPath)
               ? "text-primary font-bold"
               : "text-gray-700 hover:text-primary"
           }`}
@@ -29,10 +40,11 @@ const Sidebar = ({ activeMenu, setActiveMenu }) => {
           <RiLockPasswordLine className="text-xl" />
           Ubah Kata Sandi
         </li>
+
         <li
-          onClick={() => setActiveMenu("pesanan")}
+          onClick={() => navigate("/pesanan")}
           className={`flex items-center gap-2 font-semibold cursor-pointer transition-colors ${
-            activeMenu === "pesanan"
+            currentPath === "/pesanan"
               ? "text-primary font-bold"
               : "text-gray-700 hover:text-primary"
           }`}

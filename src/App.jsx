@@ -16,9 +16,15 @@ import ProductPage from "./pages/ProductPage";
 import DetailProductPage from "./pages/DetailProductPage";
 import ProfilePage from "./pages/ProfilePage";
 
+// Security Check
+import SecurityLayout from "./layouts/SecurityLayout";
+import SecurityCheck from "./pages/SecurityCheck";
+import SecurityPassword from "./pages/SecurityPassword";
+
 // Dashboard
 import DashboardPage from "./pages/Dashboard/DashboardPage";
 import DashboardLayout from "./layouts/dashboard/DashboardLayout";
+import { Check } from "lucide-react";
 
 const App = () => {
   return (
@@ -27,12 +33,17 @@ const App = () => {
         {/* Public Layout */}
         <Route path="/" element={<AppLayout />}>
           <Route index element={<HomePage />} />
-          <Route path="/About" element={<AboutPage />} />
-          <Route path="/Product" element={<ProductPage />} />
-          <Route path="/DetailProduct" element={<DetailProductPage />} />
-          <Route path="/Profile" element={<ProfilePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/product" element={<ProductPage />} />
+          <Route path="/detail-product" element={<DetailProductPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Route>
 
+        {/* Security Check */}
+        <Route element={<SecurityLayout />}>
+          <Route path="/security-check" element={<SecurityCheck />} />
+          <Route path="/security-password" element={<SecurityPassword />} />
+        </Route>
         {/* Dashboard Layout */}
         <Route path="/" element={<DashboardLayout />}>
           <Route path="/dashboard" element={<DashboardPage />} />

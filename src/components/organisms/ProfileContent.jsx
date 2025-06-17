@@ -64,7 +64,7 @@ const ProfileContent = () => {
                 text="Simpan"
                 width="w-32"
                 py="py-2"
-                className="text-black border-black"
+                className=" rounded-md"
               />
             </div>
           </div>

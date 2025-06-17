@@ -10,19 +10,25 @@ export default function PasswordField({
   value,
   onChange,
   className = "",
+  withIcon = true, // ✅ tambahkan default true
 }) {
   return (
     <div className="relative w-full mb-4">
       {label && (
         <label
           htmlFor={id}
-          className="absolute -top-2 left-12 px-1 bg-white text-gray-400 text-sm font-bold z-10"
+          className={`absolute -top-2 ${
+            withIcon ? "left-12" : "left-4"
+          } px-1 bg-white text-gray-400 text-sm font-bold z-10`}
         >
           {label}
         </label>
       )}
 
-      <FiLock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+      {/* Icon kunci, hanya jika withIcon true */}
+      {withIcon && (
+        <FiLock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+      )}
 
       <input
         id={id}
@@ -30,7 +36,9 @@ export default function PasswordField({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className={`w-full py-4 pl-12 pr-10 text-sm border-2 border-gray-300 rounded-full bg-white text-gray-700 focus:outline-none ${className}`}
+        className={`w-full py-4 ${
+          withIcon ? "pl-12" : "pl-4"
+        } pr-10 text-sm border-2 border-gray-300 rounded-full bg-white text-gray-700 focus:outline-none ${className}`}
       />
 
       {toggleVisibility && (
