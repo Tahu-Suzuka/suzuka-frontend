@@ -3,18 +3,11 @@ import PropTypes from "prop-types"; // Impor PropTypes
 
 // Interface DropdownProps dihapus
 
-export const Dropdown = ({
-  // Hapus React.FC dan anotasi tipe DropdownProps
-  isOpen,
-  onClose,
-  children,
-  className = "",
-}) => {
-  const dropdownRef = useRef(null); // Hapus anotasi tipe <HTMLDivElement>
+export const Dropdown = ({ isOpen, onClose, children, className = "" }) => {
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Hapus anotasi tipe MouseEvent
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target) && // Hapus 'as Node'

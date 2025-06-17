@@ -17,12 +17,6 @@ export const DropdownItem = ({
   const combinedClasses = `${baseClassName} ${className}`.trim();
 
   const handleClick = (event) => {
-    // Hapus anotasi tipe React.MouseEvent
-    // Tidak perlu event.preventDefault() jika tag bukan button submit di dalam form,
-    // namun jika ingin menjaga perilaku asli, bisa dipertahankan untuk tag 'button'
-    // if (tag === "button") {
-    //   event.preventDefault(); // Ini biasanya untuk mencegah submit form jika type button tidak diset
-    // }
     if (onClick) onClick();
     if (onItemClick) onItemClick();
   };

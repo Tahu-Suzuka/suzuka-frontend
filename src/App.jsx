@@ -14,6 +14,7 @@ import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import ProductPage from "./pages/ProductPage";
 import DetailProductPage from "./pages/DetailProductPage";
+import ProfilePage from "./pages/ProfilePage";
 
 // Dashboard
 import DashboardPage from "./pages/Dashboard/DashboardPage";
@@ -26,9 +27,10 @@ const App = () => {
         {/* Public Layout */}
         <Route path="/" element={<AppLayout />}>
           <Route index element={<HomePage />} />
-          <Route path="/AboutPage" element={<AboutPage />} />
-          <Route path="/ProductPage" element={<ProductPage />} />
-          <Route path="/DetailProductPage" element={<DetailProductPage />} />
+          <Route path="/About" element={<AboutPage />} />
+          <Route path="/Product" element={<ProductPage />} />
+          <Route path="/DetailProduct" element={<DetailProductPage />} />
+          <Route path="/Profile" element={<ProfilePage />} />
         </Route>
 
         {/* Dashboard Layout */}

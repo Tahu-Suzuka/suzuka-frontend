@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import InputField from "../../atoms/auth/InputField";
+import Input from "../../atoms/Input";
 import PasswordField from "../../atoms/auth/PasswordField";
 import Divider from "../../atoms/auth/Divider";
 import GoogleButton from "../../atoms/auth/GoogleButton";
 import Button from "../../atoms/Button";
+import { FiMail } from "react-icons/fi";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,7 +12,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
 
   const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+    setShowPassword((prev) => !prev);
   };
 
   return (
@@ -21,15 +22,19 @@ export default function Login() {
       </h1>
 
       <form className="space-y-6 w-full max-w-md mx-auto px-4 md:px-0 font-montserrat">
-        <InputField
+        <Input
           id="email"
           label="Email"
           placeholder="email@gmail.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          icon={FiMail}
+          variant="auth"
         />
 
         <PasswordField
+          id="password"
+          label="Kata Sandi"
           showPassword={showPassword}
           toggleVisibility={togglePasswordVisibility}
           value={password}
@@ -44,7 +49,8 @@ export default function Login() {
             Lupa Kata Sandi?
           </a>
         </div>
-        <Button to="/home" text="Masuk" />
+        <Button text="Masuk" className="rounded-full" />
+
         <Divider />
         <GoogleButton text="Masuk Dengan Google" />
 

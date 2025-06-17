@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import InputField from "../../atoms/auth/InputField";
+import Input from "../../atoms/Input";
 import PasswordField from "../../atoms/auth/PasswordField";
 import Divider from "../../atoms/auth/Divider";
 import GoogleButton from "../../atoms/auth/GoogleButton";
@@ -17,7 +17,7 @@ export default function Register() {
     <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-center left-14 mt-7">
       <form className="space-y-6 w-full max-w-md mx-auto px-4 md:px-0 font-montserrat">
         {/* Input Nama */}
-        <InputField
+        <Input
           id="name"
           label="Nama Lengkap"
           placeholder="Nama Anda"
@@ -26,7 +26,7 @@ export default function Register() {
         />
 
         {/* Input Email */}
-        <InputField
+        <Input
           id="email"
           label="Email"
           placeholder="email@gmail.com"
@@ -54,7 +54,7 @@ export default function Register() {
         />
 
         {/* Tombol Register */}
-        <Button type="submit" text="Daftar" />
+        <Button text="Daftar" className="rounded-full" />
 
         <Divider />
 
