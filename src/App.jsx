@@ -20,6 +20,7 @@ import ProfilePage from "./pages/ProfilePage";
 import SecurityLayout from "./layouts/SecurityLayout";
 import SecurityCheck from "./pages/SecurityCheck";
 import SecurityPassword from "./pages/SecurityPassword";
+import SecurityFailed from "./pages/SecurityFailed";
 
 // Dashboard
 import DashboardPage from "./pages/Dashboard/DashboardPage";
@@ -43,6 +44,7 @@ const App = () => {
         <Route element={<SecurityLayout />}>
           <Route path="/security-check" element={<SecurityCheck />} />
           <Route path="/security-password" element={<SecurityPassword />} />
+          <Route path="/security-failed" element={<SecurityFailed />} />
         </Route>
         {/* Dashboard Layout */}
         <Route path="/" element={<DashboardLayout />}>

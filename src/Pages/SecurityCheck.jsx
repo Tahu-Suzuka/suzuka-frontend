@@ -1,6 +1,7 @@
 import React from "react";
 import { IoShieldCheckmarkOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import Button from "../components/atoms/Button"; // pastikan path-nya sesuai
 
 const SecurityCheck = () => {
   const navigate = useNavigate();
@@ -15,12 +16,13 @@ const SecurityCheck = () => {
             satu cara di bawah ini.
           </p>
 
-          <button
+          <Button
+            text="Verifikasi dengan Kata Sandi"
             onClick={() => navigate("/security-password")}
-            className="bg-primary hover:bg-red-500 text-white font-medium py-2 px-4 rounded-full text-sm"
-          >
-            Verifikasi dengan Kata Sandi
-          </button>
+            className="rounded-full"
+            py="py-2"
+            width="w-full"
+          />
         </div>
       </div>
     </div>

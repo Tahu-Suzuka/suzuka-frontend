@@ -2,6 +2,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import SecurityNavbar from "../components/organisms/SecurityNavbar";
+import WaveFooter from "../components/organisms/Footer";
 
 const SecurityLayout = () => {
   return (
@@ -10,6 +11,9 @@ const SecurityLayout = () => {
       <main>
         <Outlet />
       </main>
+      <div className="mt-32">
+        <WaveFooter />
+      </div>
     </div>
   );
 };
