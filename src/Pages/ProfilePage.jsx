@@ -16,8 +16,10 @@ const ProfilePage = () => {
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
           />
-          <div className="bg-white rounded-md shadow-md p-6 md:col-span-3">
-            {activeMenu === "profil" && <ProfileContent />}
+          <div className="md:col-span-3">
+            <div className="bg-white rounded-md shadow-md">
+              {activeMenu === "profil" && <ProfileContent />}
+            </div>
             {activeMenu === "pesanan" && <OrderContent />}
           </div>
         </div>

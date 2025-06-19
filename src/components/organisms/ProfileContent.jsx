@@ -9,7 +9,7 @@ const ProfileContent = () => {
   const [address, setAddress] = useState("");
 
   return (
-    <div>
+    <div className="p-6">
       <h2 className="text-lg font-semibold mb-1">Profil Saya</h2>
       <p className="text-sm text-gray-600 mb-6">
         Kelola informasi profil Anda untuk mengontrol, melindungi dan
