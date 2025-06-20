@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import ReviewModal from "../organisms/ReviewModal";
 
 const OrderCard = ({ order }) => {
   const {
@@ -9,6 +10,8 @@ const OrderCard = ({ order }) => {
     deliveryDate,
     statusColor = "bg-yellow-100 text-yellow-800",
   } = order;
+
+  const [showModal, setShowModal] = useState(false);
 
   const statusConfig = {
     "SEDANG DIKEMAS": {
@@ -107,14 +110,24 @@ const OrderCard = ({ order }) => {
         {showButton && (
           <button
             className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${buttonClass}`}
-            onClick={() =>
-              console.log("Tombol diklik:", buttonText, "untuk ID", orderId)
-            }
+            onClick={() => {
+              if (buttonText === "Nilai Pesanan") {
+                setShowModal(true);
+              } else {
+                console.log("Tombol diklik:", buttonText, "untuk ID", orderId);
+              }
+            }}
           >
             {buttonText}
           </button>
         )}
       </div>
+
+      <ReviewModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        item={items[0]}
+      />
     </div>
   );
 };

@@ -48,8 +48,8 @@ const Hero = () => {
             berkualitas dan proses higienis ciri khas Bandung Cibuntu.
           </p>
           <div className="flex flex-col sm:flex-row gap-2 justify-center">
-            <Button text="Pesan Sekarang" />
-            <Button text="Tentang Kami" />
+            <Button text="Pesan Sekarang" className="rounded-full" />
+            <Button text="Tentang Kami" className="rounded-full" />
           </div>
         </div>
       </div>
