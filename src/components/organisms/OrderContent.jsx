@@ -56,22 +56,22 @@ const OrderContent = () => {
       totalAmount: 30000,
       deliveryDate: "24-11-2025",
     },
-    {
-      orderId: "202511220004",
-      status: "DIBATALKAN",
-      statusColor: "bg-red-100 text-red-800",
-      items: [
-        {
-          name: "Tahu Kuning",
-          size: "Kecil",
-          quantity: 4,
-          price: 12000,
-          image: "/images/hero/slider1.png",
-        },
-      ],
-      totalAmount: 48000,
-      deliveryDate: "25-11-2025",
-    },
+    // {
+    //   orderId: "202511220004",
+    //   status: "DIBATALKAN",
+    //   statusColor: "bg-red-100 text-red-800",
+    //   items: [
+    //     {
+    //       name: "Tahu Kuning",
+    //       size: "Kecil",
+    //       quantity: 4,
+    //       price: 12000,
+    //       image: "/images/hero/slider1.png",
+    //     },
+    //   ],
+    //   totalAmount: 48000,
+    //   deliveryDate: "25-11-2025",
+    // },
     {
       orderId: "202511220005",
       status: "SEDANG DIKEMAS",
@@ -91,47 +91,41 @@ const OrderContent = () => {
   ];
 
   const filteredOrders = sampleOrders.filter((order) => {
-    const matchesTab =
-      activeTab === "Semua" ||
-      order.status.toLowerCase() === activeTab.toLowerCase();
-
-    const matchesSearch =
-      order.orderId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.items.some((item) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-
-    return matchesTab && matchesSearch;
+    if (activeTab === "Semua") return true;
+    return order.status.toLowerCase() === activeTab.toLowerCase();
   });
+
+  const emptyMessages = {
+    "Sedang Dikemas": "Belum ada pesanan yang sedang dikemas.",
+    Dikirim: "Belum ada pesanan yang sedang dikirim.",
+    Selesai: "Kamu belum menyelesaikan pesanan apapun.",
+    Dibatalkan: "Tidak ada pesanan yang dibatalkan.",
+    Semua: "Belum ada pesanan apapun saat ini.",
+  };
 
   return (
     <div className="space-y-4">
-      {/* Tabs */}
       <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
         <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
       </div>
-
-      {/* Search */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+      <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
         <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       </div>
-
-      {/* Card Pesanan */}
       <div className="space-y-4">
         {filteredOrders.length > 0 ? (
           filteredOrders.map((order) => (
             <OrderCard key={order.orderId} order={order} />
           ))
         ) : (
-          <div className="bg-white p-4 rounded-lg shadow-sm text-center text-gray-500 text-sm border border-gray-200">
-            Tidak ada pesanan untuk <strong>{activeTab}</strong>
-            {searchTerm && (
-              <>
-                {" "}
-                dengan kata kunci "<strong>{searchTerm}</strong>"
-              </>
-            )}
-            .
+          <div className="bg-white p-6 rounded-lg shadow-sm text-center text-gray-500 text-sm border border-gray-200 flex flex-col items-center space-y-4">
+            <img
+              src="/images/no-order.png"
+              alt="No Orders"
+              className="w-40 h-40 object-contain"
+            />
+            <p className="text-sm font-normal text-gray-700">
+              {emptyMessages[activeTab] || "Tidak Ada Pesanan"}
+            </p>
           </div>
         )}
       </div>
