@@ -27,6 +27,9 @@ import DashboardPage from "./pages/Dashboard/DashboardPage";
 import DashboardLayout from "./layouts/dashboard/DashboardLayout";
 import { Check } from "lucide-react";
 
+// Error Pages
+import ErrorPage from "./pages/ErrorPage";
+
 const App = () => {
   return (
     <BrowserRouter>
@@ -56,6 +59,8 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
         </Route>
+
+        <Route path="/error" element={<ErrorPage />} />
       </Routes>
     </BrowserRouter>
   );
