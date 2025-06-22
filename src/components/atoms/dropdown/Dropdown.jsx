@@ -1,7 +1,5 @@
-import React, { useEffect, useRef } from "react"; // Ubah import type
-import PropTypes from "prop-types"; // Impor PropTypes
-
-// Interface DropdownProps dihapus
+import React, { useEffect, useRef } from "react";
+import PropTypes from "prop-types";
 
 export const Dropdown = ({ isOpen, onClose, children, className = "" }) => {
   const dropdownRef = useRef(null);
@@ -10,21 +8,20 @@ export const Dropdown = ({ isOpen, onClose, children, className = "" }) => {
     const handleClickOutside = (event) => {
       if (
         dropdownRef.current &&
-        !dropdownRef.current.contains(event.target) && // Hapus 'as Node'
-        !(event.target.closest && event.target.closest(".dropdown-toggle")) // Hapus 'as HTMLElement', tambahkan cek keberadaan closest
+        !dropdownRef.current.contains(event.target) &&
+        !(event.target.closest && event.target.closest(".dropdown-toggle"))
       ) {
         onClose();
       }
     };
 
     if (isOpen) {
-      // Hanya tambahkan event listener jika dropdown terbuka
       document.addEventListener("mousedown", handleClickOutside);
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isOpen, onClose]); // Tambahkan isOpen sebagai dependency
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -38,7 +35,6 @@ export const Dropdown = ({ isOpen, onClose, children, className = "" }) => {
   );
 };
 
-// Definisikan PropTypes
 Dropdown.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,

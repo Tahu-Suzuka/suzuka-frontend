@@ -167,7 +167,7 @@ const Navbar = () => {
               className="flex items-center cursor-pointer"
             >
               <img
-                src="/images/img1.png"
+                src="/images/default-profile.png"
                 alt="Avatar"
                 className="w-10 h-10 rounded-full border-2 bg-white p-0.5"
               />

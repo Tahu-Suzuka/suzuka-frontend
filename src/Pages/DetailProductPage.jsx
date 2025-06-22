@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { FaStar, FaTruck, FaTicketAlt } from "react-icons/fa";
+import { FaTruck, FaTicketAlt } from "react-icons/fa";
 import Button from "../components/atoms/Button";
 import Header from "../components/atoms/Header";
 import Card from "../components/atoms/Card";
+import Review from "../components/atoms/Review";
 
 const DetailProductPage = () => {
   const [size, setSize] = useState("Kecil");
@@ -55,7 +56,7 @@ const DetailProductPage = () => {
 
             <div className="flex items-center gap-1 text-primary mb-1">
               {[...Array(4)].map((_, i) => (
-                <FaStar key={i} />
+                <span key={i}>★</span>
               ))}
               <span className="text-sm text-black ml-1">3 Review</span>
             </div>
@@ -124,104 +125,29 @@ const DetailProductPage = () => {
               <FaTruck className="text-lg text-secondary" />
               Pengiriman sesuai dengan tanggal yang anda tentukan
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600 ">
+            <div className="flex items-center gap-2 text-sm text-gray-600">
               <FaTicketAlt className="text-lg text-secondary" />
               Anda dapat memasukan voucher diskon ataupun gratis ongkir
             </div>
           </div>
         </div>
 
-        {/* SECTION DESKRIPSI */}
-        <div className="max-w-6xl mx-auto bg-white rounded-md p-6 mt-6">
-          <h1 className="text-2xl font-bold mb-2">Deskripsi</h1>
-          <p className="text-gray-700 leading-relaxed">
-            Tahu kuning Tahu Suzuka dibuat dari kedelai pilihan dan diproses
-            secara tradisional dengan tambahan kunyit alami sebagai pewarna,
-            menghasilkan warna kuning cerah yang menggugah selera. Teksturnya
-            lembut di dalam dan kenyal di luar, sangat cocok digoreng langsung
-            atau dimasak dalam sajian tumis, pepes, hingga sambal goreng.
-          </p>
-        </div>
-
-        {/* SECTION ULASAN */}
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6 mb-0">
-          {/* Card Ulasan */}
-          <div className="col-span-2 bg-white rounded-md p-6">
-            <h1 className="text-2xl font-bold mb-6 text-center">Ulasan</h1>
-            {/* sorting rating */}
-            <div className="space-y-3 mb-6">
-              {[5, 4, 3, 2, 1].map((rating) => {
-                const totalReviews = rating === 5 ? 1 : 0;
-                return (
-                  <div
-                    key={rating}
-                    className="flex items-center justify-center gap-4"
-                  >
-                    <div className="flex gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <FaStar
-                          key={i}
-                          className={`text-lg ${
-                            i < rating ? "text-primary" : "text-gray-300"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-32 h-[3px] bg-gray-300 relative rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-primary"
-                          style={{
-                            width: `${(totalReviews / 1) * 100}%`,
-                          }}
-                        ></div>
-                      </div>
-                      <span className="text-sm text-gray-700">
-                        {totalReviews}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="bg-gray-50 rounded-md p-6 shadow-sm">
-              <div className="flex items-center gap-4 mb-2">
-                <img
-                  src="/images/hero/slider1.png"
-                  alt="User Profile"
-                  className="w-14 h-14 rounded-full object-cover"
-                />
-                <div>
-                  <h2 className="font-semibold text-gray-800 text-left">
-                    Jeon Jungkook
-                  </h2>
-                  <div className="flex text-primary">
-                    {[...Array(5)].map((_, i) => (
-                      <FaStar key={i} />
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <p className="text-gray-700 text-left mt-2 leading-relaxed">
-                Tahu Suzuka ini enak banget! Luar krispi, dalamnya lembut. Cocok
-                banget buat lauk harian. Udah sering repeat order 😍
-              </p>
-            </div>
+        {/* SECTION ULASAN + PRODUK SERUPA */}
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+          {/* Ulasan */}
+          <div className="col-span-2">
+            <Review />
           </div>
 
           {/* Produk Serupa */}
-          <div className="bg-white rounded-md p-6">
-            <h1 className="text-xl font-bold mb-4 text-center">
-              Produk Serupa
-            </h1>
+          <div className="bg-white rounded-md p-6 hidden lg:block self-start">
+            <h1 className="text-xl font-bold text-center">Produk Serupa</h1>
             <div className="space-y-4">
               {[1, 2].map((_, idx) => (
                 <Card
                   key={idx}
                   name="Tahu Cibuntu"
                   image="/images/product/header.png"
-                  rating={4}
                   price={12000}
                   showButton={false}
                   showRating={false}

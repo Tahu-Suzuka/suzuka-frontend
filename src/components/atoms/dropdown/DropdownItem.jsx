@@ -31,14 +31,11 @@ export const DropdownItem = ({
 
   return (
     <button type="button" onClick={handleClick} className={combinedClasses}>
-      {" "}
-      {/* Menambahkan type="button" */}
       {children}
     </button>
   );
 };
 
-// Definisikan PropTypes
 DropdownItem.propTypes = {
   tag: PropTypes.oneOf(["a", "button"]),
   to: PropTypes.string,

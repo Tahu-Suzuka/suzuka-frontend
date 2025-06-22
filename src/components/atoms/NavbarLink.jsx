@@ -1,7 +1,7 @@
 const NavbarLinks = [
   { name: "Beranda", link: "/" },
-  { name: "Tentang Kami", link: "/AboutPage" },
-  { name: "Produk", link: "/ProductPage" },
+  { name: "Tentang Kami", link: "/about" },
+  { name: "Produk", link: "/product" },
   { name: "Kontak", link: "/#Contact" },
 ];
 

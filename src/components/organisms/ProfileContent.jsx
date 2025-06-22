@@ -72,7 +72,7 @@ const ProfileContent = () => {
 
         <div className="flex flex-col items-center justify-start">
           <img
-            src="/images/img1.png"
+            src="/images/default-profile.png"
             alt="Avatar"
             className="w-24 h-24 rounded-full object-cover mb-4"
           />
