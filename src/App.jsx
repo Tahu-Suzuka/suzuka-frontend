@@ -15,6 +15,7 @@ import AboutPage from "./pages/AboutPage";
 import ProductPage from "./pages/ProductPage";
 import DetailProductPage from "./pages/DetailProductPage";
 import ProfilePage from "./pages/ProfilePage";
+import Otp from "./components/organisms/Otp";
 
 // Security Check
 import SecurityLayout from "./layouts/SecurityLayout";
@@ -41,6 +42,7 @@ const App = () => {
           <Route path="/product" element={<ProductPage />} />
           <Route path="/detail-product" element={<DetailProductPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/otp" element={<Otp />} />
         </Route>
 
         {/* Security Check */}
