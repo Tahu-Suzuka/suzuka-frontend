@@ -1,16 +1,17 @@
-import React, { useState } from "react";
-import Header from "../../components/organisms/dashboard/header/Header";
-import Sidebar from "../../components/organisms/dashboard/sidebar/Sidebar";
+import React from "react";
+import Sidebar from "../../components/organisms/dashboard/Sidebar";
+import Header from "../../components/organisms/dashboard/Header";
+import { Outlet } from "react-router-dom";
 
-export default function DashboardLayout({ children }) {
-  const [open, setOpen] = useState(true);
-
+export default function DashboardLayout() {
   return (
     <div className="min-h-screen flex">
-      <Sidebar open={open} setOpen={setOpen} />
+      <Sidebar />
       <div className="flex-1 flex flex-col">
-        <Header open={open} onToggleSidebar={() => setOpen(!open)} />
-        <main className="mt-16 p-4">{children}</main>
+        <Header />
+        <main className="p-4 lg:ml-64 bg-gray-100 flex-1">
+          <Outlet />
+        </main>
       </div>
     </div>
   );

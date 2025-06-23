@@ -15,6 +15,8 @@ import AboutPage from "./pages/AboutPage";
 import ProductPage from "./pages/ProductPage";
 import DetailProductPage from "./pages/DetailProductPage";
 import ProfilePage from "./pages/ProfilePage";
+
+// sementara
 import Otp from "./components/organisms/Otp";
 
 // Security Check
@@ -26,7 +28,6 @@ import SecurityFailed from "./pages/SecurityFailed";
 // Dashboard
 import DashboardPage from "./pages/Dashboard/DashboardPage";
 import DashboardLayout from "./layouts/dashboard/DashboardLayout";
-import { Check } from "lucide-react";
 
 // Error Pages
 import ErrorPage from "./pages/ErrorPage";
@@ -35,14 +36,20 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Dashboard Layout */}
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<DashboardPage />} />
+        </Route>
+
         {/* Public Layout */}
         <Route path="/" element={<AppLayout />}>
           <Route index element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/product" element={<ProductPage />} />
-          <Route path="/detail-product" element={<DetailProductPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/otp" element={<Otp />} />
+          <Route path="about" element={<AboutPage />} />
+          <Route path="product" element={<ProductPage />} />
+          <Route path="detail-product" element={<DetailProductPage />} />
+          <Route path="profile" element={<ProfilePage />} />
+          {/* sementara */}
+          <Route path="otp" element={<Otp />} />
         </Route>
 
         {/* Security Check */}
@@ -51,15 +58,11 @@ const App = () => {
           <Route path="/security-password" element={<SecurityPassword />} />
           <Route path="/security-failed" element={<SecurityFailed />} />
         </Route>
-        {/* Dashboard Layout */}
-        <Route path="/" element={<DashboardLayout />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
-        </Route>
 
         {/* Auth Layout */}
         <Route path="/" element={<AuthLayout />}>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route path="login" element={<LoginPage />} />
+          <Route path="register" element={<RegisterPage />} />
         </Route>
 
         <Route path="/error" element={<ErrorPage />} />

@@ -1,10 +1,11 @@
-// pages/DashboardPage.jsx
-import DashboardLayout from "../../layouts/dashboard/DashboardLayout";
+import React from "react";
+
+import DashboardContent from "../../components/organisms/dashboard/DashboardContent";
 
 export default function DashboardPage() {
   return (
-    <DashboardLayout>
-      <h1 className="text-xl font-bold">Dashboard Utama</h1>
-    </DashboardLayout>
+    <div className="p-4">
+      <DashboardContent />
+    </div>
   );
 }

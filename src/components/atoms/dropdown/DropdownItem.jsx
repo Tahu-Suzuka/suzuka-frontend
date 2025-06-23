@@ -1,11 +1,8 @@
-import React from "react"; // Ubah import type
-import PropTypes from "prop-types"; // Impor PropTypes
-import { Link } from "react-router"; // Asumsi Link dari 'react-router' masih digunakan
-
-// Interface DropdownItemProps dihapus
+import React from "react";
+import PropTypes from "prop-types";
+import { Link } from "react-router";
 
 export const DropdownItem = ({
-  // Hapus React.FC dan anotasi tipe DropdownItemProps
   tag = "button",
   to,
   onClick,
