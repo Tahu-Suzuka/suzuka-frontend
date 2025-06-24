@@ -1,15 +1,19 @@
 // organisms/Sidebar.jsx
 import { RxDashboard } from "react-icons/rx";
+import { PiPresentationChart } from "react-icons/pi";
 import { TbFileInvoice } from "react-icons/tb";
 import { CiDiscount1, CiStar } from "react-icons/ci";
+import { BiBox } from "react-icons/bi";
 import { MdInsertChartOutlined } from "react-icons/md";
 import { FiUsers } from "react-icons/fi";
 import SidebarItem from "../../atoms/SidebarItem";
 
 const menu = [
-  { name: "Dashboard", path: "/dashboard", icon: RxDashboard },
-  { name: "Pemesanan", path: "/orders", icon: TbFileInvoice },
-  { name: "Diskon", path: "/discount", icon: CiDiscount1 },
+  { name: "Dashboard", path: "/dashboard", icon: PiPresentationChart },
+  { name: "Pesanan", path: "/dashboard/order", icon: TbFileInvoice },
+  { name: "Kategori", path: "/category", icon: RxDashboard },
+  { name: "Produk", path: "/product", icon: BiBox },
+  { name: "Voucher", path: "/discount", icon: CiDiscount1 },
   { name: "Penjualan", path: "/sales", icon: MdInsertChartOutlined },
   { name: "Pengguna", path: "/users", icon: FiUsers },
   { name: "Ulasan", path: "/reviews", icon: CiStar },
@@ -28,6 +32,7 @@ const Sidebar = () => (
           to={item.path}
           label={item.name}
           icon={item.icon}
+          end={item.path === "/dashboard"} // ⬅️ hanya end untuk dashboard
         />
       ))}
     </div>

@@ -1,8 +1,7 @@
-import { Link } from "react-router-dom";
-
 export default function Button({
   type = "button",
   text,
+  children,
   onClick,
   to,
   width = "w-full",
@@ -12,21 +11,16 @@ export default function Button({
   className = "",
 }) {
   const baseClass = `
-  inline-block
-  font-semibold
-  hover:bg-secondary
-  transition
-  duration-300
-  ${width}
-  ${py}
-  ${bgColor}
-  ${textColor}
-  ${className}
-`.trim();
+    inline-flex items-center justify-center gap-2
+    font-semibold transition duration-300
+    hover:bg-secondary
+    ${width} ${py} ${bgColor} ${textColor} ${className}
+  `.trim();
 
   if (to) {
     return (
       <Link to={to} className={baseClass}>
+        {children}
         {text}
       </Link>
     );
@@ -34,6 +28,7 @@ export default function Button({
 
   return (
     <button type={type} onClick={onClick} className={baseClass}>
+      {children}
       {text}
     </button>
   );

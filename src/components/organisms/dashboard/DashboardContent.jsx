@@ -1,7 +1,9 @@
-import { FaBox, FaUsers, FaShoppingCart, FaStar } from "react-icons/fa";
+import { FaBox, FaUsers, FaStar } from "react-icons/fa";
+import { IoStatsChart } from "react-icons/io5";
+import { TbFileInvoice } from "react-icons/tb";
 import Chart from "../../atoms/Chart";
 import Stat from "../../atoms/Stat";
-import Table from "../../atoms/Table";
+import OrderTable from "../../organisms/dashboard/OrderTable";
 
 const DashboardContent = () => {
   return (
@@ -10,12 +12,12 @@ const DashboardContent = () => {
         <Stat
           title="Penjualan Hari Ini"
           value="24"
-          icon={<FaBox className="text-3xl text-primary" />}
+          icon={<IoStatsChart className="text-3xl text-primary" />}
         />
         <Stat
           title="Jumlah Pesanan"
           value="120"
-          icon={<FaUsers className="text-3xl text-primary" />}
+          icon={<TbFileInvoice className="text-3xl text-primary" />}
         />
         <Stat
           title="Ulasan"
@@ -37,7 +39,7 @@ const DashboardContent = () => {
           </h2>
           <Chart />
         </div>
-        <Table />
+        <OrderTable showDate={false} showAction={false} />
       </div>
     </div>
   );
