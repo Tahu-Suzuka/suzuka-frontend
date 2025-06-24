@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaPrint } from "react-icons/fa";
+import { FaPrint, FaPlus } from "react-icons/fa";
 import Button from "../../atoms/Button";
 import OrderTable from "../../organisms/dashboard/OrderTable";
 import SearchBar from "../../atoms/SearchBar";
@@ -52,10 +52,13 @@ const OrderContent = () => {
         <h1 className="text-xl font-bold text-gray-800">Daftar Pesanan</h1>
         <div className="flex flex-wrap justify-end gap-4">
           <Button
-            text="Tambah Pesanan Manual"
-            width="w-52"
-            className="rounded-md"
-          />
+            width="w-44"
+            py="py-1.5"
+            className="rounded-md flex items-center justify-center gap-2"
+          >
+            <FaPlus className="text-sm" />
+            <span>Tambah Kategori</span>
+          </Button>
 
           <select className="border border-gray-300 text-sm px-2 rounded-md">
             <option>Semua Status</option>
@@ -74,7 +77,12 @@ const OrderContent = () => {
             />
           </div>
 
-          <Button text="Cetak Invoice" className="rounded-md" width="w-52">
+          <Button
+            text="Cetak Invoice"
+            className="rounded-md"
+            width="w-36"
+            py="py-1"
+          >
             <FaPrint />
           </Button>
         </div>

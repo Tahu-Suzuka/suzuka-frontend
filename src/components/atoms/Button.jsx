@@ -12,7 +12,7 @@ export default function Button({
 }) {
   const baseClass = `
     inline-flex items-center justify-center gap-2
-    font-semibold transition duration-300
+    font-semibold transition duration-300 text-sm 
     hover:bg-secondary
     ${width} ${py} ${bgColor} ${textColor} ${className}
   `.trim();

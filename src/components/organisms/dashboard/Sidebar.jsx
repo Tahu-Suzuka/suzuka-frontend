@@ -11,7 +11,7 @@ import SidebarItem from "../../atoms/SidebarItem";
 const menu = [
   { name: "Dashboard", path: "/dashboard", icon: PiPresentationChart },
   { name: "Pesanan", path: "/dashboard/order", icon: TbFileInvoice },
-  { name: "Kategori", path: "/category", icon: RxDashboard },
+  { name: "Kategori", path: "/dashboard/category", icon: RxDashboard },
   { name: "Produk", path: "/dashboard/product", icon: BiBox },
   { name: "Voucher", path: "/discount", icon: CiDiscount1 },
   { name: "Penjualan", path: "/sales", icon: MdInsertChartOutlined },
@@ -32,7 +32,7 @@ const Sidebar = () => (
           to={item.path}
           label={item.name}
           icon={item.icon}
-          end={item.path === "/dashboard"} // ⬅️ hanya end untuk dashboard
+          end={item.path === "/dashboard"}
         />
       ))}
     </div>
