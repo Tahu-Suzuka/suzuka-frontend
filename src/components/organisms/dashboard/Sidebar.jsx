@@ -14,7 +14,7 @@ const menu = [
   { name: "Kategori", path: "/dashboard/category", icon: RxDashboard },
   { name: "Produk", path: "/dashboard/product", icon: BiBox },
   { name: "Voucher", path: "/dashboard/voucher", icon: CiDiscount1 },
-  { name: "Penjualan", path: "/sales", icon: MdInsertChartOutlined },
+  { name: "Penjualan", path: "/dashboard/sales", icon: MdInsertChartOutlined },
   { name: "Pelanggan", path: "/dashboard/customer", icon: FiUsers },
   { name: "Ulasan", path: "/reviews", icon: CiStar },
 ];

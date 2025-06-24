@@ -33,6 +33,7 @@ import ProductContent from "./components/organisms/dashboard/ProductContent";
 import CategoryContent from "./components/organisms/dashboard/CategoryContent";
 import CustomerContent from "./components/organisms/dashboard/CustomerContent";
 import VoucherContent from "./components/organisms/dashboard/VoucherContent";
+import SalesContent from "./components/organisms/dashboard/SalesContent";
 
 // Error Pages
 import ErrorPage from "./pages/ErrorPage";
@@ -49,6 +50,7 @@ const App = () => {
           <Route path="category" element={<CategoryContent />} />
           <Route path="customer" element={<CustomerContent />} />
           <Route path="voucher" element={<VoucherContent />} />
+          <Route path="sales" element={<SalesContent />} />
         </Route>
 
         {/* Public Layout */}
