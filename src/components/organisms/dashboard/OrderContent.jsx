@@ -61,7 +61,7 @@ const OrderContent = () => {
             <span>Tambah Kategori</span>
           </Button>
 
-          <select className="border border-gray-300 text-sm px-2 rounded-md">
+          <select className="border border-gray-300 text-sm px-2 rounded-md hover:border-primary">
             <option>Semua Status</option>
             <option>Belum Dibayar</option>
             <option>Diproses</option>

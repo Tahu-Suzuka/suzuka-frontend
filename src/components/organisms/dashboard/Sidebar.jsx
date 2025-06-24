@@ -16,7 +16,7 @@ const menu = [
   { name: "Voucher", path: "/dashboard/voucher", icon: CiDiscount1 },
   { name: "Penjualan", path: "/dashboard/sales", icon: MdInsertChartOutlined },
   { name: "Pelanggan", path: "/dashboard/customer", icon: FiUsers },
-  { name: "Ulasan", path: "/reviews", icon: CiStar },
+  { name: "Ulasan", path: "/dashboard/review", icon: CiStar },
 ];
 
 const Sidebar = () => (
