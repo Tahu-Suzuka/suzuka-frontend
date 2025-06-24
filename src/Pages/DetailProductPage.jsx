@@ -4,10 +4,26 @@ import Button from "../components/atoms/Button";
 import Header from "../components/atoms/Header";
 import Card from "../components/atoms/Card";
 import Review from "../components/atoms/Review";
+import Modal from "react-modal";
+import Slider from "react-slick";
+
+// Aksesibilitas modal (penting!)
+Modal.setAppElement("#root");
 
 const DetailProductPage = () => {
   const [size, setSize] = useState("Kecil");
   const [quantity, setQuantity] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+  const price = 12000;
+  const total = price * quantity;
+
+  const thumbnails = [
+    "/images/hero/slider1.png",
+    "/images/hero/slider2.png",
+    "/images/hero/slider3.png",
+  ];
 
   const handleDecrement = () => {
     if (quantity > 1) setQuantity(quantity - 1);
@@ -17,14 +33,23 @@ const DetailProductPage = () => {
     setQuantity(quantity + 1);
   };
 
-  const price = 12000;
-  const total = price * quantity;
+  const openModal = (index) => {
+    setSelectedImageIndex(index);
+    setIsModalOpen(true);
+  };
 
-  const thumbnails = [
-    "/images/product/header.png",
-    "/images/product/header.png",
-    "/images/product/header.png",
-  ];
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const sliderSettings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    initialSlide: selectedImageIndex,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
 
   return (
     <div className="bg-[#F3F4F6]">
@@ -44,18 +69,20 @@ const DetailProductPage = () => {
                 <img
                   key={i}
                   src={src}
-                  alt="Tahu Kuning"
-                  className="h-20 object-cover rounded-md w-full"
+                  alt="Thumbnail"
+                  onClick={() => openModal(i)}
+                  className="h-20 object-cover rounded-md w-full cursor-pointer hover:opacity-80"
                 />
               ))}
             </div>
           </div>
 
+          {/* Info Produk */}
           <div className="flex-1">
             <h1 className="text-3xl font-bold mb-2">Tahu Kuning</h1>
 
             <div className="flex items-center gap-1 text-primary mb-1">
-              {[...Array(4)].map((_, i) => (
+              {[...Array(5)].map((_, i) => (
                 <span key={i}>★</span>
               ))}
               <span className="text-sm text-black ml-1">3 Review</span>
@@ -70,13 +97,14 @@ const DetailProductPage = () => {
               Rp {price.toLocaleString("id-ID")}
             </div>
 
+            {/* Pilih Ukuran */}
             <div className="flex items-center gap-2 mb-4">
               <span className="text-sm font-medium">Ukuran :</span>
               {["Kecil", "Normal", "Besar"].map((item) => (
                 <button
                   key={item}
                   onClick={() => setSize(item)}
-                  className={`px-3 py-1 rounded-md text-sm border ${
+                  className={`px-3 py-1 rounded-md text-sm border shadow-sm ${
                     size === item
                       ? "bg-secondary text-white"
                       : "bg-white text-black"
@@ -87,9 +115,10 @@ const DetailProductPage = () => {
               ))}
             </div>
 
+            {/* Jumlah */}
             <div className="flex items-center gap-2 mb-4">
               <span className="text-sm font-medium">Banyaknya :</span>
-              <div className="flex items-center border rounded-md overflow-hidden">
+              <div className="flex items-center border rounded-md shadow overflow-hidden">
                 <button onClick={handleDecrement} className="px-3 py-1 text-lg">
                   -
                 </button>
@@ -100,24 +129,25 @@ const DetailProductPage = () => {
               </div>
             </div>
 
+            {/* Total */}
             <div className="mb-4 text-lg">
               <span className="font-medium">Total</span> : Rp{" "}
               {total.toLocaleString("id-ID")}
             </div>
 
+            {/* Tombol */}
             <div className="flex gap-4 mb-4">
               <Button
                 text="Masukan Keranjang"
                 bgColor="bg-white"
                 textColor="text-primary"
-                className="border border-primary"
+                className="border border-primary rounded-sm shadow-md hover:text-white"
                 py="py-2"
               />
               <Button
                 text="Beli Sekarang"
-                bgColor="bg-primary"
-                textColor="text-white"
                 py="py-2"
+                className="rounded-sm shadow-md"
               />
             </div>
 
@@ -158,6 +188,27 @@ const DetailProductPage = () => {
           </div>
         </div>
       </div>
+
+      {/* MODAL SLIDER */}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Preview Gambar"
+        className="max-w-3xl mx-auto mt-20 rounded-md outline-none"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start z-50"
+      >
+        <Slider {...sliderSettings}>
+          {thumbnails.map((src, i) => (
+            <div key={i}>
+              <img
+                src={src}
+                alt={`Slide ${i + 1}`}
+                className="w-full h-[400px] object-contain"
+              />
+            </div>
+          ))}
+        </Slider>
+      </Modal>
     </div>
   );
 };
