@@ -5,6 +5,7 @@ import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 import Table from "../../atoms/Table";
 import SearchBar from "../../atoms/SearchBar";
+import Pagination from "../../atoms/Pagination";
 
 const CustomerContent = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -78,15 +79,7 @@ const CustomerContent = () => {
         ))}
       </Table>
       {/* Pagination */}
-      <div className="flex justify-end mt-4 space-x-1">
-        <button className="px-3 py-1 border rounded-md text-sm">&lt;</button>
-        <button className="px-3 py-1 border rounded-md text-sm bg-primary text-white">
-          1
-        </button>
-        <button className="px-3 py-1 border rounded-md text-sm">2</button>
-        <button className="px-3 py-1 border rounded-md text-sm">3</button>
-        <button className="px-3 py-1 border rounded-md text-sm">&gt;</button>
-      </div>
+      <Pagination />
     </div>
   );
 };

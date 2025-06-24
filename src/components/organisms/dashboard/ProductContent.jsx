@@ -4,6 +4,7 @@ import Button from "../../atoms/Button";
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 import Table from "../../atoms/Table";
+import Pagination from "../../atoms/Pagination";
 
 const ProductContent = () => {
   const orders = [
@@ -84,6 +85,9 @@ const ProductContent = () => {
           </tr>
         ))}
       </Table>
+
+      {/* Pagination */}
+      <Pagination />
     </div>
   );
 };

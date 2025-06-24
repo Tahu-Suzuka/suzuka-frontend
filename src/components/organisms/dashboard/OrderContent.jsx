@@ -3,6 +3,7 @@ import { FaPrint, FaPlus } from "react-icons/fa";
 import Button from "../../atoms/Button";
 import OrderTable from "../../organisms/dashboard/OrderTable";
 import SearchBar from "../../atoms/SearchBar";
+import Pagination from "../../atoms/Pagination";
 
 const OrderContent = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -92,15 +93,7 @@ const OrderContent = () => {
       <OrderTable showDate={true} showAction={true} />
 
       {/* Pagination */}
-      <div className="flex justify-end mt-4 space-x-1">
-        <button className="px-3 py-1 border rounded-md text-sm">&lt;</button>
-        <button className="px-3 py-1 border rounded-md text-sm bg-primary text-white">
-          1
-        </button>
-        <button className="px-3 py-1 border rounded-md text-sm">2</button>
-        <button className="px-3 py-1 border rounded-md text-sm">3</button>
-        <button className="px-3 py-1 border rounded-md text-sm">&gt;</button>
-      </div>
+      <Pagination />
     </div>
   );
 };

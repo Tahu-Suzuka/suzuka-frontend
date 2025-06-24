@@ -13,7 +13,7 @@ const menu = [
   { name: "Pesanan", path: "/dashboard/order", icon: TbFileInvoice },
   { name: "Kategori", path: "/dashboard/category", icon: RxDashboard },
   { name: "Produk", path: "/dashboard/product", icon: BiBox },
-  { name: "Voucher", path: "/discount", icon: CiDiscount1 },
+  { name: "Voucher", path: "/dashboard/voucher", icon: CiDiscount1 },
   { name: "Penjualan", path: "/sales", icon: MdInsertChartOutlined },
   { name: "Pelanggan", path: "/dashboard/customer", icon: FiUsers },
   { name: "Ulasan", path: "/reviews", icon: CiStar },
