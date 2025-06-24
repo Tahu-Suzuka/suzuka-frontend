@@ -12,7 +12,7 @@ const menu = [
   { name: "Dashboard", path: "/dashboard", icon: PiPresentationChart },
   { name: "Pesanan", path: "/dashboard/order", icon: TbFileInvoice },
   { name: "Kategori", path: "/category", icon: RxDashboard },
-  { name: "Produk", path: "/product", icon: BiBox },
+  { name: "Produk", path: "/dashboard/product", icon: BiBox },
   { name: "Voucher", path: "/discount", icon: CiDiscount1 },
   { name: "Penjualan", path: "/sales", icon: MdInsertChartOutlined },
   { name: "Pengguna", path: "/users", icon: FiUsers },

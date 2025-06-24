@@ -29,6 +29,7 @@ import SecurityFailed from "./pages/SecurityFailed";
 import DashboardPage from "./pages/Dashboard/DashboardPage";
 import DashboardLayout from "./layouts/dashboard/DashboardLayout";
 import OrderContent from "./components/organisms/dashboard/OrderContent";
+import ProductContent from "./components/organisms/dashboard/ProductContent";
 
 // Error Pages
 import ErrorPage from "./pages/ErrorPage";
@@ -41,6 +42,7 @@ const App = () => {
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<DashboardPage />} />
           <Route path="order" element={<OrderContent />} />
+          <Route path="product" element={<ProductContent />} />
         </Route>
 
         {/* Public Layout */}
