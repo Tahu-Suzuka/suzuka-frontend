@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaTruck, FaTicketAlt } from "react-icons/fa";
+import { FaTruck, FaTicketAlt, FaStar } from "react-icons/fa";
 import Button from "../components/atoms/Button";
 import Header from "../components/atoms/Header";
 import Card from "../components/atoms/Card";
@@ -83,7 +83,7 @@ const DetailProductPage = () => {
 
             <div className="flex items-center gap-1 text-primary mb-1">
               {[...Array(5)].map((_, i) => (
-                <span key={i}>★</span>
+                <FaStar key={i} className="text-lg" />
               ))}
               <span className="text-sm text-black ml-1">3 Review</span>
             </div>
@@ -93,7 +93,7 @@ const DetailProductPage = () => {
               gurih, cocok untuk digoreng atau dimasak dalam berbagai hidangan.
             </p>
 
-            <div className="mb-4 text-primary text-2xl font-bold">
+            <div className="mb-4 text-2xl font-bold">
               Rp {price.toLocaleString("id-ID")}
             </div>
 
@@ -171,7 +171,7 @@ const DetailProductPage = () => {
 
           {/* Produk Serupa */}
           <div className="bg-white rounded-md p-6 hidden lg:block self-start">
-            <h1 className="text-xl font-bold text-center">Produk Serupa</h1>
+            <h1 className="text-xl font-bold mb-6">Produk Serupa</h1>
             <div className="space-y-4">
               {[1, 2].map((_, idx) => (
                 <Card

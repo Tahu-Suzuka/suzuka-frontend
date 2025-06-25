@@ -4,7 +4,7 @@ import { LuNotebookText } from "react-icons/lu";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { useNavigate, useLocation } from "react-router-dom";
 
-const Sidebar = ({ activeMenu, setActiveMenu }) => {
+const ProfileSidebar = ({ activeMenu, setActiveMenu }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -57,4 +57,4 @@ const Sidebar = ({ activeMenu, setActiveMenu }) => {
   );
 };
 
-export default Sidebar;
+export default ProfileSidebar;

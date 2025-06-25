@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Header from "../components/atoms/Header";
-import ProfileSidebar from "../components/atoms/Sidebar";
+import ProfileSidebar from "../components/organisms/sidebar/ProfileSidebar";
 import ProfileContent from "../components/organisms/ProfileContent";
 import OrderContent from "../components/organisms/OrderContent";
 
