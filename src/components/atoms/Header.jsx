@@ -9,7 +9,7 @@ const Header = ({ imageSrc, title }) => {
         alt={title}
       />
       <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-        <h1 className="text-white pt-6 lg:pt-0 text-2xl lg:text-4xl font-bold">
+        <h1 className="text-white px-4 pt-6 lg:pt-0 text-2xl lg:text-4xl font-bold">
           {title}
         </h1>
       </div>

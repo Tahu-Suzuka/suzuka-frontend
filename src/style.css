@@ -2,11 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-h1 {
+h1,
+h2 {
   @apply font-raleway;
   font-weight: 700;
 }
 
-p {
+p,
+span {
   @apply font-roboto;
 }

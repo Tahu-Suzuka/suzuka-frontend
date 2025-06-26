@@ -9,14 +9,14 @@ const AboutShort = () => {
           {/* Blob */}
           <img
             src="/images/about/blob.png"
-            alt="Blob Background"
-            className="absolute w-[50%]] z-0 pointer-events-none"
+            alt="Blob"
+            className="absolute w-[99%] z-0 pointer-events-none hidden lg:block"
           />
 
           <img
             src="/images/about/short.png"
             alt="Tentang Kami"
-            className="relative z-10 w-full object-cover"
+            className="relative z-10 w-full object-cover hidden lg:block"
           />
         </div>
 

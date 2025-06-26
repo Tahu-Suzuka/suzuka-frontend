@@ -4,7 +4,7 @@ import Register from "../../components/organisms/Auth/Register";
 export default function RegisterPage() {
   return (
     <div>
-      <div className="flex flex-col md:flex-row h-screen -translate-y-2 bg-white">
+      <div className="flex flex-col md:flex-row mb-32 h-screen -translate-y-2 bg-white">
         {/* Right */}
         <div className="hidden md:block md:w-1/2 relative">
           <div className="absolute inset-9 bg-secondary rounded-b-full mx-16 -my-7 left-20"></div>

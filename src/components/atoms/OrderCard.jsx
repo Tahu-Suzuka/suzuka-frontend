@@ -16,13 +16,13 @@ const OrderCard = ({ order }) => {
   const statusConfig = {
     "SEDANG DIKEMAS": {
       buttonText: "Batalkan Pesanan",
-      buttonClass: "bg-white border border-2 hover:bg-red-600",
+      buttonClass: "bg-white w-50 border border-1 hover:bg-red-600",
       statusMessage: `Pesanan akan dikirim pada tanggal ${deliveryDate}`,
       showButton: true,
     },
     DIKIRIM: {
       buttonText: "Pesanan Selesai",
-      buttonClass: "bg-secondary text-white hover:bg-secondary/80",
+      buttonClass: "bg-secondary text-white w-52 hover:bg-secondary/80",
       statusMessage:
         "Silahkan konfirmasi pesanan setelah menerima dan mengecek pesanan",
       showButton: true,
@@ -49,7 +49,7 @@ const OrderCard = ({ order }) => {
   } = statusConfig[status] || {};
 
   return (
-    <div className="bg-white rounded-lg p-4 space-y-4 shadow-sm border border-gray-200">
+    <div className="bg-white rounded-lg p-4  space-y-4 shadow-sm border border-gray-200">
       {/* Header */}
       <div className="flex justify-between items-center">
         <h3 className="font-semibold text-gray-900">Order ID #{orderId}</h3>
@@ -109,7 +109,7 @@ const OrderCard = ({ order }) => {
 
         {showButton && (
           <button
-            className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${buttonClass}`}
+            className={`w-32 lg:w-44 lg:px-1 py-1 lg:py-2 text-sm font-medium rounded-lg transition-colors ${buttonClass}`}
             onClick={() => {
               if (buttonText === "Nilai Pesanan") {
                 setShowModal(true);

@@ -144,8 +144,7 @@ const Navbar = () => {
                 <Button
                   text="Masuk"
                   width="w-32"
-                  py="py-2"
-                  className="rounded-sm shadow-md"
+                  className="rounded-full shadow-md py-2"
                 />
               </div>
             )}
@@ -164,11 +163,10 @@ const Navbar = () => {
             <Button
               text="Masuk"
               width="w-32"
-              py="py-2"
               className={
                 scrolled
-                  ? "text-black"
-                  : "text-white border-white rounded-full shadow-md"
+                  ? "text-black py-2 border-white rounded-full shadow-md"
+                  : "py-2 text-white border-white rounded-full shadow-md "
               }
             />
           ) : (
@@ -226,7 +224,6 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Cart Sidebar muncul di luar navbar */}
       {isCartOpen && <CartSidebar onClose={() => setIsCartOpen(false)} />}
     </>
   );

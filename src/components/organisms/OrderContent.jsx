@@ -5,7 +5,6 @@ import OrderCard from "../atoms/OrderCard";
 
 const OrderContent = () => {
   const [activeTab, setActiveTab] = useState("Semua");
-  const [searchTerm, setSearchTerm] = useState("");
 
   const sampleOrders = [
     {
@@ -107,9 +106,6 @@ const OrderContent = () => {
     <div className="space-y-4">
       <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
         <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
-      </div>
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       </div>
       <div className="space-y-4">
         {filteredOrders.length > 0 ? (

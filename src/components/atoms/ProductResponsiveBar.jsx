@@ -24,7 +24,7 @@ const ProductResponsiveBar = ({ active, setActive }) => {
           key={i}
           onClick={() => setActive(i)}
           className={`p-2 rounded hover:bg-gray-200 ${
-            active === i ? "bg-secondary hover:bg-yellow-500" : ""
+            active === i ? "bg-yellow-200 hover:bg-yellow-300" : ""
           }`}
         >
           <BarIcon bars={bars} />

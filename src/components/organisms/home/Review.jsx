@@ -61,13 +61,13 @@ const Review = () => {
   };
 
   return (
-    <div className="px-16 pb-16">
+    <div className="px-6 lg:px-16 pb-16">
       <Title subtitle="Ulasan" title="Apa Kata Pelanggan Kami" />
       <div>
         <Slider {...settings}>
           {reviews.map((review, index) => (
             <div key={index} className="px-2 pt-12">
-              <div className="relative bg-white border shadow-md rounded-xl p-6 pt-16 text-center min-h-[280px]">
+              <div className="relative bg-white border shadow-md rounded-xl p-6 pt-16 text-center lg:min-h-[280px]">
                 {/* Gambar */}
                 <div className="absolute -top-10 left-1/2 -translate-x-1/2">
                   <img

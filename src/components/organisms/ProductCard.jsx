@@ -44,8 +44,7 @@ const ProductCard = () => {
             to="/cart"
             text="Masukkan Keranjang"
             width="w-auto"
-            py="py-2"
-            className="rounded-md px-4 text-sm"
+            className="rounded-md px-4 text-sm py-2"
           />
         </Card>
       ))}

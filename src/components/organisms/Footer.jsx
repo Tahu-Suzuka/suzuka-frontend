@@ -30,7 +30,7 @@ const WaveFooter = () => {
         style={{ display: "block", margin: 0, padding: 0 }}
       />
 
-      <div className="bg-primary relative z-10 px-6 pt-10 pb-10 font-bebas font-normal tracking-wider">
+      <div className="bg-primary relative z-10 lg:px-6 pt-10 pb-10 font-normal tracking-wider">
         <img
           src="/images/footer/footer.png"
           alt="Tahu Suzuka"
@@ -41,7 +41,7 @@ const WaveFooter = () => {
           }}
         />
 
-        <h1 className="mt-16 text-white text-xl lg:text-2xl max-w-2xl mx-6 lg:mx-12 leading-relaxed text-center lg:text-left">
+        <h1 className="mt-16 text-white text-lg lg:text-xl max-w-2xl mx-2 lg:mx-12 leading-relaxed text-center lg:text-left">
           PESAN SEKARANG DAN NIKMATI BERBAGAI VARIAN TAHU KAMI YANG DIBUAT
           DENGAN BAHAN YANG BERKUALITAS DAN PROSES HIGIENIS CIRI KHAS BANDUNG
           CIBUNTU
@@ -51,40 +51,40 @@ const WaveFooter = () => {
           <Button
             text="Pesan Sekarang"
             width="w-40"
-            py="py-2"
             bgColor="bg-white"
             textColor="text-black"
+            className="rounded-full py-2"
           />
         </div>
 
-        <div className="mx-12">
+        <div className="mx-7 lg:mx-12">
           <hr className="border-white/40 mb-10 mt-3 lg:my-10 max-w-6xl" />
           <div className="flex flex-col sm:flex-row justify-between gap-5 lg:gap-8 text-left text-sm -mt-6">
             <div>
-              <h1 className="font-semibold text-white mb-2 text-xl lg:text-2xl">
+              <h1 className="font-semibold text-white mb-2 text-lg lg:text-xl">
                 INFORMASI UMUM
               </h1>
-              <ul className="space-y-1 lg:text-base">
+              <ul className="space-y-1 text-sm lg:text-base">
                 <li>Tentang Kami</li>
                 <li>Syarat dan Ketentuan</li>
                 <li>Kebijakan Privasi</li>
               </ul>
             </div>
             <div>
-              <h1 className="font-semibold text-white mb-2 text-xl lg:text-2xl">
+              <h1 className="font-semibold text-white mb-2 text-lg lg:text-xl">
                 LOKASI
               </h1>
-              <p className="lg:text-base">
+              <p className="text-sm lg:text-base">
                 Jl. Cibuntu No. 123,
                 <br />
                 Bandung
               </p>
             </div>
             <div>
-              <h1 className="font-semibold text-white mb-2 text-xl lg:text-2xl">
+              <h1 className="font-semibold text-white mb-2 text-lg lg:text-xl">
                 KONTAK KAMI
               </h1>
-              <p className="lg:text-base">
+              <p className="text-sm lg:text-base">
                 08xxxxxxxxx
                 <br />
                 tahusuzuka@gmail.com

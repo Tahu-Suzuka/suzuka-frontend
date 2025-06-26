@@ -11,7 +11,7 @@ const ProfileSidebar = ({ activeMenu, setActiveMenu }) => {
   const currentPath = location.pathname;
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6 w-64 h-44 border border-gray-200">
+    <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200 w-full h-full lg:h-48">
       <ul className="space-y-5">
         <li
           onClick={() => setActiveMenu("profil")}

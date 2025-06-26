@@ -10,18 +10,18 @@ const ProfilePage = () => {
   return (
     <div className="min-h-screen bg-[#F3F4F6]">
       <Header imageSrc="/images/product/header.png" title="Profil" />
-      <div className="pt-10 px-20">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 pb-32">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 pb-32 p-6">
+        <div className="md:col-span-1">
           <ProfileSidebar
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
           />
-          <div className="md:col-span-3">
-            <div className="bg-white rounded-md shadow-md">
-              {activeMenu === "profil" && <ProfileContent />}
-            </div>
-            {activeMenu === "pesanan" && <OrderContent />}
+        </div>
+        <div className="md:col-span-3">
+          <div className="bg-white rounded-md shadow-md">
+            {activeMenu === "profil" && <ProfileContent />}
           </div>
+          {activeMenu === "pesanan" && <OrderContent />}
         </div>
       </div>
     </div>

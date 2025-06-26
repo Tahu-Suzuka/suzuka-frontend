@@ -4,6 +4,8 @@ import PasswordField from "../../atoms/auth/PasswordField";
 import Divider from "../../atoms/auth/Divider";
 import GoogleButton from "../../atoms/auth/GoogleButton";
 import Button from "../../atoms/Button";
+import { FiMail } from "react-icons/fi";
+import { RxAvatar } from "react-icons/rx";
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
@@ -21,6 +23,7 @@ export default function Register() {
           id="name"
           label="Nama Lengkap"
           placeholder="Nama Anda"
+          icon={RxAvatar}
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -30,6 +33,7 @@ export default function Register() {
           id="email"
           label="Email"
           placeholder="email@gmail.com"
+          icon={FiMail}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -54,7 +58,7 @@ export default function Register() {
         />
 
         {/* Tombol Register */}
-        <Button text="Daftar" className="rounded-full" />
+        <Button text="Daftar" className="rounded-full py-3" />
 
         <Divider />
 

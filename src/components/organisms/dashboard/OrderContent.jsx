@@ -2,12 +2,9 @@ import React, { useState } from "react";
 import { FaPrint, FaPlus } from "react-icons/fa";
 import Button from "../../atoms/Button";
 import OrderTable from "../../organisms/dashboard/OrderTable";
-import SearchBar from "../../atoms/SearchBar";
 import Pagination from "../../atoms/Pagination";
 
 const OrderContent = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-
   const orders = [
     {
       no: "#202501",
@@ -52,6 +49,14 @@ const OrderContent = () => {
       <div className="flex w-full justify-between items-center">
         <h1 className="text-xl font-bold text-gray-800">Daftar Pesanan</h1>
         <div className="flex flex-wrap justify-end gap-4">
+          <select className="border border-gray-300 text-sm px-2 rounded-md hover:border-primary">
+            <option>Semua Status</option>
+            <option>Belum Dibayar</option>
+            <option>Diproses</option>
+            <option>Dikirim</option>
+            <option>Selesai</option>
+            <option>Dibatalkan</option>
+          </select>
           <Button
             width="w-44"
             py="py-1.5"
@@ -61,28 +66,11 @@ const OrderContent = () => {
             <span>Tambah Kategori</span>
           </Button>
 
-          <select className="border border-gray-300 text-sm px-2 rounded-md hover:border-primary">
-            <option>Semua Status</option>
-            <option>Belum Dibayar</option>
-            <option>Diproses</option>
-            <option>Dikirim</option>
-            <option>Selesai</option>
-            <option>Dibatalkan</option>
-          </select>
-
-          <div className="w-40">
-            <SearchBar
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
-              placeholder="Cari pesanan..."
-            />
-          </div>
-
           <Button
             text="Cetak Invoice"
             className="rounded-md"
             width="w-36"
-            py="py-1"
+            py="py-2"
           >
             <FaPrint />
           </Button>

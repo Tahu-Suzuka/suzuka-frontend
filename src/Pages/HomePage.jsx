@@ -6,13 +6,13 @@ import Review from "../components/organisms/home/Review";
 
 const HomePage = () => {
   return (
-    <div>
+    <div className="mb-32">
       <Hero />
       <div className="mt-20"></div>
       <Category />
-      <div className="mt-20"></div>
+      <div className="lg:mt-20"></div>
       <AboutShort />
-      <div className="mt-14"></div>
+      <div className="mt-14 "></div>
       <Review />
     </div>
   );

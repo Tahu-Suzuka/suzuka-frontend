@@ -8,7 +8,6 @@ export default function Button({
   onClick,
   to,
   width = "w-full",
-  py = "py-3",
   bgColor = "bg-primary",
   textColor = "text-white",
   className = "",
@@ -17,7 +16,7 @@ export default function Button({
     inline-flex items-center justify-center gap-2
     font-semibold transition duration-300 text-sm 
     hover:bg-secondary
-    ${width} ${py} ${bgColor} ${textColor} ${className}
+    ${width} ${bgColor} ${textColor} ${className}
   `.trim();
 
   if (to) {

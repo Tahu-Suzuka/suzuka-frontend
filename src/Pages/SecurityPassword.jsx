@@ -28,19 +28,17 @@ const SecurityPassword = () => {
           Masukkan kata sandi akun Anda untuk memverifikasi identitas Anda.
         </p>
 
-        {/* PasswordField tanpa ikon */}
         <PasswordField
           id="verify-password"
-          label="" // tidak tampilkan label
+          label=""
           placeholder="Masukkan kata sandi saat ini"
           showPassword={showPassword}
           toggleVisibility={toggleVisibility}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          withIcon={false} // hilangkan icon kunci
+          withIcon={false}
         />
 
-        {/* Tombol menggunakan komponen Button */}
         <Button
           type="submit"
           text="Konfirmasi"

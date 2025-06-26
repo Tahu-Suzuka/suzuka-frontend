@@ -17,7 +17,7 @@ export default function Login() {
 
   return (
     <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-center left-14">
-      <h1 className="text-5xl text-center font-bebas font-normal tracking-wide mb-8">
+      <h1 className="text-3xl lg:text-4xl text-center tracking-wide mb-8">
         Selamat Datang
       </h1>
 
@@ -49,7 +49,7 @@ export default function Login() {
             Lupa Kata Sandi?
           </a>
         </div>
-        <Button text="Masuk" className="rounded-full" />
+        <Button text="Masuk" className="rounded-full py-3" />
 
         <Divider />
         <GoogleButton text="Masuk Dengan Google" />

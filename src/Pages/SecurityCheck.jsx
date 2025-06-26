@@ -7,7 +7,7 @@ const SecurityCheck = () => {
   const navigate = useNavigate();
 
   return (
-    <div>
+    <div className="p-6">
       <div className="flex-grow flex items-center justify-center pt-16">
         <div className="bg-white p-10 rounded-2xl shadow-md text-center max-w-lg w-full">
           <IoShieldCheckmarkOutline className="text-7xl text-red-500 mx-auto mb-4" />

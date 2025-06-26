@@ -9,7 +9,7 @@ const Card = ({
   children,
   priceClassName = "",
   showRating = true,
-  showHorizontalLayout = false, // <== baru
+  showHorizontalLayout = false,
 }) => {
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden text-center">

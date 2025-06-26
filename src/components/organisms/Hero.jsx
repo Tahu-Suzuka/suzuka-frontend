@@ -37,8 +37,6 @@ const Hero = () => {
       ))}
 
       <div className="absolute inset-0 bg-black bg-opacity-40 z-0" />
-
-      {/* Centered Text & Buttons */}
       <div className="absolute inset-0 flex items-center justify-center text-center px-6 z-10">
         <div className="text-white max-w-xl">
           <p className="text-secondary font-bold mb-4">SEJAK TAHUN 1989</p>
@@ -47,9 +45,17 @@ const Hero = () => {
             Nikmati berbagai varian tahu kami yang dibuat dengan bahan yang
             berkualitas dan proses higienis ciri khas Bandung Cibuntu.
           </p>
-          <div className="flex flex-col sm:flex-row gap-2 justify-center">
-            <Button text="Pesan Sekarang" className="rounded-full" />
-            <Button text="Tentang Kami" className="rounded-full" />
+          <div className="flex flex-col sm:flex-row gap-3 items-center justify-center px-4">
+            <Button
+              text="Pesan Sekarang"
+              className="rounded-full py-2 "
+              width=" w-44"
+            />
+            <Button
+              text="Tentang Kami"
+              className="rounded-full py-2"
+              width=" w-44"
+            />
           </div>
         </div>
       </div>
