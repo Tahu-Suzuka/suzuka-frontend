@@ -15,7 +15,7 @@ const ProfileSidebar = ({ activeMenu, setActiveMenu }) => {
       <ul className="space-y-5">
         <li
           onClick={() => setActiveMenu("profil")}
-          className={`flex items-center gap-2 font-semibold cursor-pointer transition-colors ${
+          className={`flex items-center gap-2  cursor-pointer transition-colors ${
             activeMenu === "profil"
               ? "text-primary font-bold"
               : "text-gray-700 hover:text-primary"
@@ -27,7 +27,7 @@ const ProfileSidebar = ({ activeMenu, setActiveMenu }) => {
 
         <li
           onClick={() => navigate("/security-check")}
-          className={`flex items-center gap-2 font-semibold cursor-pointer transition-colors ${
+          className={`flex items-center gap-2  cursor-pointer transition-colors ${
             [
               "/security-check",
               "/security-password",
@@ -43,7 +43,7 @@ const ProfileSidebar = ({ activeMenu, setActiveMenu }) => {
 
         <li
           onClick={() => setActiveMenu("pesanan")}
-          className={`flex items-center gap-2 font-semibold cursor-pointer transition-colors ${
+          className={`flex items-center gap-2 cursor-pointer transition-colors ${
             activeMenu === "pesanan"
               ? "text-primary font-bold"
               : "text-gray-700 hover:text-primary"

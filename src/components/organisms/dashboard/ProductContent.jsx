@@ -1,12 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import Button from "../../atoms/Button";
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 import Table from "../../atoms/Table";
 import Pagination from "../../atoms/Pagination";
+import Filter from "../../atoms/Filter";
 
 const ProductContent = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState("");
+
+  const sortOptions = [
+    { value: "menungguPembayaran", label: "Menunggu Pembayaran" },
+    { value: "diproses", label: "Diproses" },
+    { value: "dikirim", label: "Dikirim" },
+    { value: "selesai", label: "Selesai" },
+    { value: "dibatalkan", label: "Dibatalkan" },
+  ];
+
   const orders = [
     {
       produk: {
@@ -27,22 +39,14 @@ const ProductContent = () => {
       {/* Toolbar */}
       <div className="flex w-full justify-between items-center">
         <h1 className="text-xl font-bold text-gray-800">Daftar Produk</h1>
-        <div className="flex flex-wrap justify-end gap-4">
-          <select className="border border-gray-300 text-sm px-2 rounded-md">
-            <option>Semua Kategori</option>
-            <option>Tahu Kuning</option>
-            <option>Tahu Putih</option>
-            <option>Tahu Stik</option>
-            <option>Tahu Varian Rasa</option>
-            <option>Tahu Olahan</option>
-          </select>
+        <div className="flex flex-auto justify-end gap-4">
+          <Filter value={sortBy} onChange={setSortBy} options={sortOptions} />
           <Button
             width="w-52"
-            py="py-2"
-            className="rounded-md flex items-center justify-center gap-2"
+            className="rounded-md flex items-center justify-center gap-2 py-2"
           >
             <FaPlus className="text-sm" />
-            <span>Tambah Produk</span>
+            Tambah Produk
           </Button>
         </div>
       </div>

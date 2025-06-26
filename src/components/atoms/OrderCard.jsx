@@ -14,22 +14,41 @@ const OrderCard = ({ order }) => {
   const [showModal, setShowModal] = useState(false);
 
   const statusConfig = {
-    "SEDANG DIKEMAS": {
-      buttonText: "Batalkan Pesanan",
-      buttonClass: "bg-white w-50 border border-1 hover:bg-red-600",
+    "MENUNGGU PEMBAYARAN": {
+      buttons: [
+        {
+          text: "Bayar",
+          className:
+            " bg-white text-primary border border-red-500 hover:bg-primary/10 w-full lg:w-40 mt-2 lg:mt-0",
+          onClick: () => console.log("Bayar pesanan", orderId),
+        },
+        {
+          text: "Batalkan ",
+          className:
+            " bg-primary text-white hover:bg-primary/80 w-full lg:w-40 mt-2 lg:mt-0",
+          onClick: () => console.log("Batalkan pesanan", orderId),
+        },
+      ],
+      statusMessage: "Selesaikan pembayaran untuk memproses pesanan.",
+    },
+    DIPROSES: {
+      buttonText: "",
+      buttonClass: "",
       statusMessage: `Pesanan akan dikirim pada tanggal ${deliveryDate}`,
-      showButton: true,
+      showButton: false,
     },
     DIKIRIM: {
       buttonText: "Pesanan Selesai",
-      buttonClass: "bg-secondary text-white w-52 hover:bg-secondary/80",
+      buttonClass:
+        "bg-white text-primary border border-red-500 hover:bg-primary/10 w-48",
       statusMessage:
         "Silahkan konfirmasi pesanan setelah menerima dan mengecek pesanan",
       showButton: true,
     },
     SELESAI: {
       buttonText: "Nilai Pesanan",
-      buttonClass: "bg-secondary text-white hover:bg-secondary/80",
+      buttonClass:
+        "bg-white text-primary border border-red-500 hover:bg-primary/10 w-48",
       statusMessage: "Berikan dukungan pada produk kami",
       showButton: true,
     },
@@ -46,13 +65,17 @@ const OrderCard = ({ order }) => {
     buttonClass = "",
     statusMessage = "",
     showButton = false,
+    buttons = null,
   } = statusConfig[status] || {};
 
   return (
-    <div className="bg-white rounded-lg p-4  space-y-4 shadow-sm border border-gray-200">
+    <div className="bg-white rounded-lg p-4 space-y-4 shadow-sm border border-gray-200">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h3 className="font-semibold text-gray-900">Order ID #{orderId}</h3>
+        <h3 className="font-semibold text-gray-900">
+          No. Pesanan{" "}
+          <span className="font-normal text-gray-600">#{orderId}</span>
+        </h3>
         <span
           className={`px-3 py-1 rounded-full text-xs font-medium ${statusColor}`}
         >
@@ -62,6 +85,7 @@ const OrderCard = ({ order }) => {
 
       <hr className="border-gray-300" />
 
+      {/* Item List */}
       <div className="space-y-3">
         {items.map((item, index) => (
           <div key={index}>
@@ -101,28 +125,56 @@ const OrderCard = ({ order }) => {
         </div>
       </div>
 
-      {/* Footer - Message & Button */}
+      {/* Footer */}
       <div className="flex justify-between pt-4 items-center">
+        {/* Status Message */}
         <div className="text-sm text-gray-600">
           <p>{statusMessage}</p>
         </div>
 
-        {showButton && (
-          <button
-            className={`w-32 lg:w-44 lg:px-1 py-1 lg:py-2 text-sm font-medium rounded-lg transition-colors ${buttonClass}`}
-            onClick={() => {
-              if (buttonText === "Nilai Pesanan") {
-                setShowModal(true);
-              } else {
-                console.log("Tombol diklik:", buttonText, "untuk ID", orderId);
-              }
-            }}
-          >
-            {buttonText}
-          </button>
+        {/* Tombol Aksi */}
+        {buttons ? (
+          <div className="flex gap-3">
+            {buttons.map((btn, idx) => (
+              <button
+                key={idx}
+                onClick={() => {
+                  if (btn.text === "Nilai Pesanan") {
+                    setShowModal(true);
+                  } else {
+                    btn.onClick?.();
+                  }
+                }}
+                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${btn.className}`}
+              >
+                {btn.text}
+              </button>
+            ))}
+          </div>
+        ) : (
+          showButton && (
+            <button
+              className={`w-32 lg:w-44 lg:px-1 py-1 lg:py-2 text-sm font-medium rounded-lg transition-colors ${buttonClass}`}
+              onClick={() => {
+                if (buttonText === "Nilai Pesanan") {
+                  setShowModal(true);
+                } else {
+                  console.log(
+                    "Tombol diklik:",
+                    buttonText,
+                    "untuk ID",
+                    orderId
+                  );
+                }
+              }}
+            >
+              {buttonText}
+            </button>
+          )
         )}
       </div>
 
+      {/* Modal Ulasan */}
       <ReviewModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}

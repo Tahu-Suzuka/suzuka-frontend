@@ -31,18 +31,14 @@ const CustomerContent = () => {
         <h1 className="text-xl font-bold text-gray-800">Daftar Pelanggan</h1>
 
         <div className="flex flex-wrap justify-end gap-4">
-          <div className="w-40">
+          <div className="w-44">
             <SearchBar
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
               placeholder="Cari pelanggan..."
             />
           </div>
-          <Button
-            width="w-44"
-            py="py-2"
-            className="rounded-md flex items-center justify-center gap-2"
-          >
+          <Button width="w-44" className="rounded-md py-2">
             <FaPlus className="text-sm" />
             <span>Tambah Pelanggan</span>
           </Button>

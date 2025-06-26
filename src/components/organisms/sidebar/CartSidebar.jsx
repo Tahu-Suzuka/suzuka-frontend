@@ -135,6 +135,7 @@ const CartSidebar = ({ onClose }) => {
           </p>
 
           <Button
+            to={"/checkout"}
             text="Lanjutkan"
             width="w-full"
             className="rounded text-sm font-semibold py-2"

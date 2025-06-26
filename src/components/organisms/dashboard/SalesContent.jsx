@@ -30,7 +30,7 @@ const SalesContent = () => {
       <div className="flex w-full justify-between items-center">
         <h1 className="text-xl font-bold text-gray-800">Daftar Penjualan</h1>
         <div className="flex flex-wrap justify-end gap-4">
-          <div className="w-36">
+          <div className="w-44">
             <SearchBar
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
@@ -38,12 +38,7 @@ const SalesContent = () => {
             />
           </div>
 
-          <Button
-            text="Cetak Invoice"
-            className="rounded-md"
-            width="w-44"
-            py="py-2"
-          >
+          <Button text="Cetak Invoice" className="rounded-md" width="w-36">
             <FaPrint />
           </Button>
         </div>

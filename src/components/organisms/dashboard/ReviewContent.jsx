@@ -4,9 +4,19 @@ import Button from "../../atoms/Button";
 import Table from "../../atoms/Table";
 import Pagination from "../../atoms/Pagination";
 import SearchBar from "../../atoms/SearchBar";
+import Filter from "../../atoms/Filter";
 
 const ReviewContent = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState("");
+
+  const sortOptions = [
+    { value: "bintang-1", label: "Bintang 1" },
+    { value: "bintang-2", label: "Bintang 2" },
+    { value: "bintang-3", label: "Bintang 3" },
+    { value: "bintang-4", label: "Bintang 4" },
+    { value: "bintang-5", label: "Bintang 5" },
+  ];
   const reviews = [
     {
       pelanggan: "John Doe",
@@ -35,22 +45,16 @@ const ReviewContent = () => {
       {/* Toolbar */}
       <div className="flex w-full justify-between items-center">
         <h1 className="text-xl font-bold text-gray-800">Daftar Ulasan</h1>
-        <div className="flex flex-wrap justify-end gap-4">
-          <select className="border border-gray-300 text-sm px-2 rounded-md hover:border-primary">
-            <option>Semua Rating</option>
-            <option>Bintang 1</option>
-            <option>Bintang 2</option>
-            <option>Bintang 3</option>
-            <option>Bintang 4</option>
-            <option>Bintang 5</option>
-          </select>
-          <div className="w-40">
+        <div className="flex flex-auto justify-end gap-4">
+          <div className="w-44">
             <SearchBar
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
               placeholder="Cari komentar..."
             />
           </div>
+
+          <Filter value={sortBy} onChange={setSortBy} options={sortOptions} />
         </div>
       </div>
 

@@ -39,7 +39,13 @@ const DashboardContent = () => {
           </h2>
           <Chart />
         </div>
-        <OrderTable showDate={false} showAction={false} />
+
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h2 className="text-lg font-bold text-gray-800 mb-4">
+            Daftar Pesanan
+          </h2>
+          <OrderTable showDate={false} showAction={false} />
+        </div>
       </div>
     </div>
   );

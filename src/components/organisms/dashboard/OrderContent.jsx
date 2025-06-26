@@ -3,8 +3,20 @@ import { FaPrint, FaPlus } from "react-icons/fa";
 import Button from "../../atoms/Button";
 import OrderTable from "../../organisms/dashboard/OrderTable";
 import Pagination from "../../atoms/Pagination";
+import Filter from "../../atoms/Filter";
 
 const OrderContent = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState("");
+
+  const sortOptions = [
+    { value: "menungguPembayaran", label: "Menunggu Pembayaran" },
+    { value: "diproses", label: "Diproses" },
+    { value: "dikirim", label: "Dikirim" },
+    { value: "selesai", label: "Selesai" },
+    { value: "dibatalkan", label: "Dibatalkan" },
+  ];
+
   const orders = [
     {
       no: "#202501",
@@ -48,30 +60,14 @@ const OrderContent = () => {
       {/* Toolbar */}
       <div className="flex w-full justify-between items-center">
         <h1 className="text-xl font-bold text-gray-800">Daftar Pesanan</h1>
-        <div className="flex flex-wrap justify-end gap-4">
-          <select className="border border-gray-300 text-sm px-2 rounded-md hover:border-primary">
-            <option>Semua Status</option>
-            <option>Belum Dibayar</option>
-            <option>Diproses</option>
-            <option>Dikirim</option>
-            <option>Selesai</option>
-            <option>Dibatalkan</option>
-          </select>
-          <Button
-            width="w-44"
-            py="py-1.5"
-            className="rounded-md flex items-center justify-center gap-2"
-          >
+        <div className="flex flex-auto justify-end gap-4">
+          <Filter value={sortBy} onChange={setSortBy} options={sortOptions} />
+          <Button width="w-44" className="rounded-md py-2">
             <FaPlus className="text-sm" />
-            <span>Tambah Kategori</span>
+            Tambah Pesanan
           </Button>
 
-          <Button
-            text="Cetak Invoice"
-            className="rounded-md"
-            width="w-36"
-            py="py-2"
-          >
+          <Button text="Cetak Invoice" className="rounded-md" width="w-36">
             <FaPrint />
           </Button>
         </div>

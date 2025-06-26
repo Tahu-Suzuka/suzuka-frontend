@@ -43,8 +43,7 @@ const SecurityPassword = () => {
           type="submit"
           text="Konfirmasi"
           textColor="text-white"
-          py="py-2"
-          className="rounded-full hover:bg-red-500"
+          className="py-2 lg:py-3 rounded-full shadow-md"
         />
       </div>
     </div>

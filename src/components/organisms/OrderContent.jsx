@@ -8,8 +8,24 @@ const OrderContent = () => {
 
   const sampleOrders = [
     {
+      orderId: "202511220005",
+      status: "MENUNGGU PEMBAYARAN",
+      statusColor: "bg-orange-100 orange-800",
+      items: [
+        {
+          name: "Tahu Putih",
+          size: "Besar",
+          quantity: 1,
+          price: 10000,
+          image: "/images/hero/slider2.png",
+        },
+      ],
+      totalAmount: 10000,
+      deliveryDate: "26-11-2025",
+    },
+    {
       orderId: "202511220001",
-      status: "SEDANG DIKEMAS",
+      status: "DIPROSES",
       statusColor: "bg-yellow-100 text-yellow-800",
       items: [
         {
@@ -71,22 +87,6 @@ const OrderContent = () => {
     //   totalAmount: 48000,
     //   deliveryDate: "25-11-2025",
     // },
-    {
-      orderId: "202511220005",
-      status: "SEDANG DIKEMAS",
-      statusColor: "bg-yellow-100 text-yellow-800",
-      items: [
-        {
-          name: "Tahu Putih",
-          size: "Besar",
-          quantity: 1,
-          price: 10000,
-          image: "/images/hero/slider2.png",
-        },
-      ],
-      totalAmount: 10000,
-      deliveryDate: "26-11-2025",
-    },
   ];
 
   const filteredOrders = sampleOrders.filter((order) => {
@@ -95,7 +95,8 @@ const OrderContent = () => {
   });
 
   const emptyMessages = {
-    "Sedang Dikemas": "Belum ada pesanan yang sedang dikemas.",
+    MenungguPembayaran: "Belum ada pesanan",
+    Diproses: "Belum ada pesanan yang sedang diproses.",
     Dikirim: "Belum ada pesanan yang sedang dikirim.",
     Selesai: "Kamu belum menyelesaikan pesanan apapun.",
     Dibatalkan: "Tidak ada pesanan yang dibatalkan.",
@@ -104,7 +105,7 @@ const OrderContent = () => {
 
   return (
     <div className="space-y-4">
-      <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+      <div className="bg-white p-4 rounded-lg  shadow-sm border border-gray-200">
         <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
       </div>
       <div className="space-y-4">

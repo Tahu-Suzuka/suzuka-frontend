@@ -1,25 +1,36 @@
 import React from "react";
+import useHorizontalScroll from "../../hooks/useHorizontalScroll";
 
-const tabs = ["Semua", "Sedang Dikemas", "Dikirim", "Selesai", "Dibatalkan"];
+const tabs = [
+  "Semua",
+  "Menunggu Pembayaran",
+  "Diproses",
+  "Dikirim",
+  "Selesai",
+  "Dibatalkan",
+];
 
 const Tabs = ({ activeTab, setActiveTab }) => {
+  const scrollRef = useHorizontalScroll();
+
   return (
-    <div className="overflow-x-auto">
-      <div className="flex gap-4 sm:gap-8 md:gap-12 lg:gap-24 px-2 sm:px-4 whitespace-nowrap border-b border-gray-200 text-sm font-medium">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`pb-2 transition-colors ${
-              activeTab === tab
-                ? "border-b-2 border-red-500 text-red-500 font-semibold"
-                : "border-b-2 border-transparent text-gray-600 hover:text-red-500"
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
+    <div
+      ref={scrollRef}
+      className="overflow-x-auto scroll-hide flex gap-6 lg:gap-[70px] px-4 border-b border-gray-200 text-sm cursor-grab select-none whitespace-nowrap"
+    >
+      {tabs.map((tab) => (
+        <button
+          key={tab}
+          onClick={() => setActiveTab(tab)}
+          className={`pb-2 transition-colors ${
+            activeTab === tab
+              ? "border-b-2 border-red-500 text-red-500 font-semibold"
+              : "border-b-2 border-transparent text-gray-600 hover:text-red-500"
+          }`}
+        >
+          {tab}
+        </button>
+      ))}
     </div>
   );
 };

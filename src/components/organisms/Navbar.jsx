@@ -142,6 +142,7 @@ const Navbar = () => {
             {!isLoggedIn && isOpen && (
               <div className="flex justify-start px-4 pt-4 md:hidden">
                 <Button
+                  to={"/login"}
                   text="Masuk"
                   width="w-32"
                   className="rounded-full shadow-md py-2"
@@ -161,6 +162,7 @@ const Navbar = () => {
           />
           {!isLoggedIn ? (
             <Button
+              to={"/login"}
               text="Masuk"
               width="w-32"
               className={

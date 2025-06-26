@@ -23,11 +23,10 @@ const CategoryContent = () => {
         <div className="flex flex-wrap justify-end gap-4">
           <Button
             width="w-44"
-            py="py-2"
-            className="rounded-md flex items-center justify-center gap-2"
+            className="rounded-md flex items-center justify-center gap-2 py-2"
           >
             <FaPlus className="text-sm" />
-            <span>Tambah Kategori</span>
+            Tambah Kategori
           </Button>
         </div>
       </div>

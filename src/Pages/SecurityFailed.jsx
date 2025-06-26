@@ -19,8 +19,7 @@ const SecurityFailed = () => {
         <Button
           text="Coba Lagi"
           onClick={() => navigate("/security-check")}
-          py="py-2"
-          className="rounded-full "
+          className="rounded-full py-2 shadow-md"
         />
       </div>
     </div>
