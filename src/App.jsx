@@ -16,6 +16,10 @@ import ProductPage from "./pages/ProductPage";
 import DetailProductPage from "./pages/DetailProductPage";
 import ProfilePage from "./pages/ProfilePage";
 
+// Checkout
+import CheckoutLayout from "./layouts/CheckoutLayout";
+import CheckoutPage from "./pages/CheckoutPage";
+
 // sementara
 import Otp from "./components/organisms/Otp";
 
@@ -62,8 +66,14 @@ const App = () => {
           <Route path="product" element={<ProductPage />} />
           <Route path="detail-product" element={<DetailProductPage />} />
           <Route path="profile" element={<ProfilePage />} />
+
           {/* sementara */}
           <Route path="otp" element={<Otp />} />
+        </Route>
+
+        {/* Checkout Layout */}
+        <Route element={<CheckoutLayout />}>
+          <Route path="checkout" element={<CheckoutPage />} />
         </Route>
 
         {/* Security Check */}
