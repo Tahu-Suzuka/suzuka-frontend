@@ -8,6 +8,7 @@ import AuthLayout from "./layouts/AuthLayout";
 import LoginPage from "./pages/Auth/LoginPage";
 import RegisterPage from "./pages/Auth/RegisterPage";
 import Otp from "./components/organisms/Otp";
+import ForgotPasswordPage from "./pages/Auth/ForgotPasswordPage";
 
 // Home
 import AppLayout from "./layouts/AppLayout";
@@ -86,6 +87,7 @@ const App = () => {
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
           <Route path="otp" element={<Otp />} />
+          <Route path="forgot-password" element={<ForgotPasswordPage />} />
         </Route>
 
         <Route path="/error" element={<ErrorPage />} />

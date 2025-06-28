@@ -61,7 +61,7 @@ export default function Login() {
 
         <div className="flex justify-end">
           <a
-            href="#"
+            href="/forgot-password"
             className="text-xs text-primary font-bold hover:text-gray-800 transition duration-300"
           >
             Lupa Kata Sandi?

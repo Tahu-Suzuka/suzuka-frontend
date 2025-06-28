@@ -1,7 +1,7 @@
 import React from "react";
-import Register from "../../components/organisms/Auth/Register";
+import ForgotPassword from "../../components/organisms/auth/ForgotPassword";
 
-export default function RegisterPage() {
+const ForgotPasswordPage = () => {
   return (
     <div className="overflow-hidden min-h-screen ">
       <div className="flex flex-col md:flex-row h-screen -translate-y-2 bg-white">
@@ -14,14 +14,14 @@ export default function RegisterPage() {
               alt="Tahu Suzuka"
               className="w-64 h-64 object-contain mb-4"
             />
-            <h2 className="text-4xl font-bebas font-bold text-white">
-              Buat Akun Baru
-            </h2>
+            {/* <h2 className="text-4xl font-bold text-white">Lupa Kata Sandi</h2> */}
           </div>
         </div>
         {/* Left  */}
-        <Register />
+        <ForgotPassword />
       </div>
     </div>
   );
-}
+};
+
+export default ForgotPasswordPage;
