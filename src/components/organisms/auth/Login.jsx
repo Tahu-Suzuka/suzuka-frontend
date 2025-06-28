@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthService } from "../../../services/AuthServices";
 import Input from "../../atoms/Input";
 import PasswordField from "../../atoms/auth/PasswordField";
 import Divider from "../../atoms/auth/Divider";
@@ -10,6 +12,19 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await AuthService.login(email, password);
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      navigate("/");
+    } catch (err) {
+      alert(err.response?.data?.message || "Gagal login");
+    }
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -21,7 +36,10 @@ export default function Login() {
         Selamat Datang
       </h1>
 
-      <form className="space-y-6 w-full max-w-md mx-auto px-4 md:px-0 font-montserrat">
+      <form
+        onSubmit={handleLogin}
+        className="space-y-6 w-full max-w-md mx-auto px-4 md:px-0 font-montserrat"
+      >
         <Input
           id="email"
           label="Email"
@@ -49,8 +67,8 @@ export default function Login() {
             Lupa Kata Sandi?
           </a>
         </div>
-        <Button text="Masuk" className="rounded-full py-3" />
 
+        <Button type="submit" text="Masuk" className="rounded-full py-3" />
         <Divider />
         <GoogleButton text="Masuk Dengan Google" />
 

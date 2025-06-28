@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthService } from "../../../services/AuthServices";
 import Input from "../../atoms/Input";
 import PasswordField from "../../atoms/auth/PasswordField";
 import Divider from "../../atoms/auth/Divider";
@@ -15,9 +17,35 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      alert("Konfirmasi kata sandi tidak cocok!");
+      return;
+    }
+
+    try {
+      await AuthService.register({ name, email, password });
+
+      localStorage.setItem("temp_password", password);
+
+      navigate("/otp", { state: { email } });
+    } catch (error) {
+      const msg = error.response?.data?.message || "Terjadi kesalahan.";
+      console.error("Gagal register:", msg);
+      alert(msg);
+    }
+  };
+
   return (
     <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-center left-14 mt-7">
-      <form className="space-y-6 w-full max-w-md mx-auto px-4 md:px-0 font-montserrat">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-6 w-full max-w-md mx-auto px-4 md:px-0 font-montserrat"
+      >
         {/* Input Nama */}
         <Input
           id="name"
@@ -58,7 +86,7 @@ export default function Register() {
         />
 
         {/* Tombol Register */}
-        <Button text="Daftar" className="rounded-full py-3" />
+        <Button type="submit" text="Daftar" className="rounded-full py-3" />
 
         <Divider />
 

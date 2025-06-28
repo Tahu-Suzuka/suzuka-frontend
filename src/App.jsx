@@ -4,9 +4,10 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 // Auth
+import AuthLayout from "./layouts/AuthLayout";
 import LoginPage from "./pages/Auth/LoginPage";
 import RegisterPage from "./pages/Auth/RegisterPage";
-import AuthLayout from "./layouts/AuthLayout";
+import Otp from "./components/organisms/Otp";
 
 // Home
 import AppLayout from "./layouts/AppLayout";
@@ -21,7 +22,6 @@ import CheckoutLayout from "./layouts/CheckoutLayout";
 import CheckoutPage from "./pages/CheckoutPage";
 
 // sementara
-import Otp from "./components/organisms/Otp";
 
 // Security Check
 import SecurityLayout from "./layouts/SecurityLayout";
@@ -66,9 +66,6 @@ const App = () => {
           <Route path="product" element={<ProductPage />} />
           <Route path="detail-product" element={<DetailProductPage />} />
           <Route path="profile" element={<ProfilePage />} />
-
-          {/* sementara */}
-          <Route path="otp" element={<Otp />} />
         </Route>
 
         {/* Checkout Layout */}
@@ -88,6 +85,7 @@ const App = () => {
           {" "}
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
+          <Route path="otp" element={<Otp />} />
         </Route>
 
         <Route path="/error" element={<ErrorPage />} />

@@ -19,7 +19,6 @@ const SecurityCheck = () => {
           <Button
             text="Verifikasi dengan Kata Sandi"
             onClick={() => navigate("/security-password")}
-            className="rounded-full"
             width="w-full"
             className="py-2 rounded-full shadow-md"
           />

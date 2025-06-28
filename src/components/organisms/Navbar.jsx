@@ -8,6 +8,7 @@ import { TbLogout } from "react-icons/tb";
 import Button from "../atoms/Button";
 import NavbarLinks from "../atoms/NavbarLink";
 import CartSidebar from "../organisms/sidebar/CartSidebar";
+import Avatar from "../atoms/Avatar";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -177,11 +178,7 @@ const Navbar = () => {
                 onClick={() => setIsDropdownOpen((prev) => !prev)}
                 className="flex items-center cursor-pointer"
               >
-                <img
-                  src="/images/default-profile.png"
-                  alt="Avatar"
-                  className="w-10 h-10 rounded-full border-2 bg-white p-0.5"
-                />
+                <Avatar src="/images/default-profile.png" />
                 {isDropdownOpen ? (
                   <RiArrowDropUpLine className="h-9 w-9" />
                 ) : (

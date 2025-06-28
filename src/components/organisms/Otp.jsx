@@ -1,9 +1,16 @@
 import React, { useRef } from "react";
+import axios from "axios";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 import { IoShieldCheckmarkOutline } from "react-icons/io5";
 import Button from "../atoms/Button";
 
 const Otp = () => {
   const inputRefs = useRef([]);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const email = location.state?.email || "";
 
   const handleInputChange = (e, index) => {
     const value = e.target.value;
@@ -19,6 +26,48 @@ const Otp = () => {
   const handleKeyDown = (e, index) => {
     if (e.key === "Backspace" && !e.target.value && index > 0) {
       inputRefs.current[index - 1].focus();
+    }
+  };
+
+  // Kirim OTP
+  const handleVerifyOtp = async () => {
+    const otp = inputRefs.current.map((ref) => ref.value).join("");
+
+    if (otp.length !== 6) {
+      alert("Kode OTP harus 6 digit.");
+      return;
+    }
+
+    try {
+      // ✅ 1. Verifikasi OTP
+      await axios.post("http://34.101.147.220:8080/auth/verify-otp", {
+        email,
+        otp,
+      }); // ✅ 2. Login otomatis pakai email & password (kamu harus simpan password-nya saat register)
+
+      const res = await axios.post("http://34.101.147.220:8080/auth/login", {
+        email,
+        password: localStorage.getItem("temp_password"),
+      });
+
+      const { token, user } = res.data.data;
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      navigate("/profile");
+    } catch (error) {
+      alert(error.response?.data?.message || "Gagal verifikasi atau login.");
+    }
+  };
+
+  // Kirim ulang kode OTP
+  const handleResendOtp = async () => {
+    try {
+      await axios.post("http://34.101.147.220:8080/auth/resend-otp", { email });
+      alert("Kode OTP baru telah dikirim.");
+    } catch (error) {
+      alert(error.response?.data?.message || "Gagal kirim ulang kode.");
     }
   };
 
@@ -48,8 +97,7 @@ const Otp = () => {
             VERIFIKASI AKUN
           </h1>
           <p className="text-sm text-gray-700 mb-6 leading-relaxed">
-            Kami telah mengirimkan kode pada email{" "}
-            <strong>af*****@gmail.com</strong>
+            Kami telah mengirimkan kode pada email <strong>{email}</strong>
             <br />
             mohon cek email untuk memasukan kode
           </p>
@@ -69,11 +117,18 @@ const Otp = () => {
           </div>
 
           {/* Tombol Verifikasi */}
-          <Button text="Verifikasi Email" className="rounded-full" />
+          <Button
+            text="Verifikasi Email"
+            className="rounded-full py-2"
+            onClick={handleVerifyOtp}
+          />
 
           {/* Kirim Ulang */}
           <p className="text-xs mt-4 text-gray-600">
-            <button className="hover:underline font-medium">
+            <button
+              onClick={handleResendOtp}
+              className="hover:underline font-medium"
+            >
               Kirim Ulang Kode
             </button>
           </p>

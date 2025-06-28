@@ -5,7 +5,7 @@ const Avatar = ({ src }) => {
     <img
       src={src}
       alt="Avatar"
-      className="w-10 h-10 rounded-full object-cover border"
+      className="w-10 h-10 rounded-full object-cover border-2 bg-white"
     />
   );
 };
