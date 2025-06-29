@@ -3,8 +3,7 @@ import { FiEdit } from "react-icons/fi";
 import { IoEyeSharp } from "react-icons/io5";
 import Table from "../../atoms/Table";
 
-// const OrderTable = ({ showAction = true, showDate = true }) => {
-const OrderTable = ({ showAction = true }) => {
+const OrderTable = ({ showAction = true, showPayment = true }) => {
   const orders = [
     {
       no: "#202501",
@@ -16,8 +15,8 @@ const OrderTable = ({ showAction = true }) => {
   ];
 
   const headers = ["No. Pesanan"];
-  // if (showDate) headers.push("Tanggal");
-  headers.push("Pelanggan", "Total", "Pembayaran", "Status");
+  headers.push("Pelanggan", "Total", "Status");
+  if (showPayment) headers.push("Pembayaran");
   if (showAction) headers.push("Aksi");
 
   return (
@@ -25,10 +24,11 @@ const OrderTable = ({ showAction = true }) => {
       {orders.map((order, idx) => (
         <tr key={idx} className="border-t">
           <td className="py-2 px-4">{order.no}</td>
-          {/* {showDate && <td className="py-2 px-4">{order.tanggal}</td>} */}
+
           <td className="py-2 px-4">{order.pelanggan}</td>
           <td className="py-2 px-4">{order.total}</td>
-          <td className="py-2 px-4">{order.Pembayaran}</td>
+          {showPayment && <td className="py-2 px-4">{order.Pembayaran}</td>}
+
           <td className="py-2 px-4">
             <span
               className={`px-2 py-1 text-xs font-medium rounded-sm ${
@@ -48,9 +48,6 @@ const OrderTable = ({ showAction = true }) => {
             <td className="py-2 px-4 flex gap-3">
               <button className="text-blue-500 hover:text-blue-700">
                 <IoEyeSharp className="w-5 h-5" />
-              </button>
-              <button className="text-green-500 hover:text-green-700">
-                <FiEdit className="w-5 h-5" />
               </button>
             </td>
           )}
