@@ -12,17 +12,43 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [loginError, setLoginError] = useState("");
+
   const navigate = useNavigate();
+
+  const validateEmailClient = (email) => {
+    if (email.trim() === "") return "Email tidak boleh kosong.";
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!regex.test(email)) return "Format email tidak valid.";
+    return "";
+  };
+
+  const validatePasswordClient = (password) => {
+    if (password.trim() === "") return "Kata sandi tidak boleh kosong.";
+    return "";
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    const emailErr = validateEmailClient(email);
+    const passwordErr = validatePasswordClient(password);
+
+    setEmailError(emailErr);
+    setPasswordError(passwordErr);
+    setLoginError("");
+    if (emailErr || passwordErr) return;
+
     try {
       const res = await AuthService.login(email, password);
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
       navigate("/");
     } catch (err) {
-      alert(err.response?.data?.message || "Gagal login");
+      const msg = err.response?.data?.message || "Email atau kata sandi salah.";
+      setLoginError(msg);
     }
   };
 
@@ -40,6 +66,11 @@ export default function Login() {
         onSubmit={handleLogin}
         className="space-y-6 w-full max-w-md mx-auto px-4 md:px-0 font-montserrat"
       >
+        {/* Error global */}
+        {loginError && (
+          <p className="text-primary text-center text-sm -mt-3">{loginError}</p>
+        )}
+
         <Input
           id="email"
           label="Email"
@@ -49,6 +80,9 @@ export default function Login() {
           icon={FiMail}
           variant="auth"
         />
+        {emailError && (
+          <p className="text-primary text-sm mt-1">{emailError}</p>
+        )}
 
         <PasswordField
           id="password"
@@ -58,6 +92,9 @@ export default function Login() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+        {passwordError && (
+          <p className="text-primary text-sm mt-1">{passwordError}</p>
+        )}
 
         <div className="flex justify-end">
           <a

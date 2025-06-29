@@ -7,7 +7,7 @@ export default function InputField({
   icon: Icon,
   type = "text",
   variant = "auth",
-  rightElement, // 👈 tambahkan ini
+  rightElement,
 }) {
   const isAuth = variant === "auth";
 

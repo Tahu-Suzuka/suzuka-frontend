@@ -13,17 +13,41 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [name, setName] = useState("");
+  const [nameError, setNameError] = useState("");
   const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Validasi kosong
 
-    if (password !== confirmPassword) {
-      alert("Konfirmasi kata sandi tidak cocok!");
+    const nameErr = name.trim() === "" ? "Nama tidak boleh kosong." : "";
+    const emailErr =
+      email.trim() === ""
+        ? "Email tidak boleh kosong."
+        : validateEmailClient(email);
+    const passwordErr =
+      password.trim() === ""
+        ? "Kata sandi tidak boleh kosong."
+        : validatePasswordClient(password);
+    const confirmErr =
+      confirmPassword.trim() === ""
+        ? "Konfirmasi kata sandi tidak boleh kosong."
+        : password !== confirmPassword
+        ? "Konfirmasi kata sandi tidak cocok."
+        : ""; // Set state error
+
+    setNameError(nameErr);
+    setEmailError(emailErr);
+    setPasswordError(passwordErr);
+    setConfirmPasswordError(confirmErr); // Cegah submit jika ada error
+
+    if (nameErr || emailErr || passwordErr || confirmErr) {
       return;
     }
 
@@ -31,7 +55,6 @@ export default function Register() {
       await AuthService.register({ name, email, password });
 
       localStorage.setItem("temp_password", password);
-
       navigate("/otp", { state: { email } });
     } catch (error) {
       const msg = error.response?.data?.message || "Terjadi kesalahan.";
@@ -40,11 +63,29 @@ export default function Register() {
     }
   };
 
+  const validatePasswordClient = (pwd) => {
+    if (pwd.length < 8) {
+      return "Kata Sandi harus minimal 8 karakter.";
+    }
+    if (!/\d/.test(pwd)) {
+      return "Kata Sandi harus mengandung setidaknya satu angka.";
+    }
+    return "";
+  };
+
+  const validateEmailClient = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!regex.test(email)) {
+      return "Format email tidak valid.";
+    }
+    return "";
+  };
+
   return (
-    <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-center left-14 mt-7">
+    <div className="w-full lg:w-1/2 p-6 flex flex-col justify-center left-14 mt-7">
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 w-full max-w-md mx-auto px-4 md:px-0 font-montserrat"
+        className="space-y-4 w-full max-w-md mx-auto px-4"
       >
         {/* Input Nama */}
         <Input
@@ -55,6 +96,7 @@ export default function Register() {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
+        {nameError && <p className="text-red-500 text-sm mt-1">{nameError}</p>}
 
         {/* Input Email */}
         <Input
@@ -65,6 +107,9 @@ export default function Register() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+        {emailError && (
+          <p className="text-red-500 text-sm mt-1">{emailError}</p>
+        )}
 
         {/* Input Kata Sandi */}
         <PasswordField
@@ -75,6 +120,9 @@ export default function Register() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+        {passwordError && (
+          <p className="text-primary text-sm">{passwordError}</p>
+        )}
 
         <PasswordField
           id="confirmPassword"
@@ -84,9 +132,12 @@ export default function Register() {
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
+        {confirmPasswordError && (
+          <p className="text-primary text-sm">{confirmPasswordError}</p>
+        )}
 
         {/* Tombol Register */}
-        <Button type="submit" text="Daftar" className="rounded-full py-3" />
+        <Button type="submit" text="Daftar" className="rounded-full py-2" />
 
         <Divider />
 
