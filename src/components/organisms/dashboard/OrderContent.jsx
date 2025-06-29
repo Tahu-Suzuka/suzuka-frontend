@@ -22,44 +22,6 @@ const OrderContent = () => {
     { value: "dibatalkan", label: "Dibatalkan" },
   ];
 
-  const orders = [
-    {
-      no: "#202501",
-      tanggal: "2025-06-17",
-      pelanggan: "Ahmad",
-      total: "Rp120.000",
-      status: "Belum Dibayar",
-    },
-    {
-      no: "#202502",
-      tanggal: "2025-06-17",
-      pelanggan: "Siti",
-      total: "Rp85.000",
-      status: "Diproses",
-    },
-    {
-      no: "#202503",
-      tanggal: "2025-06-17",
-      pelanggan: "Rudi",
-      total: "Rp200.000",
-      status: "Dikirim",
-    },
-    {
-      no: "#202504",
-      tanggal: "2025-06-17",
-      pelanggan: "Nina",
-      total: "Rp55.000",
-      status: "Selesai",
-    },
-    {
-      no: "#202505",
-      tanggal: "2025-06-17",
-      pelanggan: "Fajar",
-      total: "Rp99.000",
-      status: "Dibatalkan",
-    },
-  ];
-
   const handlePrint = () => {
     if (!startDate || !endDate) {
       alert("Silakan pilih rentang tanggal terlebih dahulu.");
