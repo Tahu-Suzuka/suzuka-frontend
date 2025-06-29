@@ -40,8 +40,9 @@ import CustomerContent from "./components/organisms/dashboard/CustomerContent";
 import VoucherContent from "./components/organisms/dashboard/VoucherContent";
 import SalesContent from "./components/organisms/dashboard/SalesContent";
 import ReviewContent from "./components/organisms/dashboard/ReviewContent";
-import AddOrderPage from "./pages/Dashboard/AddOrderPage";
-import ReadOrderPage from "./pages/Dashboard/ReadOrderPage";
+import AddOrderPage from "./pages/Dashboard/orders/AddOrderPage";
+import ReadOrderPage from "./pages/Dashboard/orders/ReadOrderPage";
+import AddProductPage from "./pages/Dashboard/products/AddProductPage";
 
 // Error Pages
 import ErrorPage from "./pages/ErrorPage";
@@ -62,6 +63,7 @@ const App = () => {
           <Route path="review" element={<ReviewContent />} />
           <Route path="add-order" element={<AddOrderPage />} />
           <Route path="order/:id" element={<ReadOrderPage />} />
+          <Route path="add-product" element={<AddProductPage />} />
         </Route>
 
         {/* Public Layout */}

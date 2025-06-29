@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaPlus, FaMinus, FaTimes } from "react-icons/fa";
-import Input from "../../components/atoms/Input";
-import Button from "../../components/atoms/Button";
+import Input from "../../../components/atoms/Input";
+import Button from "../../../components/atoms/Button";
 
 const products = [
   {
