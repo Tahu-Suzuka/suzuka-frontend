@@ -7,6 +7,7 @@ import { MdDelete } from "react-icons/md";
 import Table from "../../atoms/Table";
 import Pagination from "../../atoms/Pagination";
 import Filter from "../../atoms/Filter";
+import Alert from "../../atoms/Alert";
 
 const ProductContent = () => {
   const navigate = useNavigate();
@@ -20,8 +21,9 @@ const ProductContent = () => {
     { value: "dibatalkan", label: "Dibatalkan" },
   ];
 
-  const orders = [
+  const [products, setProducts] = useState([
     {
+      id: 1,
       produk: {
         nama: "Tahu Kuning Normal",
         gambar: "/images/product/header.png",
@@ -29,14 +31,52 @@ const ProductContent = () => {
       harga: "Rp12.000",
       kategori: "Tahu Kuning",
       deskripsi:
-        "lorem ipsum dolor sit amet, consectetur adipiscing elit.  Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     },
-  ];
+    {
+      id: 2,
+      produk: {
+        nama: "Tahu Putih Pedas",
+        gambar: "/images/product/header.png",
+      },
+      harga: "Rp10.000",
+      kategori: "Tahu Putih",
+      deskripsi:
+        "Tahu dengan rasa pedas menggugah selera, cocok untuk cemilan atau lauk.",
+    },
+  ]);
+
+  const [showAlert, setShowAlert] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+
+  const confirmDelete = (id) => {
+    setSelectedId(id);
+    setShowAlert(true);
+  };
+
+  const handleConfirmDelete = () => {
+    setProducts((prev) => prev.filter((item) => item.id !== selectedId));
+    setShowAlert(false);
+    setSelectedId(null);
+  };
+
+  const handleCancelDelete = () => {
+    setShowAlert(false);
+    setSelectedId(null);
+  };
 
   const headers = ["No", "Produk", "Kategori", "Harga", "Deskripsi", "Aksi"];
 
   return (
-    <div className="space-y-6 bg-white p-6 rounded-lg shadow">
+    <div className="space-y-6 bg-white p-6 rounded-lg shadow relative">
+      {showAlert && (
+        <Alert
+          message="Apakah kamu yakin ingin menghapus produk ini?"
+          onCancel={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
+
       {/* Toolbar */}
       <div className="flex w-full justify-between items-center">
         <h1 className="text-xl font-bold text-gray-800">Daftar Produk</h1>
@@ -53,9 +93,10 @@ const ProductContent = () => {
         </div>
       </div>
 
+      {/* Table Produk */}
       <Table headers={headers}>
-        {orders.map((order, idx) => (
-          <tr key={idx} className="border-t">
+        {products.map((order, idx) => (
+          <tr key={order.id} className="border-t">
             <td className="py-2 px-4">{idx + 1}</td>
             <td className="py-2 px-4">
               <div className="flex items-center gap-3">
@@ -80,15 +121,16 @@ const ProductContent = () => {
               </p>
             </td>
             <td className="py-2 px-4 flex gap-3">
-              <button className="text-green-500 hover:text-green-700">
-                <FiEdit
-                  className="w-5 h-5"
-                  onClick={() =>
-                    navigate(`/dashboard/edit-product/${order.id}`)
-                  }
-                />
+              <button
+                className="text-green-500 hover:text-green-700"
+                onClick={() => navigate(`/dashboard/edit-product/${order.id}`)}
+              >
+                <FiEdit className="w-5 h-5" />
               </button>
-              <button className="text-primary hover:text-red-800">
+              <button
+                className="text-primary hover:text-red-800"
+                onClick={() => confirmDelete(order.id)}
+              >
                 <MdDelete className="w-5 h-5" />
               </button>
             </td>
@@ -96,7 +138,6 @@ const ProductContent = () => {
         ))}
       </Table>
 
-      {/* Pagination */}
       <Pagination />
     </div>
   );
