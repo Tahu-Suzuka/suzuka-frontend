@@ -81,7 +81,12 @@ const ProductContent = () => {
             </td>
             <td className="py-2 px-4 flex gap-3">
               <button className="text-green-500 hover:text-green-700">
-                <FiEdit className="w-5 h-5" />
+                <FiEdit
+                  className="w-5 h-5"
+                  onClick={() =>
+                    navigate(`/dashboard/edit-product/${order.id}`)
+                  }
+                />
               </button>
               <button className="text-primary hover:text-red-800">
                 <MdDelete className="w-5 h-5" />
