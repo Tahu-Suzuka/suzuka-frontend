@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import Button from "../../atoms/Button";
 import { FiEdit } from "react-icons/fi";
@@ -6,6 +7,7 @@ import { MdDelete } from "react-icons/md";
 import Table from "../../atoms/Table";
 
 const CategoryContent = () => {
+  const navigate = useNavigate();
   const categories = [
     {
       gambar: "/images/no-order.png",
@@ -24,6 +26,7 @@ const CategoryContent = () => {
           <Button
             width="w-44"
             className="rounded-md flex items-center justify-center gap-2 py-2"
+            onClick={() => navigate("/dashboard/add-category")}
           >
             <FaPlus className="text-sm" />
             Tambah Kategori
