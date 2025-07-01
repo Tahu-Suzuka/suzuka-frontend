@@ -105,7 +105,12 @@ const VoucherContentPage = () => {
             </td>
 
             <td className="py-2 px-4 flex gap-3">
-              <button className="text-green-500 hover:text-green-700">
+              <button
+                className="text-green-500 hover:text-green-700"
+                onClick={() =>
+                  navigate(`/dashboard/edit-voucher/${voucher.id}`)
+                }
+              >
                 <FiEdit className="w-5 h-5" />
               </button>
               <button className="text-primary hover:text-red-800">

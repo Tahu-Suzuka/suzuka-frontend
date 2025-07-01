@@ -45,9 +45,11 @@ import ReadOrderPage from "./pages/Dashboard/order/ReadOrderPage";
 import AddProductPage from "./pages/Dashboard/product/AddProductPage";
 import EditProductPage from "./pages/Dashboard/product/EditProductPage";
 import AddVoucherPage from "./pages/Dashboard/voucher/AddVoucherPage";
+import EditVoucherPage from "./pages/Dashboard/voucher/EditVoucherPage";
 
 // Error Pages
 import ErrorPage from "./pages/ErrorPage";
+import { Edit } from "lucide-react";
 
 const App = () => {
   return (
@@ -68,6 +70,7 @@ const App = () => {
           <Route path="add-product" element={<AddProductPage />} />
           <Route path="edit-product/:id" element={<EditProductPage />} />
           <Route path="add-voucher" element={<AddVoucherPage />} />
+          <Route path="edit-voucher/:id" element={<EditVoucherPage />} />
         </Route>
 
         {/* Public Layout */}
