@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import Button from "../../atoms/Button";
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 import Table from "../../atoms/Table";
+import Alert from "../../atoms/Alert";
 
 const CategoryContent = () => {
   const navigate = useNavigate();
@@ -15,10 +16,36 @@ const CategoryContent = () => {
     },
   ];
 
+  const [showAlert, setShowAlert] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+
+  const confirmDelete = (id) => {
+    setSelectedId(id);
+    setShowAlert(true);
+  };
+
+  const handleConfirmDelete = () => {
+    setCategories((prev) => prev.filter((item) => item.id !== selectedId));
+    setShowAlert(false);
+    setSelectedId(null);
+  };
+
+  const handleCancelDelete = () => {
+    setShowAlert(false);
+    setSelectedId(null);
+  };
+
   const headers = ["Gambar", "Nama", "Aksi"];
 
   return (
     <div className="space-y-6 bg-white p-6 rounded-lg shadow">
+      {showAlert && (
+        <Alert
+          message="Apakah kamu yakin ingin menghapus produk ini?"
+          onCancel={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
       {/* Toolbar */}
       <div className="flex w-full justify-between items-center">
         <h1 className="text-xl font-bold text-gray-800">Daftar Kategori</h1>
@@ -54,7 +81,10 @@ const CategoryContent = () => {
               >
                 <FiEdit className="w-5 h-5" />
               </button>
-              <button className="text-primary hover:text-red-800">
+              <button
+                className="text-primary hover:text-red-800"
+                onClick={() => confirmDelete(category.id)}
+              >
                 <MdDelete className="w-5 h-5" />
               </button>
             </td>
