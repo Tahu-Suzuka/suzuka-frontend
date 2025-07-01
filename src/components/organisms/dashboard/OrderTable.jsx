@@ -75,17 +75,17 @@ const OrderTable = ({ showAction = true, showPayment = true }) => {
           <td className="py-2 px-4">
             <select
               className={`text-xs px-2 py-1 rounded-sm
-  ${
-    order.status === "Dikirim"
-      ? "bg-blue-100 text-blue-700"
-      : order.status === "Selesai"
-      ? "bg-green-100 text-green-700"
-      : order.status === "Dibatalkan"
-      ? "bg-red-100 text-red-700"
-      : order.status === "Menunggu Pembayaran"
-      ? "bg-orange-100 text-orange-700"
-      : "bg-yellow-100 text-yellow-700"
-  }`}
+              ${
+                order.status === "Dikirim"
+                  ? "bg-blue-100 text-blue-700"
+                  : order.status === "Selesai"
+                  ? "bg-green-100 text-green-700"
+                  : order.status === "Dibatalkan"
+                  ? "bg-red-100 text-red-700"
+                  : order.status === "Menunggu Pembayaran"
+                  ? "bg-orange-100 text-orange-700"
+                  : "bg-yellow-100 text-yellow-700"
+              }`}
               value={order.status}
               onChange={(e) => handleStatusChange(idx, e.target.value)}
             >

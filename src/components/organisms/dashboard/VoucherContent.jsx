@@ -6,8 +6,9 @@ import { MdDelete } from "react-icons/md";
 import Button from "../../atoms/Button";
 import Table from "../../atoms/Table";
 import Pagination from "../../atoms/Pagination";
+import Alert from "../../atoms/Alert";
 
-const VoucherContentPage = () => {
+const VoucherContent = () => {
   const navigate = useNavigate();
   const [vouchers, setVouchers] = useState([
     {
@@ -30,6 +31,9 @@ const VoucherContentPage = () => {
     },
   ]);
 
+  const [showAlert, setShowAlert] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+
   const headers = [
     "No",
     "Kode",
@@ -50,8 +54,32 @@ const VoucherContentPage = () => {
     return "Rp" + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   };
 
+  const confirmDelete = (id) => {
+    setSelectedId(id);
+    setShowAlert(true);
+  };
+
+  const handleConfirmDelete = () => {
+    setVouchers((prev) => prev.filter((item) => item.id !== selectedId));
+    setShowAlert(false);
+    setSelectedId(null);
+  };
+
+  const handleCancelDelete = () => {
+    setShowAlert(false);
+    setSelectedId(null);
+  };
+
   return (
-    <div className="space-y-6 bg-white p-6 rounded-lg shadow">
+    <div className="space-y-6 bg-white p-6 rounded-lg shadow relative">
+      {showAlert && (
+        <Alert
+          message="Apakah kamu yakin ingin menghapus voucher ini?"
+          onCancel={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
+
       {/* Toolbar */}
       <div className="flex w-full justify-between items-center">
         <h1 className="text-xl font-bold text-gray-800">Daftar Voucher</h1>
@@ -73,7 +101,6 @@ const VoucherContentPage = () => {
           <tr key={voucher.id} className="border-t">
             <td className="py-2 px-4">{index + 1}</td>
             <td className="py-2 px-4">{voucher.kode}</td>
-
             <td className="py-2 px-4">
               <span
                 className={`px-2 py-1 text-xs rounded font-medium ${
@@ -87,11 +114,9 @@ const VoucherContentPage = () => {
                 {voucher.tipe}
               </span>
             </td>
-
             <td className="py-2 px-4">{formatRupiah(voucher.minPembelian)}</td>
             <td className="py-2 px-4">{formatRupiah(voucher.nilai)}</td>
             <td className="py-2 px-4">{formatTanggal(voucher.masaBerlaku)}</td>
-
             <td className="py-2 px-4">
               <span
                 className={`px-2 py-1 text-xs rounded font-medium ${
@@ -103,7 +128,6 @@ const VoucherContentPage = () => {
                 {voucher.status}
               </span>
             </td>
-
             <td className="py-2 px-4 flex gap-3">
               <button
                 className="text-green-500 hover:text-green-700"
@@ -113,7 +137,10 @@ const VoucherContentPage = () => {
               >
                 <FiEdit className="w-5 h-5" />
               </button>
-              <button className="text-primary hover:text-red-800">
+              <button
+                className="text-primary hover:text-red-800"
+                onClick={() => confirmDelete(voucher.id)}
+              >
                 <MdDelete className="w-5 h-5" />
               </button>
             </td>
@@ -127,4 +154,4 @@ const VoucherContentPage = () => {
   );
 };
 
-export default VoucherContentPage;
+export default VoucherContent;
