@@ -49,10 +49,10 @@ import EditVoucherPage from "./pages/Dashboard/voucher/EditVoucherPage";
 import AddCustomerPage from "./pages/Dashboard/customer/AddCustomerPage";
 import EditCustomerPage from "./pages/Dashboard/customer/EditCustomerPage";
 import AddCategoryPage from "./pages/Dashboard/category/AddCategoryPage";
+import EditCategoryPage from "./pages/Dashboard/category/EditCategoryPage";
 
 // Error Pages
 import ErrorPage from "./pages/ErrorPage";
-import { Edit } from "lucide-react";
 
 const App = () => {
   return (
@@ -77,6 +77,7 @@ const App = () => {
           <Route path="add-customer" element={<AddCustomerPage />} />
           <Route path="edit-customer/:id" element={<EditCustomerPage />} />
           <Route path="add-category" element={<AddCategoryPage />} />
+          <Route path="edit-category/:id" element={<EditCategoryPage />} />
         </Route>
 
         {/* Public Layout */}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ImagePlus } from "lucide-react";
+import { IoIosClose } from "react-icons/io";
 
 const AddProductPage = () => {
   const navigate = useNavigate();
@@ -13,6 +13,10 @@ const AddProductPage = () => {
     gambar1: null,
     gambar2: null,
     gambar3: null,
+    previewGambarUtama: null,
+    previewGambar1: null,
+    previewGambar2: null,
+    previewGambar3: null,
   });
 
   useEffect(() => {
@@ -66,12 +70,31 @@ const AddProductPage = () => {
         ...prev,
         [name]: formatRupiah(rawValue),
       }));
+    } else if (files) {
+      const file = files[0];
+      const previewKey =
+        "preview" + name.charAt(0).toUpperCase() + name.slice(1);
+      setForm((prev) => ({
+        ...prev,
+        [name]: file,
+        [previewKey]: URL.createObjectURL(file),
+      }));
     } else {
       setForm((prev) => ({
         ...prev,
-        [name]: files ? files[0] : value,
+        [name]: value,
       }));
     }
+  };
+
+  const handleRemoveImage = (name) => {
+    const previewKey = "preview" + name.charAt(0).toUpperCase() + name.slice(1);
+    setForm((prev) => ({
+      ...prev,
+      [name]: null,
+      [previewKey]: null,
+    }));
+    document.querySelector(`input[name="${name}"]`).value = "";
   };
 
   const handleVariasiChange = (index, field, value) => {
@@ -126,22 +149,41 @@ const AddProductPage = () => {
     "Kerupuk Tahu",
   ];
 
-  const renderUploadField = (label, name, required = false) => (
-    <div>
-      <label className="block text-sm font-medium mb-1">{label}</label>
-      <div className="flex items-center gap-4 border rounded-md px-4 py-2">
-        <ImagePlus className="w-5 h-5 text-gray-400" />
+  const renderUploadField = (label, name, required = false) => {
+    const previewKey = "preview" + name.charAt(0).toUpperCase() + name.slice(1);
+    const previewUrl = form[previewKey];
+
+    return (
+      <div>
+        <label className="block text-sm font-medium mb-1">{label}</label>
+        {previewUrl && (
+          <div className="mb-2 relative inline-block">
+            <button
+              type="button"
+              onClick={() => handleRemoveImage(name)}
+              className="absolute -top-2 -right-2 bg-white border border-gray-300 rounded-full w-7 h-7 flex items-center justify-center text-red-600 hover:bg-gray-100"
+              title="Hapus gambar"
+            >
+              <IoIosClose className="w-8 h-8" />
+            </button>
+            <img
+              src={previewUrl}
+              alt="Preview"
+              className="w-32 h-32 object-cover rounded-md border"
+            />
+          </div>
+        )}
         <input
           type="file"
           name={name}
           accept="image/*"
           onChange={handleChange}
-          className="w-full"
+          className="w-full border px-4 py-2 rounded-md"
           required={required}
         />
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 ">
@@ -153,13 +195,10 @@ const AddProductPage = () => {
           &lt; Kembali
         </button>
 
-        <h1 className="text-xl font-bold text-gray-800 mb-6">
-          Tambah Produk Baru
-        </h1>
+        <h1 className="text-xl font-bold text-gray-800 mb-6">Tambah Produk</h1>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="grid grid-cols-2 gap-6">
-            {/* Kiri */}
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-1">
@@ -170,6 +209,7 @@ const AddProductPage = () => {
                   name="nama"
                   value={form.nama}
                   onChange={handleChange}
+                  placeholder="Masukkan nama produk"
                   className="w-full border px-4 py-2 rounded-md"
                   required
                 />
@@ -197,7 +237,6 @@ const AddProductPage = () => {
                 </select>
               </div>
 
-              {/* Variasi Produk */}
               <div>
                 <label className="block text-sm font-medium mb-1">
                   Variasi Produk
@@ -239,7 +278,6 @@ const AddProductPage = () => {
                     )}
                   </div>
                 ))}
-                {/* Tambah Variasi */}
                 {form.variasi.length < 3 && (
                   <button
                     type="button"
@@ -252,7 +290,6 @@ const AddProductPage = () => {
               </div>
             </div>
 
-            {/* Kanan */}
             <div className="space-y-4">
               {renderUploadField("Gambar Utama", "gambarUtama", true)}
               {renderUploadField("Pilihan Gambar 1", "gambar1")}
@@ -261,7 +298,6 @@ const AddProductPage = () => {
             </div>
           </div>
 
-          {/* Deskripsi */}
           <div>
             <label className="block text-sm font-medium mb-1">Deskripsi</label>
             <textarea
@@ -274,7 +310,6 @@ const AddProductPage = () => {
             ></textarea>
           </div>
 
-          {/* Submit */}
           <div className="pt-4 justify-end flex">
             <button
               type="submit"

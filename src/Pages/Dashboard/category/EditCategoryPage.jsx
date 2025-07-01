@@ -1,14 +1,29 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { IoIosClose } from "react-icons/io";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { XCircle } from "lucide-react";
 
-const AddCategoryPage = () => {
+const EditCategoryPage = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
+
   const [form, setForm] = useState({
     nama: "",
     gambar: null,
     preview: null,
   });
+
+  // Dummy data
+  useEffect(() => {
+    const fetchedData = {
+      nama: "Tahu Kuning",
+      gambar: "/images/hero/slider1.png",
+    };
+    setForm((prev) => ({
+      ...prev,
+      nama: fetchedData.nama,
+      preview: fetchedData.gambar,
+    }));
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -35,8 +50,8 @@ const AddCategoryPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Data yang dikirim:", form);
-    navigate(-1); // balik ke halaman sebelumnya
+    console.log("Data yang diperbarui:", form);
+    navigate(-1);
   };
 
   return (
@@ -45,7 +60,7 @@ const AddCategoryPage = () => {
         {/* Tombol Kembali */}
         <button
           onClick={() => navigate(-1)}
-          className="text-primary font-semibold text-sm mb-6"
+          className="text-primary font-medium text-sm mb-6"
         >
           &lt; Kembali
         </button>
@@ -68,7 +83,7 @@ const AddCategoryPage = () => {
 
           {/* Unggah Foto */}
           <div>
-            <label className="block font-semibold mb-1">Unggah Foto</label>
+            <label className="block font-semibold mb-1">Ubah Foto</label>
             {form.preview && (
               <div className="relative inline-block mb-4">
                 <button
@@ -77,7 +92,7 @@ const AddCategoryPage = () => {
                   className="absolute -top-2 -right-2 bg-white border border-gray-300 rounded-full w-7 h-7 flex items-center justify-center text-red-600 hover:bg-gray-100"
                   title="Hapus gambar"
                 >
-                  <IoIosClose className="w-8 h-8" />
+                  <XCircle className="w-5 h-5" />
                 </button>
                 <img
                   src={form.preview}
@@ -101,7 +116,7 @@ const AddCategoryPage = () => {
               type="submit"
               className="bg-red-600 text-white px-6 py-2 rounded-md hover:bg-red-700"
             >
-              Simpan
+              Simpan Perubahan
             </button>
           </div>
         </form>
@@ -110,4 +125,4 @@ const AddCategoryPage = () => {
   );
 };
 
-export default AddCategoryPage;
+export default EditCategoryPage;
