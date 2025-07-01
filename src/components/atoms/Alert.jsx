@@ -9,7 +9,7 @@ const Alert = ({
   cancelText = "Batal",
 }) => {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center px-4">
+    <div className="fixed -inset-7 bg-black bg-opacity-40 z-50 flex items-center justify-center px-4">
       <div className="bg-white rounded-lg p-6 w-full max-w-sm shadow-lg space-y-4 text-center">
         {/* <h2 className="text-lg font-bold text-gray-800">{title}</h2> */}
         <p className="text-sm text-gray-600">{message}</p>

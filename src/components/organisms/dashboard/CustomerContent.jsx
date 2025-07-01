@@ -7,6 +7,7 @@ import { MdDelete } from "react-icons/md";
 import Table from "../../atoms/Table";
 import SearchBar from "../../atoms/SearchBar";
 import Pagination from "../../atoms/Pagination";
+import Alert from "../../atoms/Alert";
 
 const CustomerContent = () => {
   const navigate = useNavigate();
@@ -24,10 +25,29 @@ const CustomerContent = () => {
     },
   ];
 
+  const [showAlert, setShowAlert] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+
+  const confirmDelete = (id) => {
+    setSelectedId(id);
+    setShowAlert(true);
+  };
+
+  const handleConfirmDelete = () => {
+    setCustomers((prev) => prev.filter((item) => item.id !== selectedId));
+    setShowAlert(false);
+    setSelectedId(null);
+  };
+
+  const handleCancelDelete = () => {
+    setShowAlert(false);
+    setSelectedId(null);
+  };
+
   const headers = ["Nama", "Email", "No. Telepon", "Jumlah Pesanan", "Aksi"];
 
   return (
-    <div className="space-y-6 bg-white p-6 rounded-lg shadow">
+    <div className="space-y-6 bg-white p-6 rounded-lg shadow ">
       {/* Toolbar */}
       <div className="flex w-full justify-between items-center">
         <h1 className="text-xl font-bold text-gray-800">Daftar Pelanggan</h1>
@@ -78,13 +98,26 @@ const CustomerContent = () => {
               >
                 <FiEdit className="w-5 h-5" />
               </button>
-              <button className="text-primary hover:text-red-800">
+              <button
+                className="text-primary hover:text-red-800"
+                onClick={() => confirmDelete(customer.id)}
+              >
                 <MdDelete className="w-5 h-5" />
               </button>
             </td>
           </tr>
         ))}
       </Table>
+
+      {/* Alert */}
+      {showAlert && (
+        <Alert
+          title="Konfirmasi Hapus"
+          message="Apakah Anda yakin ingin menghapus pelanggan ini?"
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+        />
+      )}
       {/* Pagination */}
       <Pagination />
     </div>
