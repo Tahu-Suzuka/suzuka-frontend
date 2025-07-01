@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import Button from "../../atoms/Button";
 import { FiEdit } from "react-icons/fi";
@@ -8,6 +9,7 @@ import SearchBar from "../../atoms/SearchBar";
 import Pagination from "../../atoms/Pagination";
 
 const CustomerContent = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const customers = [
     {
@@ -38,9 +40,13 @@ const CustomerContent = () => {
               placeholder="Cari pelanggan..."
             />
           </div>
-          <Button width="w-44" className="rounded-md py-2">
+          <Button
+            width="w-52"
+            className="rounded-md flex items-center justify-center gap-2 py-2"
+            onClick={() => navigate("/dashboard/add-customer")}
+          >
             <FaPlus className="text-sm" />
-            <span>Tambah Pelanggan</span>
+            Tambah Pelanggan
           </Button>
         </div>
       </div>

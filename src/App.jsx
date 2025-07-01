@@ -46,6 +46,7 @@ import AddProductPage from "./pages/Dashboard/product/AddProductPage";
 import EditProductPage from "./pages/Dashboard/product/EditProductPage";
 import AddVoucherPage from "./pages/Dashboard/voucher/AddVoucherPage";
 import EditVoucherPage from "./pages/Dashboard/voucher/EditVoucherPage";
+import AddCustomerPage from "./pages/Dashboard/customer/AddCustomerPage";
 
 // Error Pages
 import ErrorPage from "./pages/ErrorPage";
@@ -71,6 +72,7 @@ const App = () => {
           <Route path="edit-product/:id" element={<EditProductPage />} />
           <Route path="add-voucher" element={<AddVoucherPage />} />
           <Route path="edit-voucher/:id" element={<EditVoucherPage />} />
+          <Route path="add-customer" element={<AddCustomerPage />} />
         </Route>
 
         {/* Public Layout */}
