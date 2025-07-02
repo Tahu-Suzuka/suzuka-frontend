@@ -110,7 +110,7 @@ const ChangePassword = () => {
         className="w-full text-white font-semibold py-2 rounded-full mt-2 transition"
         disabled={loading}
       >
-        {loading ? "Loading..." : "Change Password"}
+        {loading ? "Loading..." : "Ubah Kata Sandi"}
       </Button>
 
       <div className="mt-4 text-center">
@@ -118,7 +118,7 @@ const ChangePassword = () => {
           href="/forgot-password"
           className="text-sm text-primary hover:underline"
         >
-          Forgot Password?
+          Lupa Kata Sandi?
         </a>
       </div>
     </div>

@@ -1,33 +1,50 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
-import Button from "../../atoms/Button";
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
+import Button from "../../atoms/Button";
 import Table from "../../atoms/Table";
 import Alert from "../../atoms/Alert";
+import { CategoryService } from "../../../services/CategoryService";
 
 const CategoryContent = () => {
   const navigate = useNavigate();
-  const categories = [
-    {
-      gambar: "/images/no-order.png",
-      nama: "Tahu Kuning",
-    },
-  ];
 
+  const [categories, setCategories] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await CategoryService.getAllCategories();
+        setCategories(res.data);
+      } catch (error) {
+        console.error("Gagal mengambil kategori:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const confirmDelete = (id) => {
     setSelectedId(id);
     setShowAlert(true);
   };
 
-  const handleConfirmDelete = () => {
-    setCategories((prev) => prev.filter((item) => item.id !== selectedId));
-    setShowAlert(false);
-    setSelectedId(null);
+  const handleConfirmDelete = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await CategoryService.deleteCategory({ id: selectedId, token });
+
+      setCategories((prev) => prev.filter((item) => item.id !== selectedId));
+    } catch (error) {
+      alert(error.response?.data?.message || "Gagal menghapus kategori.");
+    } finally {
+      setShowAlert(false);
+      setSelectedId(null);
+    }
   };
 
   const handleCancelDelete = () => {
@@ -41,11 +58,12 @@ const CategoryContent = () => {
     <div className="space-y-6 bg-white p-6 rounded-lg shadow">
       {showAlert && (
         <Alert
-          message="Apakah kamu yakin ingin menghapus produk ini?"
+          message="Apakah kamu yakin ingin menghapus kategori ini?"
           onCancel={handleCancelDelete}
           onConfirm={handleConfirmDelete}
         />
       )}
+
       {/* Toolbar */}
       <div className="flex w-full justify-between items-center">
         <h1 className="text-xl font-bold text-gray-800">Daftar Kategori</h1>
@@ -61,23 +79,39 @@ const CategoryContent = () => {
         </div>
       </div>
 
+      {/* Tabel Kategori */}
       <Table headers={headers}>
-        {categories.map((category, idx) => (
-          <tr key={idx} className="border-t">
+        {categories.map((category) => (
+          <tr key={category.id} className="border-t">
             <td className="py-2 px-4">
               <div className="flex items-center gap-3">
-                <img
-                  src={category.gambar}
-                  alt={category.nama}
-                  className="w-10 h-10 object-cover rounded"
-                />
+                <div className="flex items-center gap-3">
+                  {category.image && (
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={
+                          category.image?.startsWith("http")
+                            ? category.image
+                            : `${
+                                import.meta.env.VITE_API_URL ||
+                                "http://34.101.147.220:8080"
+                              }${category.image}`
+                        }
+                        alt={category.category_name}
+                        className="w-10 h-10 object-cover rounded"
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             </td>
-            <td className="py-2 px-4">{category.nama}</td>
+            <td className="py-2 px-4">{category.category_name}</td>
             <td className="py-2 px-4 flex gap-3">
               <button
                 className="text-green-500 hover:text-green-700"
-                onClick={() => navigate(`/dashboard/edit-category/${idx}`)}
+                onClick={() =>
+                  navigate(`/dashboard/edit-category/${category.id}`)
+                }
               >
                 <FiEdit className="w-5 h-5" />
               </button>

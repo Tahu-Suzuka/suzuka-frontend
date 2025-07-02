@@ -1,39 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-
-const products = [
-  {
-    id: 1,
-    name: "Tahu Kuning",
-    image: "/images/hero/slider1.png",
-  },
-  {
-    id: 2,
-    name: "Tahu Kuning Stik",
-    image: "/images/hero/slider2.png",
-  },
-  {
-    id: 3,
-    name: "Tahu Putih",
-    image: "/images/hero/slider3.png",
-  },
-  {
-    id: 4,
-    name: "Tahu Putih Stik",
-    image: "/images/hero/slider4.png",
-  },
-  {
-    id: 5,
-    name: "Tahu Hijau",
-    image: "/images/hero/slider5.png",
-  },
-  {
-    id: 6,
-    name: "Tahu Pedas",
-    image: "/images/hero/slider6.png",
-  },
-];
+import { CategoryService } from "../../../services/CategoryService";
 
 const PrevArrow = ({ onClick }) => (
   <button
@@ -54,14 +22,28 @@ const NextArrow = ({ onClick }) => (
 );
 
 const CardSlider = () => {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await CategoryService.getAllCategories();
+        setCategories(res.data);
+      } catch (error) {
+        console.error("Gagal mengambil kategori:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
   const settings = {
     dots: false,
     infinite: true,
-    speed: 500,
+    speed: 600,
     slidesToShow: 4,
     slidesToScroll: 1,
-    prevArrow: <PrevArrow />,
-    nextArrow: <NextArrow />,
+    // prevArrow: <PrevArrow />,
+    // nextArrow: <NextArrow />,
     responsive: [
       {
         breakpoint: 1024,
@@ -87,22 +69,30 @@ const CardSlider = () => {
   return (
     <div className="relative px-4 lg:px-16">
       <Slider {...settings}>
-        {products.map((product) => (
-          <div key={product.id} className="px-2">
-            <div className="bg-white rounded-[20px] shadow-lg overflow-hidden">
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-40 object-cover rounded-t-[20px]"
-              />
-              <div className="p-4">
-                <h3 className="text-center text-black font-bold text-sm lg:text-base">
-                  {product.name}
-                </h3>
+        {categories.map((category) => {
+          const imageUrl = category.image?.startsWith("http")
+            ? category.image
+            : `${import.meta.env.VITE_API_URL || "http://34.101.147.220:8080"}${
+                category.image
+              }`;
+
+          return (
+            <div key={category.id} className="px-2">
+              <div className="bg-white rounded-[20px] shadow-lg overflow-hidden">
+                <img
+                  src={imageUrl}
+                  alt={category.category_name}
+                  className="w-full h-40 object-cover rounded-t-[20px]"
+                />
+                <div className="p-4">
+                  <h3 className="text-center text-black font-bold text-sm lg:text-base">
+                    {category.category_name}
+                  </h3>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </Slider>
     </div>
   );

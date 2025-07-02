@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { XCircle } from "lucide-react";
+import { IoIosClose } from "react-icons/io";
+import { CategoryService } from "../../../services/CategoryService";
+import Alert from "../../../components/atoms/Alert";
 
 const EditCategoryPage = () => {
   const navigate = useNavigate();
@@ -12,18 +14,33 @@ const EditCategoryPage = () => {
     preview: null,
   });
 
-  // Dummy data
+  const [loading, setLoading] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+
   useEffect(() => {
-    const fetchedData = {
-      nama: "Tahu Kuning",
-      gambar: "/images/hero/slider1.png",
+    const fetchCategory = async () => {
+      try {
+        const res = await CategoryService.getCategoryById(id);
+
+        const imageUrl = res.data.image?.startsWith("http")
+          ? res.data.image
+          : `${import.meta.env.VITE_API_URL || "http://34.101.147.220:8080"}${
+              res.data.image
+            }`;
+
+        setForm((prev) => ({
+          ...prev,
+          nama: res.data.category_name,
+          preview: imageUrl,
+        }));
+      } catch (error) {
+        alert("Gagal mengambil data kategori.");
+        navigate(-1);
+      }
     };
-    setForm((prev) => ({
-      ...prev,
-      nama: fetchedData.nama,
-      preview: fetchedData.gambar,
-    }));
-  }, [id]);
+
+    fetchCategory();
+  }, [id, navigate]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -48,10 +65,25 @@ const EditCategoryPage = () => {
     document.querySelector('input[name="gambar"]').value = "";
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Data yang diperbarui:", form);
-    navigate(-1);
+    setLoading(true);
+
+    try {
+      const token = localStorage.getItem("token");
+      await CategoryService.updateCategory({
+        id,
+        name: form.nama,
+        image: form.gambar,
+        token,
+      });
+
+      setShowAlert(true);
+    } catch (error) {
+      alert(error.response?.data?.message || "Gagal memperbarui kategori.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -92,7 +124,7 @@ const EditCategoryPage = () => {
                   className="absolute -top-2 -right-2 bg-white border border-gray-300 rounded-full w-7 h-7 flex items-center justify-center text-red-600 hover:bg-gray-100"
                   title="Hapus gambar"
                 >
-                  <XCircle className="w-5 h-5" />
+                  <IoIosClose className="w-8 h-8" />
                 </button>
                 <img
                   src={form.preview}
@@ -115,12 +147,21 @@ const EditCategoryPage = () => {
             <button
               type="submit"
               className="bg-red-600 text-white px-6 py-2 rounded-md hover:bg-red-700"
+              disabled={loading}
             >
-              Simpan Perubahan
+              {loading ? "Menyimpan..." : "Simpan Perubahan"}
             </button>
           </div>
         </form>
       </div>
+
+      {showAlert && (
+        <Alert
+          message="Kategori berhasil diperbarui!"
+          onConfirm={() => navigate(-1)}
+          confirmText="OK"
+        />
+      )}
     </div>
   );
 };

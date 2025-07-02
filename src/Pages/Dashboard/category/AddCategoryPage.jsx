@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IoIosClose } from "react-icons/io";
+import { CategoryService } from "../../../services/CategoryService";
+import Alert from "../../../components/atoms/Alert";
 
 const AddCategoryPage = () => {
   const navigate = useNavigate();
@@ -9,6 +11,9 @@ const AddCategoryPage = () => {
     gambar: null,
     preview: null,
   });
+
+  const [loading, setLoading] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -33,10 +38,22 @@ const AddCategoryPage = () => {
     document.querySelector('input[name="gambar"]').value = "";
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Data yang dikirim:", form);
-    navigate(-1); // balik ke halaman sebelumnya
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      await CategoryService.createCategory({
+        name: form.nama,
+        image: form.gambar,
+        token,
+      });
+      setShowAlert(true);
+    } catch (error) {
+      alert(error.response?.data?.message || "Gagal menambahkan kategori.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -100,12 +117,22 @@ const AddCategoryPage = () => {
             <button
               type="submit"
               className="bg-red-600 text-white px-6 py-2 rounded-md hover:bg-red-700"
+              disabled={loading}
             >
-              Simpan
+              {loading ? "Menyimpan..." : "Simpan"}
             </button>
           </div>
         </form>
       </div>
+
+      {/* ✅ ALERT Berhasil */}
+      {showAlert && (
+        <Alert
+          message="Kategori berhasil ditambahkan!"
+          onConfirm={() => navigate(-1)}
+          confirmText="OK"
+        />
+      )}
     </div>
   );
 };
