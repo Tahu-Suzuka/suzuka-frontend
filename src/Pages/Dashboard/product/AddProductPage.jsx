@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { IoIosClose } from "react-icons/io";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { ProductService } from "../../../services/ProductService";
+import { CategoryService } from "../../../services/CategoryService";
+import Alert from "../../../components/atoms/Alert";
 
 const AddProductPage = () => {
   const navigate = useNavigate();
+  const [showAlert, setShowAlert] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     nama: "",
     kategori: "",
@@ -18,59 +25,34 @@ const AddProductPage = () => {
     previewGambar2: null,
     previewGambar3: null,
   });
+  const [kategoriOptions, setKategoriOptions] = useState([]);
 
   useEffect(() => {
-    if (window.ckeditorInstance) return;
-
-    const script = document.createElement("script");
-    script.src =
-      "https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js";
-    script.onload = () => {
-      if (window.ClassicEditor && !window.ckeditorInstance) {
-        window.ClassicEditor.create(document.querySelector("#deskripsi"))
-          .then((editor) => {
-            window.ckeditorInstance = editor;
-          })
-          .catch((error) => {
-            console.error("CKEditor init error:", error);
-          });
+    const fetchKategori = async () => {
+      try {
+        const res = await CategoryService.getAllCategories();
+        setKategoriOptions(res.data);
+      } catch (err) {
+        console.error("Gagal mengambil kategori:", err);
       }
     };
-    document.body.appendChild(script);
-
-    return () => {
-      if (window.ckeditorInstance) {
-        window.ckeditorInstance.destroy().catch(() => {});
-        window.ckeditorInstance = null;
-      }
-    };
+    fetchKategori();
   }, []);
 
   const formatRupiah = (angka) => {
-    const numberString = angka.replace(/[^,\d]/g, "").toString();
-    const split = numberString.split(",");
-    const sisa = split[0].length % 3;
-    let rupiah = split[0].substr(0, sisa);
-    const ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
+    const numberString = angka.replace(/[^\d]/g, "");
+    const sisa = numberString.length % 3;
+    let rupiah = numberString.substr(0, sisa);
+    const ribuan = numberString.substr(sisa).match(/\d{3}/g);
     if (ribuan) {
-      const separator = sisa ? "." : "";
-      rupiah += separator + ribuan.join(".");
+      rupiah += (sisa ? "." : "") + ribuan.join(".");
     }
-
-    return "Rp" + rupiah + (split[1] !== undefined ? "," + split[1] : "");
+    return "Rp" + rupiah;
   };
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-
-    if (name === "harga") {
-      const rawValue = value.replace(/\D/g, "");
-      setForm((prev) => ({
-        ...prev,
-        [name]: formatRupiah(rawValue),
-      }));
-    } else if (files) {
+    if (files) {
       const file = files[0];
       const previewKey =
         "preview" + name.charAt(0).toUpperCase() + name.slice(1);
@@ -123,36 +105,51 @@ const AddProductPage = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const deskripsiValue = window.ckeditorInstance?.getData() || "";
+    setLoading(true);
 
-    const cleanVariasi = form.variasi.map((item) => ({
-      ...item,
-      harga: parseInt(item.harga.replace(/\D/g, ""), 10),
-    }));
+    try {
+      const formData = new FormData();
+      formData.append("product_name", form.nama);
+      formData.append(
+        "price",
+        parseInt(form.variasi[0].harga.replace(/\D/g, ""), 10)
+      );
+      formData.append("description", form.deskripsi);
+      formData.append("categoryId", form.kategori);
 
-    const finalForm = {
-      ...form,
-      deskripsi: deskripsiValue,
-      variasi: cleanVariasi,
-    };
+      form.variasi.forEach((v, i) => {
+        formData.append(`variations[${i}][name]`, v.nama);
+        formData.append(
+          `variations[${i}][price]`,
+          parseInt(v.harga.replace(/\D/g, ""), 10)
+        );
+      });
 
-    console.log("Data disubmit:", finalForm);
-    navigate(-1);
+      if (form.gambarUtama) formData.append("mainImage", form.gambarUtama);
+      if (form.gambar1) formData.append("additionalImages", form.gambar1);
+      if (form.gambar2) formData.append("additionalImages", form.gambar2);
+      if (form.gambar3) formData.append("additionalImages", form.gambar3);
+
+      const token = localStorage.getItem("token");
+      await ProductService.create(formData, token);
+      setShowAlert(true);
+    } catch (err) {
+      console.error("Gagal menambahkan produk:", err);
+      if (err.response) {
+        alert("Gagal: " + JSON.stringify(err.response.data.errors));
+      } else {
+        alert("Terjadi kesalahan jaringan atau server.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
-
-  const kategoriOptions = [
-    "Tahu Kuning",
-    "Tahu Putih",
-    "Tahu Stik",
-    "Kerupuk Tahu",
-  ];
 
   const renderUploadField = (label, name, required = false) => {
     const previewKey = "preview" + name.charAt(0).toUpperCase() + name.slice(1);
     const previewUrl = form[previewKey];
-
     return (
       <div>
         <label className="block text-sm font-medium mb-1">{label}</label>
@@ -186,7 +183,7 @@ const AddProductPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 ">
+    <div className="min-h-screen bg-gray-100">
       <div className="bg-white p-6 md:p-10 rounded-xl shadow-md">
         <button
           onClick={() => navigate(-1)}
@@ -223,15 +220,15 @@ const AddProductPage = () => {
                   name="kategori"
                   value={form.kategori}
                   onChange={handleChange}
-                  className="w-full border px-4 py-2 rounded-md text-gray-400"
+                  className="w-full border px-4 py-2 rounded-md"
                   required
                 >
-                  <option value="" className="text-black" disabled>
+                  <option value="" disabled>
                     Pilih kategori
                   </option>
                   {kategoriOptions.map((opt) => (
-                    <option className="text-black" key={opt} value={opt}>
-                      {opt}
+                    <option key={opt.id} value={opt.id}>
+                      {opt.category_name}
                     </option>
                   ))}
                 </select>
@@ -271,7 +268,7 @@ const AddProductPage = () => {
                       <button
                         type="button"
                         onClick={() => removeVariasi(index)}
-                        className="text-primary hover:underline text-xs hover:text-red-700 px-2"
+                        className="text-xs text-red-500 hover:underline px-2"
                       >
                         Hapus
                       </button>
@@ -300,26 +297,38 @@ const AddProductPage = () => {
 
           <div>
             <label className="block text-sm font-medium mb-1">Deskripsi</label>
-            <textarea
-              id="deskripsi"
-              name="deskripsi"
-              defaultValue={form.deskripsi}
-              rows="4"
-              className="w-full border px-4 py-2 rounded-md"
-              required
-            ></textarea>
+            <CKEditor
+              editor={ClassicEditor}
+              data={form.deskripsi}
+              onChange={(_, editor) => {
+                const data = editor.getData();
+                setForm((prev) => ({ ...prev, deskripsi: data }));
+              }}
+            />
           </div>
 
           <div className="pt-4 justify-end flex">
             <button
               type="submit"
               className="bg-primary text-white px-6 py-2 rounded-md hover:bg-opacity-90"
+              disabled={loading}
             >
-              Simpan Produk
+              {loading ? "Menyimpan..." : "Simpan Produk"}
             </button>
           </div>
         </form>
       </div>
+
+      {showAlert && (
+        <Alert
+          message="Produk berhasil ditambahkan!"
+          confirmText="OK"
+          onConfirm={() => {
+            setShowAlert(false);
+            navigate("/dashboard/product");
+          }}
+        />
+      )}
     </div>
   );
 };

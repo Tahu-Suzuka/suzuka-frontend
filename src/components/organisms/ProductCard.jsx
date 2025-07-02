@@ -1,44 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../atoms/Card";
 import Button from "../atoms/Button";
-
-const products = [
-  {
-    name: "Tahu Kuning",
-    image: "/images/hero/slider1.png",
-    price: 12000,
-    rating: 5,
-  },
-  {
-    name: "Tahu Putih",
-    image: "/images/hero/slider2.png",
-    price: 10000,
-    rating: 4,
-  },
-  {
-    name: "Tahu Stik",
-    image: "/images/hero/slider3.png",
-    price: 14000,
-    rating: 5,
-  },
-  {
-    name: "Tahu Stik",
-    image: "/images/hero/slider3.png",
-    price: 14000,
-    rating: 5,
-  },
-];
+import { ProductService } from "../../services/ProductService";
 
 const ProductCard = () => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await ProductService.getAll();
+        setProducts(res.data);
+      } catch (err) {
+        console.error("Gagal memuat produk:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  if (loading) {
+    return <p className="text-center text-gray-500">Memuat produk...</p>;
+  }
+
   return (
     <>
       {products.map((product, index) => (
         <Card
           key={index}
-          name={product.name}
-          image={product.image}
-          rating={product.rating}
-          price={product.price}
+          name={product.product_name}
+          image={product.mainImage}
+          rating={product.rating || 5} // default rating jika belum tersedia
+          price={product.variations?.[0]?.price || 0} // fallback harga 0 jika kosong
         >
           <Button
             to="/cart"

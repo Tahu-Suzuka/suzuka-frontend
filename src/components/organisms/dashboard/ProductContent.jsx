@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import Button from "../../atoms/Button";
@@ -8,10 +8,15 @@ import Table from "../../atoms/Table";
 import Pagination from "../../atoms/Pagination";
 import Filter from "../../atoms/Filter";
 import Alert from "../../atoms/Alert";
+import { ProductService } from "../../../services/ProductService";
 
 const ProductContent = () => {
   const navigate = useNavigate();
   const [sortBy, setSortBy] = useState("");
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
 
   const sortOptions = [
     { value: "menungguPembayaran", label: "Menunggu Pembayaran" },
@@ -21,43 +26,42 @@ const ProductContent = () => {
     { value: "dibatalkan", label: "Dibatalkan" },
   ];
 
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      produk: {
-        nama: "Tahu Kuning Normal",
-        gambar: "/images/product/header.png",
-      },
-      harga: "Rp12.000",
-      kategori: "Tahu Kuning",
-      deskripsi:
-        "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    },
-    {
-      id: 2,
-      produk: {
-        nama: "Tahu Putih Pedas",
-        gambar: "/images/product/header.png",
-      },
-      harga: "Rp10.000",
-      kategori: "Tahu Putih",
-      deskripsi:
-        "Tahu dengan rasa pedas menggugah selera, cocok untuk cemilan atau lauk.",
-    },
-  ]);
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await ProductService.getAll(token);
+      setProducts(response.data);
+    } catch (err) {
+      console.error("Gagal mengambil data produk:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const [showAlert, setShowAlert] = useState(false);
-  const [selectedId, setSelectedId] = useState(null);
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   const confirmDelete = (id) => {
     setSelectedId(id);
     setShowAlert(true);
   };
 
-  const handleConfirmDelete = () => {
-    setProducts((prev) => prev.filter((item) => item.id !== selectedId));
-    setShowAlert(false);
-    setSelectedId(null);
+  const handleConfirmDelete = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await ProductService.delete(selectedId, token);
+      setProducts((prev) => prev.filter((item) => item.id !== selectedId));
+    } catch (err) {
+      console.error(
+        "Gagal menghapus produk:",
+        err.response?.data || err.message
+      );
+    } finally {
+      setShowAlert(false);
+      setSelectedId(null);
+    }
   };
 
   const handleCancelDelete = () => {
@@ -77,7 +81,6 @@ const ProductContent = () => {
         />
       )}
 
-      {/* Toolbar */}
       <div className="flex w-full justify-between items-center">
         <h1 className="text-xl font-bold text-gray-800">Daftar Produk</h1>
         <div className="flex flex-auto justify-end gap-4">
@@ -93,50 +96,59 @@ const ProductContent = () => {
         </div>
       </div>
 
-      {/* Table Produk */}
-      <Table headers={headers}>
-        {products.map((order, idx) => (
-          <tr key={order.id} className="border-t">
-            <td className="py-2 px-4">{idx + 1}</td>
-            <td className="py-2 px-4">
-              <div className="flex items-center gap-3">
-                <img
-                  src={order.produk.gambar}
-                  alt={order.produk.nama}
-                  className="w-10 h-10 object-cover rounded"
-                />
-                <span className="text-sm font-medium text-gray-800">
-                  {order.produk.nama}
-                </span>
-              </div>
-            </td>
-            <td className="py-2 px-4">{order.kategori}</td>
-            <td className="py-2 px-4">{order.harga}</td>
-            <td className="py-2 px-4 max-w-xs">
-              <p
-                className="truncate text-sm text-gray-700"
-                title={order.deskripsi}
-              >
-                {order.deskripsi}
-              </p>
-            </td>
-            <td className="py-2 px-4 flex gap-3">
-              <button
-                className="text-green-500 hover:text-green-700"
-                onClick={() => navigate(`/dashboard/edit-product/${order.id}`)}
-              >
-                <FiEdit className="w-5 h-5" />
-              </button>
-              <button
-                className="text-primary hover:text-red-800"
-                onClick={() => confirmDelete(order.id)}
-              >
-                <MdDelete className="w-5 h-5" />
-              </button>
-            </td>
-          </tr>
-        ))}
-      </Table>
+      {loading ? (
+        <p className="text-center py-10 text-gray-500">Memuat data...</p>
+      ) : (
+        <Table headers={headers}>
+          {products.map((item, idx) => (
+            <tr key={item.id} className="border-t">
+              <td className="py-2 px-4">{idx + 1}</td>
+              <td className="py-2 px-4">
+                <div className="flex items-center gap-3">
+                  <img
+                    src={item.mainImage}
+                    alt={item.product_name}
+                    className="w-10 h-10 object-cover rounded"
+                  />
+                  <span className="text-sm font-medium text-gray-800">
+                    {item.product_name}
+                  </span>
+                </div>
+              </td>
+              <td className="py-2 px-4">
+                {item.category?.category_name || "-"}
+              </td>
+              <td className="py-2 px-4">
+                {item.variations?.[0]?.price
+                  ? `Rp${item.variations[0].price.toLocaleString("id-ID")}`
+                  : "-"}
+              </td>
+              <td className="py-2 px-4 max-w-xs">
+                <p
+                  className="truncate text-sm text-gray-700"
+                  title={item.description}
+                >
+                  {item.description}
+                </p>
+              </td>
+              <td className="py-2 px-4 flex gap-3">
+                <button
+                  className="text-green-500 hover:text-green-700"
+                  onClick={() => navigate(`/dashboard/edit-product/${item.id}`)}
+                >
+                  <FiEdit className="w-5 h-5" />
+                </button>
+                <button
+                  className="text-primary hover:text-red-800"
+                  onClick={() => confirmDelete(item.id)}
+                >
+                  <MdDelete className="w-5 h-5" />
+                </button>
+              </td>
+            </tr>
+          ))}
+        </Table>
+      )}
 
       <Pagination />
     </div>
