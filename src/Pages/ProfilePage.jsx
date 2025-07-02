@@ -3,6 +3,7 @@ import Header from "../components/atoms/Header";
 import ProfileSidebar from "../components/organisms/sidebar/ProfileSidebar";
 import ProfileContent from "../components/organisms/ProfileContent";
 import OrderContent from "../components/organisms/OrderContent";
+import ChangePassword from "../components/organisms/ChangePassword";
 
 const ProfilePage = () => {
   const [activeMenu, setActiveMenu] = useState("profil");
@@ -20,6 +21,9 @@ const ProfilePage = () => {
         <div className="md:col-span-3">
           <div className="bg-white rounded-md shadow-md">
             {activeMenu === "profil" && <ProfileContent />}
+          </div>
+          <div className="bg-white rounded-md shadow-md">
+            {activeMenu === "changePassword" && <ChangePassword />}
           </div>
           {activeMenu === "pesanan" && <OrderContent />}
         </div>

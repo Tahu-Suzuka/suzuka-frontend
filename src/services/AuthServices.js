@@ -44,4 +44,17 @@ export const AuthService = {
     });
     return res.data;
   },
+
+  changePassword: async ({ oldPassword, newPassword, token }) => {
+    const res = await axios.patch(
+      `${API_URL}/auth/change-password`,
+      { oldPassword, newPassword },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return res.data;
+  },
 };

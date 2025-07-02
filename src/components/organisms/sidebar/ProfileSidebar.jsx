@@ -26,13 +26,9 @@ const ProfileSidebar = ({ activeMenu, setActiveMenu }) => {
         </li>
 
         <li
-          onClick={() => navigate("/security-check")}
-          className={`flex items-center gap-2  cursor-pointer transition-colors ${
-            [
-              "/security-check",
-              "/security-password",
-              "/change-password",
-            ].includes(currentPath)
+          onClick={() => setActiveMenu("changePassword")}
+          className={`flex items-center gap-2 cursor-pointer transition-colors ${
+            activeMenu === "changePassword"
               ? "text-primary font-bold"
               : "text-gray-700 hover:text-primary"
           }`}

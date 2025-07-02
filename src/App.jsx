@@ -22,14 +22,6 @@ import ProfilePage from "./pages/ProfilePage";
 import CheckoutLayout from "./layouts/CheckoutLayout";
 import CheckoutPage from "./pages/CheckoutPage";
 
-// sementara
-
-// Security Check
-import SecurityLayout from "./layouts/SecurityLayout";
-import SecurityCheck from "./pages/SecurityCheck";
-import SecurityPassword from "./pages/SecurityPassword";
-import SecurityFailed from "./pages/SecurityFailed";
-
 // Dashboard
 import DashboardPage from "./pages/Dashboard/DashboardPage";
 import DashboardLayout from "./layouts/dashboard/DashboardLayout";
@@ -92,13 +84,6 @@ const App = () => {
         {/* Checkout Layout */}
         <Route element={<CheckoutLayout />}>
           <Route path="checkout" element={<CheckoutPage />} />
-        </Route>
-
-        {/* Security Check */}
-        <Route element={<SecurityLayout />}>
-          <Route path="/security-check" element={<SecurityCheck />} />
-          <Route path="/security-password" element={<SecurityPassword />} />
-          <Route path="/security-failed" element={<SecurityFailed />} />
         </Route>
 
         {/* Auth Layout */}

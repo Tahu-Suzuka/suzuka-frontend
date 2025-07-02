@@ -125,38 +125,25 @@ const ProfileContent = () => {
         </div>
 
         {/* Gambar profil */}
-        <div className="flex flex-col items-center md:items-start">
-          {/* Preview gambar */}
-          {image && (
-            <img
-              src={
-                typeof image === "string"
-                  ? image.startsWith("http") || image.startsWith("/")
-                    ? image
-                    : `${API_URL}/${image}`
+        <div className="w-full md:w-1/3 flex flex-col items-center md:items-start">
+          <img
+            src={
+              image
+                ? typeof image === "string"
+                  ? `${API_URL}/${image}`
                   : URL.createObjectURL(image)
-              }
-              alt="Avatar"
-              className="w-24 h-24 rounded-full object-cover mb-4"
-            />
-          )}
-
+                : "/images/default-profile.png"
+            }
+            alt="Avatar"
+            className="w-24 h-24 rounded-full object-cover mb-4"
+          />
           <input
             type="file"
-            id="file-upload"
             accept="image/png, image/jpeg"
             onChange={(e) => setImage(e.target.files[0])}
-            className="hidden"
+            className="text-sm"
           />
-
-          <label
-            htmlFor="file-upload"
-            className="cursor-pointer text-sm bg-primary text-white px-4 py-1 rounded-md hover:bg-red-700"
-          >
-            {image ? "Ganti Foto" : "Unggah Foto"}
-          </label>
-
-          <p className="text-xs text-gray-500 mt-1 text-center md:text-left">
+          <p className="text-xs text-gray-500 mt-1">
             Ukuran maks. 1 MB <br />
             Format: .JPEG, .PNG
           </p>
