@@ -8,6 +8,7 @@ export default function InputField({
   type = "text",
   variant = "auth",
   rightElement,
+  className = "",
 }) {
   const isAuth = variant === "auth";
 
@@ -35,7 +36,7 @@ export default function InputField({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className={`w-full text-sm border-gray-300 bg-white text-gray-700 focus:outline-none ${inputClass}`}
+        className={`w-full text-sm border-gray-300 bg-white text-gray-700 focus:outline-none ${inputClass} ${className}`}
       />
 
       {rightElement && (

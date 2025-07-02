@@ -27,7 +27,7 @@ export const AuthService = {
   resendOtp: async (email) => {
     const res = await axios.post(`${API_URL}/auth/resend-otp`, { email });
     return res.data;
-  }, // ✅ Tambahkan ini
+  },
 
   forgotPassword: async (email) => {
     const res = await axios.post(`${API_URL}/auth/forgot-password`, {
@@ -40,7 +40,7 @@ export const AuthService = {
     const res = await axios.post(`${API_URL}/auth/reset-password`, {
       email,
       otp,
-      newPassword, // pastikan ini tidak diganti jadi `password`
+      newPassword,
     });
     return res.data;
   },
