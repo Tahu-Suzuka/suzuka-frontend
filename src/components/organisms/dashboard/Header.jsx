@@ -28,9 +28,11 @@ const Header = () => {
   };
 
   return (
-    <header className="h-16 bg-white border-b flex items-center justify-between px-6 shadow z-30 relative">
+    <header className="relative z-30 flex h-16 items-center justify-between border-b bg-white px-6 shadow">
+      {/* --- PERBAIKAN DI SINI --- */}
+      {/* Tampilkan sapaan hanya jika user sudah ada */}
       <div className="ml-20 text-base font-semibold text-gray-800">
-        Hello, {user.name}!
+        {user ? `Hello, ${user.name}!` : "..."}
       </div>
 
       <div className="relative">
@@ -38,24 +40,27 @@ const Header = () => {
           onClick={() => setOpen(!open)}
           className="flex items-center gap-2 focus:outline-none"
         >
+          {/* Menggunakan optional chaining di sini sudah benar */}
           <Avatar src={user?.image || "/images/default-profile.png"} />
-          <FaChevronDown className="text-gray-500 text-sm" />
+          <FaChevronDown className="text-sm text-gray-500" />
         </button>
 
-        {open && (
-          <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-md text-sm z-50">
-            <div className="p-4 border-b">
-              <p className="font-medium text-gray-800">{user.name}</p>
+        {/* Tampilkan dropdown hanya jika user ada dan state open true */}
+        {open && user && (
+          <div className="absolute right-0 z-50 mt-2 w-56 rounded-md bg-white text-sm shadow-md">
+            <div className="border-b p-4">
+              {/* --- PERBAIKAN DI SINI (Gunakan optional chaining) --- */}
+              <p className="font-medium text-gray-800">{user?.name}</p>
             </div>
             <button
               onClick={() => navigate("/")}
-              className="flex items-center w-full px-3 py-2 text-gray-700 hover:bg-gray-100 rounded"
+              className="flex w-full items-center rounded px-3 py-2 text-gray-700 hover:bg-gray-100"
             >
               <IoHomeOutline className="mr-2" /> Beranda
             </button>
             <button
               onClick={handleLogout}
-              className="flex items-center w-full px-3 py-2 text-red-600 hover:bg-red-50 rounded mt-1"
+              className="mt-1 flex w-full items-center rounded px-3 py-2 text-red-600 hover:bg-red-50"
             >
               <IoLogOutOutline className="mr-2" /> Keluar
             </button>

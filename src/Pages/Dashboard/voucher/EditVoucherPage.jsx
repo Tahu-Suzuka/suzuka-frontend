@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
+import { VoucherService } from "../../../services/VoucherService";
+import Alert from "../../../components/atoms/Alert";
 
 const EditVoucherPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [alert, setAlert] = useState({ message: "", show: false });
+
   const [form, setForm] = useState({
     kode: "",
     tipe: "",
@@ -13,24 +17,6 @@ const EditVoucherPage = () => {
     mulai: "",
     sampai: "",
   });
-
-  useEffect(() => {
-    // Simulasi fetch data voucher untuk diedit (nanti bisa ganti pakai axios)
-    const fetchVoucher = async () => {
-      // data dummy
-      const data = {
-        kode: "DISKON10",
-        tipe: "Potongan Ongkir",
-        minPembelian: "Rp100.000",
-        nilai: "10",
-        mulai: "2025-06-01",
-        sampai: "2025-06-30",
-      };
-      setForm(data);
-    };
-
-    fetchVoucher();
-  }, [id]);
 
   const formatRupiah = (angka) => {
     const numberString = angka.replace(/[^,\d]/g, "").toString();
@@ -47,6 +33,35 @@ const EditVoucherPage = () => {
     return "Rp" + rupiah + (split[1] !== undefined ? "," + split[1] : "");
   };
 
+  const parseRupiah = (rupiahStr) => {
+    return parseInt(rupiahStr.replace(/[^\d]/g, ""), 10);
+  };
+
+  useEffect(() => {
+    const fetchVoucher = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const data = await VoucherService.getById(id, token);
+
+        setForm({
+          kode: data.code,
+          tipe:
+            data.type === "POTONGAN_HARGA"
+              ? "Potongan Harga"
+              : "Potongan Ongkir",
+          minPembelian: formatRupiah(data.minPurchase.toString()),
+          nilai: formatRupiah(data.value.toString()),
+          mulai: data.validFrom.split("T")[0],
+          sampai: data.validUntil.split("T")[0],
+        });
+      } catch (err) {
+        setAlert({ show: true, message: "Gagal memuat data voucher" });
+      }
+    };
+
+    fetchVoucher();
+  }, [id]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "minPembelian" || name === "nilai") {
@@ -62,9 +77,29 @@ const EditVoucherPage = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Update voucher:", form);
+    try {
+      const token = localStorage.getItem("token");
+      const payload = {
+        code: form.kode,
+        type: form.tipe.toUpperCase().replace(" ", "_"),
+        minPurchase: parseRupiah(form.minPembelian),
+        value: parseRupiah(form.nilai),
+        validFrom: form.mulai,
+        validUntil: form.sampai,
+        description: `Voucher ${form.kode} berlaku dari ${form.mulai} sampai ${form.sampai}`,
+      };
+
+      await VoucherService.update(id, payload, token);
+      setAlert({ show: true, message: "Voucher berhasil diperbarui!" });
+      setTimeout(() => navigate("/dashboard/voucher"), 1500);
+    } catch (err) {
+      setAlert({
+        show: true,
+        message: err?.message || "Gagal memperbarui voucher",
+      });
+    }
   };
 
   return (
@@ -78,7 +113,6 @@ const EditVoucherPage = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Kiri */}
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-1">
@@ -89,7 +123,6 @@ const EditVoucherPage = () => {
                 name="kode"
                 value={form.kode}
                 onChange={handleChange}
-                placeholder="Masukan Kode Voucher"
                 className="w-full border px-4 py-2 rounded-md"
                 required
               />
@@ -120,7 +153,6 @@ const EditVoucherPage = () => {
                 name="minPembelian"
                 value={form.minPembelian}
                 onChange={handleChange}
-                placeholder="Masukan Minimum Pembelian"
                 className="w-full border px-4 py-2 rounded-md"
                 required
               />
@@ -135,14 +167,12 @@ const EditVoucherPage = () => {
                 name="nilai"
                 value={form.nilai}
                 onChange={handleChange}
-                placeholder="Masukan Nilai Diskon"
                 className="w-full border px-4 py-2 rounded-md"
                 required
               />
             </div>
           </div>
 
-          {/* Kanan */}
           <div className="space-y-4">
             <label className="block text-sm font-medium mb-1 text-center">
               Masa Berlaku
@@ -178,6 +208,14 @@ const EditVoucherPage = () => {
           </button>
         </div>
       </form>
+
+      {alert.show && (
+        <Alert
+          message={alert.message}
+          onConfirm={() => setAlert({ show: false, message: "" })}
+          confirmText="Tutup"
+        />
+      )}
     </div>
   );
 };
