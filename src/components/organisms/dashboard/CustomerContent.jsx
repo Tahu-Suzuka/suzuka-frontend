@@ -1,42 +1,58 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
-import Button from "../../atoms/Button";
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
+import Button from "../../atoms/Button";
 import Table from "../../atoms/Table";
 import SearchBar from "../../atoms/SearchBar";
 import Pagination from "../../atoms/Pagination";
 import Alert from "../../atoms/Alert";
+import { UserService } from "../../../services/UserService";
 
 const CustomerContent = () => {
   const navigate = useNavigate();
+  const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const customers = [
-    {
-      customer: {
-        nama: "Jeon Jungkook",
-        gambar: "/images/default-profile.png",
-      },
-
-      email: "jek@suzuka.com",
-      telepon: "08123456789",
-      jumlah: 5,
-    },
-  ];
-
   const [showAlert, setShowAlert] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
+
+  const fetchCustomers = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      const res = await UserService.getAll(token);
+      setCustomers(res.data);
+    } catch (err) {
+      console.error("Gagal mengambil data pelanggan:", err);
+      alert("Gagal memuat data pelanggan");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCustomers();
+  }, []);
 
   const confirmDelete = (id) => {
     setSelectedId(id);
     setShowAlert(true);
   };
 
-  const handleConfirmDelete = () => {
-    setCustomers((prev) => prev.filter((item) => item.id !== selectedId));
-    setShowAlert(false);
-    setSelectedId(null);
+  const handleConfirmDelete = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await UserService.delete(selectedId, token);
+      setCustomers((prev) => prev.filter((item) => item.id !== selectedId));
+    } catch (err) {
+      console.error("Gagal menghapus pelanggan:", err);
+      alert("Gagal menghapus pelanggan");
+    } finally {
+      setShowAlert(false);
+      setSelectedId(null);
+    }
   };
 
   const handleCancelDelete = () => {
@@ -46,9 +62,12 @@ const CustomerContent = () => {
 
   const headers = ["Nama", "Email", "No. Telepon", "Jumlah Pesanan", "Aksi"];
 
+  const filteredCustomers = customers.filter((cust) =>
+    cust.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="space-y-6 bg-white p-6 rounded-lg shadow ">
-      {/* Toolbar */}
+    <div className="space-y-6 bg-white p-6 rounded-lg shadow">
       <div className="flex w-full justify-between items-center">
         <h1 className="text-xl font-bold text-gray-800">Daftar Pelanggan</h1>
 
@@ -71,43 +90,47 @@ const CustomerContent = () => {
         </div>
       </div>
 
-      <Table headers={headers}>
-        {customers.map((customer, idx) => (
-          <tr key={idx} className="border-t">
-            <td className="py-2 px-4">
-              <div className="flex items-center gap-3">
-                <img
-                  src={customer.customer.gambar}
-                  alt={customer.customer.nama}
-                  className="w-10 h-10 object-cover rounded"
-                />
-                <span className="text-sm font-medium text-gray-800">
-                  {customer.customer.nama}
-                </span>
-              </div>
-            </td>
-            <td className="py-2 px-4">{customer.email}</td>
-            <td className="py-2 px-4">{customer.telepon}</td>
-            <td className="py-2 px-4">{customer.jumlah}</td>
-            <td className="py-2 px-4 flex gap-3">
-              <button
-                className="text-green-500 hover:text-green-700"
-                onClick={() =>
-                  navigate(`/dashboard/edit-customer/${customer.id}`)
-                }
-              >
-                <FiEdit className="w-5 h-5" />
-              </button>
-              <button
-                className="text-primary hover:text-red-800"
-                onClick={() => confirmDelete(customer.id)}
-              >
-                <MdDelete className="w-5 h-5" />
-              </button>
-            </td>
-          </tr>
-        ))}
-      </Table>
+      {loading ? (
+        <p className="text-center text-gray-500 py-10">Memuat data...</p>
+      ) : (
+        <Table headers={headers}>
+          {filteredCustomers.map((customer) => (
+            <tr key={customer.id} className="border-t">
+              <td className="py-2 px-4">
+                <div className="flex items-center gap-3">
+                  <img
+                    src={customer.image || "/images/default-profile.png"}
+                    alt={customer.name}
+                    className="w-10 h-10 object-cover rounded"
+                  />
+                  <span className="text-sm font-medium text-gray-800">
+                    {customer.name}
+                  </span>
+                </div>
+              </td>
+              <td className="py-2 px-4">{customer.email}</td>
+              <td className="py-2 px-4">{customer.phone || "-"}</td>
+              <td className="py-2 px-4">{customer.orderCount || 0}</td>
+              <td className="py-2 px-4 flex gap-3">
+                <button
+                  className="text-green-500 hover:text-green-700"
+                  onClick={() =>
+                    navigate(`/dashboard/edit-customer/${customer.id}`)
+                  }
+                >
+                  <FiEdit className="w-5 h-5" />
+                </button>
+                <button
+                  className="text-primary hover:text-red-800"
+                  onClick={() => confirmDelete(customer.id)}
+                >
+                  <MdDelete className="w-5 h-5" />
+                </button>
+              </td>
+            </tr>
+          ))}
+        </Table>
+      )}
 
       {/* Alert */}
       {showAlert && (
@@ -118,6 +141,7 @@ const CustomerContent = () => {
           onCancel={handleCancelDelete}
         />
       )}
+
       {/* Pagination */}
       <Pagination />
     </div>

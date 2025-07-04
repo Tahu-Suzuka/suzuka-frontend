@@ -63,7 +63,7 @@ const Navbar = () => {
           {isLoggedIn && (
             <div className="relative">
               <img
-                src="/images/img1.png"
+                src={user?.image || "/images/default-profile.png"}
                 alt="Avatar"
                 className="w-10 h-10 rounded-full border-2 bg-white p-0.5"
                 onClick={() => setIsDropdownOpen((prev) => !prev)}
@@ -71,22 +71,30 @@ const Navbar = () => {
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-52 bg-white text-black rounded shadow-md z-50">
                   <div className="px-4 py-2 border-b border-gray-300">
-                    <p className="text-sm font-bold text-center">
-                      {user?.name}
-                    </p>
+                    <p className="text-sm font-bold text-center">{user.name}</p>
                   </div>
                   <ul className="py-1">
-                    <li className="flex items-center gap-2 px-4 py-2 hover:bg-primary hover:bg-opacity-10 cursor-pointer">
-                      <CgProfile className="text-lg" />
-                      <span className="text-sm hover:font-bold">
-                        Profil Saya
-                      </span>
+                    <li>
+                      <Link
+                        to="/ProfileContent"
+                        className="flex items-center gap-2 px-4 py-2 hover:bg-primary hover:bg-opacity-10 cursor-pointer"
+                      >
+                        <CgProfile className="text-lg" />
+                        <span className="text-sm hover:font-bold">
+                          Profil Saya
+                        </span>
+                      </Link>
                     </li>
-                    <li className="flex items-center gap-2 px-4 py-2 hover:bg-primary hover:bg-opacity-10 cursor-pointer">
-                      <LuNotebookText className="text-lg" />
-                      <span className="text-sm hover:font-bold">
-                        Pesanan Saya
-                      </span>
+                    <li>
+                      <Link
+                        to="/OrderContent"
+                        className="flex items-center gap-2 px-4 py-2 hover:bg-primary hover:bg-opacity-10 cursor-pointer"
+                      >
+                        <LuNotebookText className="text-lg" />
+                        <span className="text-sm hover:font-bold">
+                          Pesanan Saya
+                        </span>
+                      </Link>
                     </li>
                     <li
                       className="flex items-center gap-2 px-4 py-2 hover:bg-primary hover:bg-opacity-10 cursor-pointer text-primary hover:font-bold"
@@ -178,7 +186,7 @@ const Navbar = () => {
                 onClick={() => setIsDropdownOpen((prev) => !prev)}
                 className="flex items-center cursor-pointer"
               >
-                <Avatar src="/images/default-profile.png" />
+                <Avatar src={user?.image || "/images/default-profile.png"} />
                 {isDropdownOpen ? (
                   <RiArrowDropUpLine className="h-9 w-9" />
                 ) : (

@@ -3,23 +3,23 @@ import Slider from "react-slick";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { CategoryService } from "../../../services/CategoryService";
 
-const PrevArrow = ({ onClick }) => (
-  <button
-    className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md"
-    onClick={onClick}
-  >
-    <FaArrowLeft className="text-primary" />
-  </button>
-);
+// const PrevArrow = ({ onClick }) => (
+//   <button
+//     className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md"
+//     onClick={onClick}
+//   >
+//     <FaArrowLeft className="text-primary" />
+//   </button>
+// );
 
-const NextArrow = ({ onClick }) => (
-  <button
-    className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md"
-    onClick={onClick}
-  >
-    <FaArrowRight className="text-primary" />
-  </button>
-);
+// const NextArrow = ({ onClick }) => (
+//   <button
+//     className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md"
+//     onClick={onClick}
+//   >
+//     <FaArrowRight className="text-primary" />
+//   </button>
+// );
 
 const CardSlider = () => {
   const [categories, setCategories] = useState([]);
