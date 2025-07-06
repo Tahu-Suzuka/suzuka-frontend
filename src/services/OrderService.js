@@ -63,4 +63,37 @@ export const OrderService = {
     );
     return response.data;
   },
+
+  getAllOrders: async () => {
+    const token = localStorage.getItem("token");
+    const response = await axios.get(`${API_URL}/orders/all`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        limit: 5, // bisa diubah sesuai kebutuhan
+      },
+    });
+    return response.data;
+  },
+
+  getByCustomer: async () => {
+    const token = localStorage.getItem("token");
+    const response = await axios.get(`${API_URL}/orders`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  },
+
+  getDashboardStats: async () => {
+    const token = localStorage.getItem("token");
+    const response = await axios.get(`${API_URL}/orders/stats`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  },
 };

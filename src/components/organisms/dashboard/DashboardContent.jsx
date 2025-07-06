@@ -1,37 +1,77 @@
-import { FaBox, FaUsers, FaStar } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaUsers, FaStar } from "react-icons/fa";
 import { IoStatsChart } from "react-icons/io5";
 import { TbFileInvoice } from "react-icons/tb";
 import Chart from "../../atoms/Chart";
 import Stat from "../../atoms/Stat";
 import OrderTable from "../../organisms/dashboard/OrderTable";
+import { OrderService } from "../../../services/OrderService";
 
 const DashboardContent = () => {
+  const [orders, setOrders] = useState([]);
+  const [stats, setStats] = useState({
+    todaySales: 0,
+    totalOrders: 0,
+    totalReviews: 0,
+    totalCustomers: 0,
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const resOrders = await OrderService.getAllOrders();
+        const allOrders = resOrders.data || [];
+
+        setOrders(allOrders);
+
+        // Hitung statistik dari orders
+        const today = new Date().toISOString().slice(0, 10);
+        const todaySales = allOrders.filter((order) =>
+          order.createdAt?.startsWith(today)
+        ).length;
+
+        const totalOrders = allOrders.length;
+        const totalCustomers = new Set(allOrders.map((o) => o.user.id)).size;
+
+        setStats({
+          todaySales,
+          totalOrders,
+          totalReviews: 0, // Jika tidak ada data review, tetap 0
+          totalCustomers,
+        });
+      } catch (err) {
+        console.error("Gagal memuat data dashboard:", err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Stat
           title="Penjualan Hari Ini"
-          value="24"
+          value={stats.todaySales}
           icon={<IoStatsChart className="text-3xl text-primary" />}
         />
         <Stat
           title="Jumlah Pesanan"
-          value="120"
+          value={stats.totalOrders}
           icon={<TbFileInvoice className="text-3xl text-primary" />}
         />
         <Stat
           title="Ulasan"
-          value="65"
+          value={stats.totalReviews}
           icon={<FaStar className="text-3xl text-primary" />}
         />
         <Stat
           title="Jumlah Pelanggan"
-          value="65"
+          value={stats.totalCustomers}
           icon={<FaUsers className="text-3xl text-primary" />}
         />
       </div>
 
-      {/* Grafik dan Tabel */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-lg font-bold text-gray-800 mb-4">
@@ -44,7 +84,7 @@ const DashboardContent = () => {
           <h2 className="text-lg font-bold text-gray-800 mb-4">
             Daftar Pesanan
           </h2>
-          <OrderTable showPayment={false} showAction={false} />
+          <OrderTable data={orders} showPayment={false} showAction={false} />
         </div>
       </div>
     </div>
