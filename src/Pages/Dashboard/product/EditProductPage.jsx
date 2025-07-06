@@ -3,8 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { IoIosClose } from "react-icons/io";
 import { ProductService } from "../../../services/ProductService";
 import { CategoryService } from "../../../services/CategoryService";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import Alert from "../../../components/atoms/Alert";
 
 const EditProductPage = () => {
   const navigate = useNavigate();
@@ -27,6 +26,7 @@ const EditProductPage = () => {
 
   const [kategoriOptions, setKategoriOptions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
     const fetchDetail = async () => {
@@ -42,7 +42,7 @@ const EditProductPage = () => {
         setForm((prev) => ({
           ...prev,
           nama: data.product_name,
-          kategori: data.category_id,
+          kategori: String(data.category_id),
           deskripsi: data.description,
           variasi:
             data.variations?.map((v) => ({
@@ -159,8 +159,7 @@ const EditProductPage = () => {
       if (form.gambar3) formData.append("additionalImages", form.gambar3);
 
       await ProductService.update(id, formData, token);
-      alert("Produk berhasil diperbarui!");
-      navigate("/dashboard/product");
+      setShowAlert(true);
     } catch (err) {
       console.error("Gagal update produk:", err);
       alert("Gagal memperbarui produk.");
@@ -245,7 +244,7 @@ const EditProductPage = () => {
                     Pilih kategori
                   </option>
                   {kategoriOptions.map((opt) => (
-                    <option key={opt.id} value={opt.id}>
+                    <option key={opt.id} value={String(opt.id)}>
                       {opt.category_name}
                     </option>
                   ))}
@@ -311,13 +310,12 @@ const EditProductPage = () => {
 
           <div>
             <label className="block text-sm font-medium mb-1">Deskripsi</label>
-            <CKEditor
-              editor={ClassicEditor}
-              data={form.deskripsi}
-              onChange={(_, editor) => {
-                const data = editor.getData();
-                setForm((prev) => ({ ...prev, deskripsi: data }));
-              }}
+            <textarea
+              name="deskripsi"
+              value={form.deskripsi}
+              onChange={handleChange}
+              className="w-full border px-4 py-2 rounded-md min-h-[150px]"
+              required
             />
           </div>
 
@@ -331,6 +329,14 @@ const EditProductPage = () => {
           </div>
         </form>
       </div>
+
+      {showAlert && (
+        <Alert
+          message="Produk berhasil diperbarui!"
+          onConfirm={() => navigate("/dashboard/product")}
+          confirmText="Tutup"
+        />
+      )}
     </div>
   );
 };

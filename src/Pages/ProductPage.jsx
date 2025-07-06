@@ -5,6 +5,7 @@ import ProductToolbar from "../components/organisms/ProductToolbar";
 
 const ProductPage = () => {
   const [activeLayout, setActiveLayout] = useState(1);
+  const [refreshCart, setRefreshCart] = useState(false);
 
   const getGridCols = () => {
     switch (activeLayout) {
@@ -19,6 +20,9 @@ const ProductPage = () => {
     }
   };
 
+  const triggerCartRefresh = () => {
+    setRefreshCart((prev) => !prev);
+  };
   return (
     <div>
       <Header imageSrc="/images/product/header.png" title="Produk" />
@@ -26,7 +30,7 @@ const ProductPage = () => {
       <div
         className={`p-6 pb-28 lg:pb-32 lg:px-20 md:p-12 grid grid-cols-1 ${getGridCols()} gap-10`}
       >
-        <ProductCard />
+        <ProductCard onCartUpdate={triggerCartRefresh} />
       </div>
     </div>
   );

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { IoIosClose } from "react-icons/io";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { ProductService } from "../../../services/ProductService";
 import { CategoryService } from "../../../services/CategoryService";
 import Alert from "../../../components/atoms/Alert";
@@ -297,13 +295,13 @@ const AddProductPage = () => {
 
           <div>
             <label className="block text-sm font-medium mb-1">Deskripsi</label>
-            <CKEditor
-              editor={ClassicEditor}
-              data={form.deskripsi}
-              onChange={(_, editor) => {
-                const data = editor.getData();
-                setForm((prev) => ({ ...prev, deskripsi: data }));
-              }}
+            <textarea
+              name="deskripsi"
+              value={form.deskripsi}
+              onChange={handleChange}
+              placeholder="Masukkan deskripsi produk"
+              className="w-full border px-4 py-2 rounded-md min-h-[120px]"
+              required
             />
           </div>
 

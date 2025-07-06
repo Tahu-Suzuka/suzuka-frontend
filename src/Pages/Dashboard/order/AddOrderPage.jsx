@@ -1,43 +1,158 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { FaPlus, FaMinus, FaTimes } from "react-icons/fa";
 import Input from "../../../components/atoms/Input";
 import Button from "../../../components/atoms/Button";
-
-const products = [
-  {
-    name: "Tahu Stik Kuning",
-    price: 12000,
-    img: "/images/hero/slider1.png",
-  },
-];
+import { ProductService } from "../../../services/ProductService";
+import { OrderService } from "../../../services/OrderService";
+import { useAuthToken } from "../../../services/useAuthToken";
+import Alert from "../../../components/atoms/Alert";
 
 export default function AddOrderPage() {
+  const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const [customerName, setCustomerName] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
+  const [note, setNote] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState(null);
+  const [suggestions, setSuggestions] = useState([]);
+  const [selectedUserId, setSelectedUserId] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const token = useAuthToken();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await ProductService.getAll();
+        const mapped = data.data.map((item) => ({
+          ...item,
+          price: item.price ?? 0,
+          img: item.mainImage ? item.mainImage : "/images/default.png",
+        }));
+        setProducts(mapped);
+      } catch (error) {
+        console.error("Gagal ambil produk:", error);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    if (alert) {
+      const timeout = setTimeout(() => setAlert(null), 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [alert]);
+
+  useEffect(() => {
+    if (!customerName) {
+      setSuggestions([]);
+      return;
+    }
+
+    const timeout = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `https://api.tahusuzuka.shop/users?name=${encodeURIComponent(
+            customerName
+          )}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = await res.json();
+        const query = customerName.toLowerCase();
+        const sorted = (data.data || []).sort((a, b) => {
+          const aName = a.name.toLowerCase();
+          const bName = b.name.toLowerCase();
+          const aStarts = aName.startsWith(query);
+          const bStarts = bName.startsWith(query);
+          if (aStarts && !bStarts) return -1;
+          if (!aStarts && bStarts) return 1;
+          const aIndex = aName.indexOf(query);
+          const bIndex = bName.indexOf(query);
+          if (aIndex !== bIndex) return aIndex - bIndex;
+          return aName.localeCompare(bName);
+        });
+        setSuggestions(sorted);
+      } catch (err) {
+        console.error("Gagal ambil saran nama:", err);
+      }
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [customerName, token]);
 
   const addToCart = (product) => {
-    const existing = cart.find((item) => item.name === product.name);
+    const variation = product.variations?.[0];
+    if (!variation) return;
+
+    const existing = cart.find(
+      (item) => item.id === product.id && item.size === variation.name
+    );
     if (existing) return;
-    setCart([...cart, { ...product, qty: 1, size: "Kecil" }]);
+
+    setCart([
+      ...cart,
+      {
+        ...product,
+        qty: 1,
+        size: variation.name,
+        price: variation.price,
+        variationId: variation.id,
+      },
+    ]);
   };
 
-  const updateQty = (name, amount) => {
+  const updateQty = (id, size, amount) => {
     setCart(
       cart.map((item) =>
-        item.name === name
+        item.id === id && item.size === size
           ? { ...item, qty: Math.max(1, item.qty + amount) }
           : item
       )
     );
   };
 
-  const removeFromCart = (name) => {
-    setCart(cart.filter((item) => item.name !== name));
+  const removeFromCart = (id, size) => {
+    setCart(cart.filter((item) => !(item.id === id && item.size === size)));
   };
 
-  const total = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+  const total = cart.reduce(
+    (acc, item) => acc + (item.price ?? 0) * item.qty,
+    0
+  );
+
+  const handleSubmit = async () => {
+    if (!selectedUserId || cart.length === 0 || !paymentMethod) {
+      setAlert({ type: "danger", message: "Lengkapi semua field!" });
+      return;
+    }
+
+    const payload = {
+      userId: selectedUserId,
+      items: cart.map((i) => ({
+        variationId: i.variationId,
+        quantity: i.qty,
+      })),
+      note,
+      paymentMethod: paymentMethod === "tunai" ? "Cash" : "QRIS",
+    };
+
+    try {
+      setLoading(true);
+      const res = await OrderService.createManualOrder(payload, token);
+      console.log("Res:", res);
+      setShowAlert(true); // ✅ Ini yang bikin alert muncul
+    } catch (er) {
+      console.error(er);
+      setAlert({ type: "danger", message: "Gagal membuat pesanan!" });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="w-full grid grid-cols-2 gap-4 items-start">
@@ -55,16 +170,18 @@ export default function AddOrderPage() {
         <div className="grid grid-cols-2 gap-4">
           {products.map((p) => (
             <div
-              key={p.name}
+              key={p.id}
               className="bg-white rounded-xl shadow p-2 flex items-center gap-4"
             >
               <img
                 src={p.img}
-                alt={p.name}
+                alt={p.product_name}
                 className="w-16 h-16 object-cover rounded-md"
               />
               <div className="flex flex-col items-center justify-center h-full">
-                <span className="text-sm font-medium mb-2">{p.name}</span>
+                <span className="text-sm font-medium mb-2">
+                  {p.product_name}
+                </span>
                 <button
                   onClick={() => addToCart(p)}
                   className="bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center"
@@ -78,17 +195,41 @@ export default function AddOrderPage() {
       </div>
 
       {/* RIGHT */}
-      <div className="space-y-2 bg-white p-6 rounded-md shadow">
-        <div className="-mb-2">
+      <div className="space-y-2 bg-white p-6 rounded-md shadow relative">
+        {alert && <Alert type={alert.type}>{alert.message}</Alert>}
+
+        <div className="relative">
           <Input
             id="name"
-            label="Nama"
-            placeholder="Masukkan nama lengkap"
+            label="Nama Pelanggan"
+            placeholder="Masukkan Nama Pelanggan"
             value={customerName}
-            onChange={(e) => setCustomerName(e.target.value)}
+            onChange={(e) => {
+              setCustomerName(e.target.value);
+              setSelectedUserId("");
+            }}
             variant="profile"
+            autoComplete="off"
           />
+          {suggestions.length > 0 && !selectedUserId && (
+            <ul className="absolute z-10 bg-white border border-gray-300 w-full mt-1 rounded shadow">
+              {suggestions.map((user) => (
+                <li
+                  key={user.id}
+                  onClick={() => {
+                    setCustomerName(user.name);
+                    setSelectedUserId(user.id);
+                    setSuggestions([]);
+                  }}
+                  className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+                >
+                  {user.name}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
+
         <select
           value={paymentMethod}
           onChange={(e) => setPaymentMethod(e.target.value)}
@@ -99,22 +240,29 @@ export default function AddOrderPage() {
           <option value="qris">QRIS</option>
         </select>
 
-        {/* Cart Items */}
+        <textarea
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          placeholder="Tulis catatan pesanan (opsional)"
+          className="w-full border border-gray-300 p-2 rounded-md text-sm resize-none"
+          rows={3}
+        />
+
         <div className="space-y-4">
           {cart.map((item) => (
             <div
-              key={item.name}
+              key={item.id + item.size}
               className="flex items-center gap-4 border-b pb-2"
             >
               <img
                 src={item.img}
-                alt={item.name}
+                alt={item.product_name}
                 className="w-16 h-16 object-cover rounded"
               />
               <div className="flex-1">
-                <p className="font-medium text-sm pb-2">{item.name}</p>
+                <p className="font-medium text-sm pb-2">{item.product_name}</p>
                 <p className="text-xs text-gray-500 pb-2">
-                  Rp{item.price.toLocaleString()}
+                  Rp{Number(item.price || 0).toLocaleString()}
                 </p>
                 <select
                   className="bg-gray-200 text-xs rounded px-2 py-1"
@@ -122,30 +270,39 @@ export default function AddOrderPage() {
                   onChange={(e) =>
                     setCart(
                       cart.map((i) =>
-                        i.name === item.name
-                          ? { ...i, size: e.target.value }
+                        i.id === item.id && i.size === item.size
+                          ? {
+                              ...i,
+                              size: e.target.value,
+                              price:
+                                i.variations?.find(
+                                  (v) => v.name === e.target.value
+                                )?.price ?? i.price,
+                            }
                           : i
                       )
                     )
                   }
                 >
-                  <option value="Kecil">Kecil</option>
-                  <option value="Sedang">Sedang</option>
-                  <option value="Besar">Besar</option>
+                  {item.variations?.map((v) => (
+                    <option key={v.id} value={v.name}>
+                      {v.name}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="flex items-center gap-2 border px-2 py-1 rounded">
-                <button onClick={() => updateQty(item.name, -1)}>
+                <button onClick={() => updateQty(item.id, item.size, -1)}>
                   <FaMinus size={12} />
                 </button>
                 <span>{item.qty}</span>
-                <button onClick={() => updateQty(item.name, 1)}>
+                <button onClick={() => updateQty(item.id, item.size, 1)}>
                   <FaPlus size={12} />
                 </button>
               </div>
 
               <button
-                onClick={() => removeFromCart(item.name)}
+                onClick={() => removeFromCart(item.id, item.size)}
                 className="w-6 h-6 text-gray-600"
               >
                 <FaTimes />
@@ -154,14 +311,29 @@ export default function AddOrderPage() {
           ))}
         </div>
 
-        {/* Total & Confirm */}
         <div className="pt-4 border-t flex items-center justify-between pb-2">
           <p className="font-semibold">Total</p>
-          <p className="font-semibold">Rp{total.toLocaleString()}</p>
+          <p className="font-semibold">
+            Rp{Number(total || 0).toLocaleString()}
+          </p>
         </div>
 
-        <Button className="py-2 rounded-md">Konfirmasi</Button>
+        <Button
+          className="py-2 rounded-md"
+          onClick={handleSubmit}
+          disabled={loading}
+        >
+          {loading ? "Memproses..." : "Konfirmasi"}
+        </Button>
       </div>
+
+      {showAlert && (
+        <Alert
+          message="Pesanan berhasil ditambahkan!"
+          onConfirm={() => navigate("/dashboard/order")}
+          confirmText="OK"
+        />
+      )}
     </div>
   );
 }

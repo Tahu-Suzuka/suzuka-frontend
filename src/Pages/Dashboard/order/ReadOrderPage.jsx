@@ -1,41 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { OrderService } from "../../../services/OrderService";
 
 const ReadOrderPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [order, setOrder] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const dummyOrders = {
-    202506: {
-      customer: "Siti",
-      address: "Jalan",
-      phone: "08xxxxxxx",
-      date: "24-06-2025",
-      status: "Diproses",
-      payment: "QRIS",
-      items: [
-        { nama: "Tahu Kuning", variasi: "Kecil", jumlah: 2, harga: 12000 },
-        { nama: "Tahu Kuning", variasi: "Besar", jumlah: 2, harga: 14000 },
-        { nama: "Kerupuk Tahu", variasi: "500gr", jumlah: 2, harga: 25000 },
-        { nama: "Tahu Stik Putih", variasi: "Normal", jumlah: 1, harga: 13000 },
-      ],
-    },
-  };
-  const order = dummyOrders[id];
+  useEffect(() => {
+    const fetchOrder = async () => {
+      try {
+        const res = await OrderService.getByIdAdmin(id);
 
-  if (!order) {
-    return <div>Pesanan dengan ID {id} tidak ditemukan.</div>;
-  }
+        setOrder(res.data?.data);
+      } catch (err) {
+        console.error("Gagal mengambil data pesanan:", err);
+        setError("Pesanan tidak ditemukan.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const subtotal = order.items.reduce(
-    (sum, item) => sum + item.jumlah * item.harga,
-    0
-  );
-  const serviceFee = 5000;
-  const total = subtotal + serviceFee;
+    fetchOrder();
+  }, [id]);
+
+  if (loading) return <div>Memuat data pesanan...</div>;
+  if (error || !order) return <div>{error || "Pesanan tidak ditemukan."}</div>;
+
+  const subtotal = order.subtotal || 0;
+  const serviceFee = order.serviceFee || 0;
+  const total = order.totalPayment || 0;
 
   return (
-    <div className="  min-h-screen">
+    <div className="min-h-screen">
       <div className="bg-white rounded-xl shadow-md p-6 md:p-10">
         <button
           onClick={() => navigate(-1)}
@@ -46,42 +45,43 @@ const ReadOrderPage = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 text-sm mb-6">
           <div className="space-y-2">
-            {/* Kolom kiri */}
             <div className="flex">
               <span className="w-32 font-semibold">Nama</span>
-              <span>: {order.customer}</span>
+              <span>: {order.user?.name || "-"}</span>
             </div>
             <div className="flex">
               <span className="w-32 font-semibold">Alamat</span>
-              <span>: {order.address}</span>
+              <span>: {order.user?.address || "-"}</span>
             </div>
             <div className="flex">
               <span className="w-32 font-semibold">No Handphone</span>
-              <span>: {order.phone}</span>
+              <span>: {order.user?.phone || "-"}</span>
             </div>
           </div>
 
           <div className="space-y-2 mt-4 md:mt-0 ml-auto">
             <div className="flex">
               <span className="w-40 font-semibold">Tanggal Pesanan</span>
-              <span>: {order.date}</span>
+              <span>
+                : {new Date(order.orderDate).toLocaleDateString("id-ID")}
+              </span>
             </div>
             <div className="flex">
               <span className="w-40 font-semibold">No Pesanan</span>
-              <span>: {id}</span>
+              <span>: {order.id?.slice(0, 6)}</span>
             </div>
             <div className="flex">
               <span className="w-40 font-semibold">Status Pesanan</span>
-              <span>: {order.status}</span>
+              <span>: {order.orderStatus}</span>
             </div>
             <div className="flex">
               <span className="w-40 font-semibold">Metode Pembayaran</span>
-              <span>: {order.payment}</span>
+              <span>: {order.paymentMethod || "-"}</span>
             </div>
           </div>
         </div>
 
-        <table className="w-full text-sm  ">
+        <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-black">
               <th className="py-2 text-left">No</th>
@@ -93,15 +93,17 @@ const ReadOrderPage = () => {
             </tr>
           </thead>
           <tbody>
-            {order.items.map((item, index) => (
+            {(order.items || []).map((item, index) => (
               <tr key={index} className="border-b">
                 <td className="py-2">{index + 1}</td>
-                <td className="py-2">{item.nama}</td>
-                <td className="py-2">{item.variasi}</td>
-                <td className="py-2">{item.jumlah}</td>
-                <td className="py-2">Rp{item.harga.toLocaleString("id-ID")}</td>
                 <td className="py-2">
-                  Rp{(item.harga * item.jumlah).toLocaleString("id-ID")}
+                  {item.variation?.product?.product_name}
+                </td>
+                <td className="py-2">{item.variation?.name}</td>
+                <td className="py-2">{item.quantity}</td>
+                <td className="py-2">Rp{item.price.toLocaleString("id-ID")}</td>
+                <td className="py-2">
+                  Rp{(item.price * item.quantity).toLocaleString("id-ID")}
                 </td>
               </tr>
             ))}

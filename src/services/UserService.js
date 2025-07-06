@@ -43,4 +43,14 @@ export const UserService = {
     });
     return res.data;
   },
+
+  async getProfile() {
+    const token = localStorage.getItem("token");
+    const res = await axios.get(`${API_URL}/auth/profile`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data;
+  },
 };

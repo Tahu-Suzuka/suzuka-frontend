@@ -76,7 +76,7 @@ const Navbar = () => {
                   <ul className="py-1">
                     <li>
                       <Link
-                        to="/ProfileContent"
+                        to="/profile"
                         className="flex items-center gap-2 px-4 py-2 hover:bg-primary hover:bg-opacity-10 cursor-pointer"
                       >
                         <CgProfile className="text-lg" />
