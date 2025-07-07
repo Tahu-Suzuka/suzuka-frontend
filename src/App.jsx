@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // Auth
 import AuthLayout from "./layouts/AuthLayout";
@@ -51,7 +52,14 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         {/* Dashboard Layout */}
-        <Route path="/dashboard" element={<DashboardLayout />}>
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<DashboardPage />} />
           <Route path="order" element={<OrderContent />} />
           <Route path="product" element={<ProductContent />} />
@@ -78,7 +86,7 @@ const App = () => {
           <Route path="about" element={<AboutPage />} />
           <Route path="product" element={<ProductPage />} />
           <Route path="/produk/:id" element={<DetailProductPage />} />
-          <Route path="profile" element={<ProfilePage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Route>
 
         {/* Checkout Layout */}

@@ -9,8 +9,7 @@ import Modal from "react-modal";
 import Slider from "react-slick";
 import { ProductService } from "../services/ProductService";
 import { CartService } from "../services/CartService";
-import { BuyNowService } from "../services/BuyNowService";
-import Alert from "../components/atoms/Alert";
+import { OrderService } from "../services/OrderService";
 
 Modal.setAppElement("#root");
 
@@ -96,32 +95,49 @@ const DetailProductPage = () => {
     }
   };
 
-  const handleBuyNow = () => {
-    if (!selectedVariation) return alert("Variasi tidak dipilih.");
-
+  const handleBuyNow = async () => {
     try {
-      const buyNowItem = {
-        id: Date.now(),
-        variation: {
-          id: selectedVariation.id,
-          name: selectedVariation.name,
-          price: selectedVariation.price,
-          product: {
-            id: product.id,
-            product_name: product.product_name,
-            mainImage: product.mainImage,
+      if (!selectedVariation) return alert("Variasi tidak dipilih.");
+
+      const payload = {
+        items: [
+          {
+            variationId: selectedVariation.id,
+            quantity,
           },
-        },
-        quantity: quantity,
+        ],
       };
 
-      BuyNowService.validateBuyNowItems([buyNowItem]);
-      BuyNowService.setBuyNowItems([buyNowItem]);
+      // Buat pesanan dulu
+      const orderRes = await OrderService.createBuyNowOrder(payload);
+      const orderId = orderRes?.data?.id;
 
+      // Simpan item dan order ID ke session
+      sessionStorage.setItem("checkoutMode", "buyNow");
+      sessionStorage.setItem(
+        "buyNowItems",
+        JSON.stringify([
+          {
+            variation: {
+              id: selectedVariation.id,
+              name: selectedVariation.name,
+              price: selectedVariation.price,
+              product: {
+                product_name: product.product_name,
+                mainImage: product.mainImage,
+              },
+            },
+            quantity,
+          },
+        ])
+      );
+      sessionStorage.setItem("buyNowOrderId", orderId);
+
+      // Arahkan ke halaman checkout
       navigate("/checkout");
     } catch (error) {
-      console.error("Error in Buy Now:", error);
-      alert(error.message || "Terjadi kesalahan saat memproses pesanan");
+      console.error("Error Buy Now:", error);
+      alert(error.message || "Gagal proses beli sekarang.");
     }
   };
 

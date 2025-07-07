@@ -5,6 +5,7 @@ import { MdSpeakerNotes } from "react-icons/md";
 import Button from "../components/atoms/Button";
 import { CartService } from "../services/CartService";
 import { UserService } from "../services/UserService";
+import { OrderService } from "../services/OrderService";
 
 const CheckoutPage = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -18,7 +19,6 @@ const CheckoutPage = () => {
         const mode = sessionStorage.getItem("checkoutMode");
         setCheckoutMode(mode || "cart");
 
-        // Ambil cart / buy now items
         if (mode === "buyNow") {
           const buyNowItems = JSON.parse(
             sessionStorage.getItem("buyNowItems") || "[]"
@@ -29,7 +29,6 @@ const CheckoutPage = () => {
           setCartItems(cartRes.carts || []);
         }
 
-        // Ambil profil user
         const profileRes = await UserService.getProfile();
         setProfile(profileRes.data);
       } catch (error) {
@@ -45,6 +44,7 @@ const CheckoutPage = () => {
       if (checkoutMode === "buyNow") {
         sessionStorage.removeItem("buyNowItems");
         sessionStorage.removeItem("checkoutMode");
+        sessionStorage.removeItem("buyNowOrderId");
       }
     };
   }, []);
@@ -57,13 +57,54 @@ const CheckoutPage = () => {
   const discount = 0;
   const total = subtotal + serviceFee - discount;
 
-  const handlePayment = () => {
-    alert("Pembayaran berhasil!");
-    if (checkoutMode === "buyNow") {
-      sessionStorage.removeItem("buyNowItems");
-      sessionStorage.removeItem("checkoutMode");
+  const handlePayment = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (checkoutMode === "cart") {
+        const orderRes = await OrderService.createFromCart(token);
+        const orderId = orderRes?.data?.id;
+        const paymentRes = await OrderService.createPayment(orderId, token);
+        const snapToken = paymentRes.token;
+
+        window.snap.pay(snapToken, {
+          onSuccess: () => (window.location.href = "/orders"),
+          onPending: () => (window.location.href = "/orders"),
+          onError: (error) => {
+            console.error("Pembayaran gagal", error);
+            alert("Terjadi kesalahan saat memproses pembayaran.");
+          },
+          onClose: () => {
+            console.warn("User menutup popup tanpa menyelesaikan pembayaran");
+          },
+        });
+      } else if (checkoutMode === "buyNow") {
+        const orderId = sessionStorage.getItem("buyNowOrderId");
+        if (!orderId)
+          throw new Error("Order ID tidak ditemukan untuk Beli Sekarang");
+
+        const paymentRes = await OrderService.createPayment(orderId, token);
+        const snapToken = paymentRes.token;
+
+        window.snap.pay(snapToken, {
+          onSuccess: () => (window.location.href = "/orders"),
+          onPending: () => (window.location.href = "/orders"),
+          onError: (error) => {
+            console.error("Pembayaran gagal", error);
+            alert("Terjadi kesalahan saat memproses pembayaran.");
+          },
+          onClose: () => {
+            console.warn("User menutup popup tanpa menyelesaikan pembayaran");
+          },
+        });
+      } else {
+        alert("Pesanan berhasil dibuat.");
+        window.location.href = "/orders";
+      }
+    } catch (error) {
+      console.error("Gagal memproses pembayaran:", error);
+      alert(error.message || "Terjadi kesalahan saat pembayaran.");
     }
-    window.location.href = "/";
   };
 
   if (loading) {
@@ -134,7 +175,7 @@ const CheckoutPage = () => {
         <div className="space-y-2 text-sm text-gray-600">
           {cartItems.map((item, index) => (
             <div
-              key={item.id}
+              key={index}
               className={`flex justify-between items-center p-3 rounded ${
                 index % 2 === 1 ? "bg-gray-50" : "bg-white"
               }`}

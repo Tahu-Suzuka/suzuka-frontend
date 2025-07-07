@@ -19,7 +19,7 @@ const CartSidebar = ({ onClose, refresh }) => {
     try {
       const res = await CartService.getAll();
       const mapped = await Promise.all(
-        res.carts.map(async (item) => {
+        [...res.carts].reverse().map(async (item) => {
           const detail = await ProductService.getById(item.variation.productId);
           return {
             id: item.id,
@@ -108,6 +108,11 @@ const CartSidebar = ({ onClose, refresh }) => {
     await updateCart(updated);
   };
 
+  const handleCheckout = () => {
+    sessionStorage.setItem("checkoutMode", "cart");
+    window.location.href = "/checkout";
+  };
+
   const total = items.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
@@ -192,10 +197,10 @@ const CartSidebar = ({ onClose, refresh }) => {
             Ongkir dan Voucher diskon akan dihitung pada saat checkout.
           </p>
           <Button
-            to="/checkout"
             text="Lanjutkan"
             width="w-full"
             className="rounded text-sm font-semibold py-2"
+            onClick={handleCheckout}
           />
         </div>
       </div>

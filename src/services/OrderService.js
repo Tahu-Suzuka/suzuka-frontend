@@ -31,6 +31,19 @@ export const OrderService = {
     return response.data;
   },
 
+  getAllOrders: async () => {
+    const token = localStorage.getItem("token");
+    const response = await axios.get(`${API_URL}/orders/all`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        limit: 5,
+      },
+    });
+    return response.data;
+  },
+
   getById: async (id) => {
     const token = localStorage.getItem("token");
     const response = await axios.get(`${API_URL}/orders/${id}`, {
@@ -41,37 +54,11 @@ export const OrderService = {
     return response.data;
   },
 
-  // OrderService.js
   getByIdAdmin: async (id) => {
-    return axios.get(`${API_URL}/orders/all/${id}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-  },
-
-  updateStatus: async (id, status) => {
     const token = localStorage.getItem("token");
-    const response = await axios.patch(
-      `${API_URL}/orders/${id}/status`,
-      { status },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  },
-
-  getAllOrders: async () => {
-    const token = localStorage.getItem("token");
-    const response = await axios.get(`${API_URL}/orders/all`, {
+    const response = await axios.get(`${API_URL}/orders/all/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
-      },
-      params: {
-        limit: 5, // bisa diubah sesuai kebutuhan
       },
     });
     return response.data;
@@ -94,6 +81,59 @@ export const OrderService = {
         Authorization: `Bearer ${token}`,
       },
     });
+    return response.data;
+  },
+
+  updateStatus: async (id, status) => {
+    const token = localStorage.getItem("token");
+    const response = await axios.patch(
+      `${API_URL}/orders/${id}/status`,
+      { status },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  },
+
+  createFromCart: async () => {
+    const token = localStorage.getItem("token");
+    const response = await axios.post(
+      `${API_URL}/orders/from-cart`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  },
+
+  createBuyNowOrder: async (payload) => {
+    const token = localStorage.getItem("token");
+    const response = await axios.post(`${API_URL}/orders`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  },
+
+  // Simpel kalau backend udah ngatur:
+  createPayment: async (orderId) => {
+    const token = localStorage.getItem("token");
+    const response = await axios.post(
+      `${API_URL}/orders/${orderId}/create-payment`,
+      {}, // kosongin body
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   },
 };

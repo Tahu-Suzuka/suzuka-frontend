@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaUsers, FaStar } from "react-icons/fa";
 import { IoStatsChart } from "react-icons/io5";
 import { TbFileInvoice } from "react-icons/tb";
@@ -6,6 +6,7 @@ import Chart from "../../atoms/Chart";
 import Stat from "../../atoms/Stat";
 import OrderTable from "../../organisms/dashboard/OrderTable";
 import { OrderService } from "../../../services/OrderService";
+import { API_URL } from "../../../services/API";
 
 const DashboardContent = () => {
   const [orders, setOrders] = useState([]);
@@ -24,7 +25,6 @@ const DashboardContent = () => {
 
         setOrders(allOrders);
 
-        // Hitung statistik dari orders
         const today = new Date().toISOString().slice(0, 10);
         const todaySales = allOrders.filter((order) =>
           order.createdAt?.startsWith(today)
@@ -36,7 +36,7 @@ const DashboardContent = () => {
         setStats({
           todaySales,
           totalOrders,
-          totalReviews: 0, // Jika tidak ada data review, tetap 0
+          totalReviews: 0,
           totalCustomers,
         });
       } catch (err) {

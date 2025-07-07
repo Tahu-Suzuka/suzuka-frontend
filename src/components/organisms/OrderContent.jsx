@@ -8,6 +8,9 @@ const OrderContent = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Helper untuk normalisasi status
+  const normalize = (str) => str?.toLowerCase().replace(/\s+/g, "");
+
   const fetchOrders = async () => {
     try {
       setLoading(true);
@@ -25,9 +28,17 @@ const OrderContent = () => {
     fetchOrders();
   }, []);
 
+  // Auto-fetch ulang jika kembali dari Midtrans
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("payment") === "success") {
+      fetchOrders();
+    }
+  }, []);
+
   const filteredOrders = orders.filter((order) => {
     if (activeTab === "Semua") return true;
-    return order.status?.toLowerCase() === activeTab.toLowerCase();
+    return normalize(order.status) === normalize(activeTab);
   });
 
   const emptyMessages = {
