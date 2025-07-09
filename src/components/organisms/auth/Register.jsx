@@ -24,7 +24,7 @@ export default function Register() {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Validasi kosong
+    e.preventDefault();
 
     const nameErr = name.trim() === "" ? "Nama tidak boleh kosong." : "";
     const emailErr =
@@ -45,7 +45,7 @@ export default function Register() {
     setNameError(nameErr);
     setEmailError(emailErr);
     setPasswordError(passwordErr);
-    setConfirmPasswordError(confirmErr); // Cegah submit jika ada error
+    setConfirmPasswordError(confirmErr);
 
     if (nameErr || emailErr || passwordErr || confirmErr) {
       return;
@@ -137,7 +137,7 @@ export default function Register() {
         )}
 
         {/* Tombol Register */}
-        <Button type="submit" text="Daftar" className="rounded-full py-2" />
+        <Button type="submit" text="Daftar" className="rounded-xl py-2" />
 
         <Divider />
 

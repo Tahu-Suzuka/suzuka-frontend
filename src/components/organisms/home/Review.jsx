@@ -1,99 +1,106 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import { FaStar } from "react-icons/fa";
 import Title from "../../atoms/Title";
+import { ReviewService } from "../../../services/ReviewService";
+import { API_URL } from "../../../services/API";
+
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const reviews = [
-  {
-    image: "/images/footer/footer.png",
-    name: "Andi Setiawan",
-    testimonial:
-      "Tahu Suzuka rasanya enak dan gurih banget, cocok untuk semua usia! Rasanya selalu konsisten dan teksturnya lembut.",
-    rating: 5,
-  },
-  {
-    image: "/images/footer/footer.png",
-    name: "Siti Rahma",
-    testimonial:
-      "Saya selalu pesan tahu dari sini, kualitasnya konsisten dan pengirimannya cepat. Cocok untuk lauk sehari-hari.",
-    rating: 4,
-  },
-  {
-    image: "/images/footer/footer.png",
-    name: "Budi Santoso",
-    testimonial:
-      "Pelayanannya cepat, tahu datang masih hangat! Anak-anak saya pun sangat menyukainya.",
-    rating: 5,
-  },
-  {
-    image: "/images/footer/footer.png",
-    name: "Maria Lestari",
-    testimonial:
-      "Kualitas tahu yang sangat baik dan rasa autentik. Cocok disantap kapan saja, baik digoreng maupun dikukus.",
-    rating: 5,
-  },
-];
-
 const Review = () => {
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const fetchAndShuffleReviews = async () => {
+    try {
+      const response = await ReviewService.getReviewByProduct(null);
+      const allReviews = response.data || [];
+      const shuffled = allReviews.sort(() => 0.5 - Math.random());
+      setReviews(shuffled);
+    } catch (error) {
+      console.error("Gagal mengambil ulasan:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAndShuffleReviews();
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        fetchAndShuffleReviews();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
+  const getFullImageUrl = (path) => {
+    if (!path) return "/images/default-profile.png";
+    if (path.startsWith("http")) return path;
+    return `${API_URL}${path}`;
+  };
+
   const settings = {
     dots: false,
-    infinite: true,
+    infinite: reviews.length > 3,
     autoplay: true,
-    autoplaySpeed: 2000,
+    autoplaySpeed: 3000,
     slidesToShow: 4,
     slidesToScroll: 1,
     responsive: [
-      {
-        breakpoint: 1280,
-        settings: { slidesToShow: 3 },
-      },
-      {
-        breakpoint: 1024,
-        settings: { slidesToShow: 2 },
-      },
-      {
-        breakpoint: 640,
-        settings: { slidesToShow: 1 },
-      },
+      { breakpoint: 1280, settings: { slidesToShow: 3 } },
+      { breakpoint: 1024, settings: { slidesToShow: 2 } },
+      { breakpoint: 640, settings: { slidesToShow: 1 } },
     ],
   };
 
+  if (loading) {
+    return (
+      <div className="px-6 lg:px-16 pb-16">
+        <Title subtitle="Ulasan" title="Apa Kata Pelanggan Kami" />
+        <p className="text-center text-gray-500">Memuat ulasan...</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="px-6 lg:px-16 pb-16">
+    <div className="px-6 lg:px-16 pb-20">
       <Title subtitle="Ulasan" title="Apa Kata Pelanggan Kami" />
-      <div>
+      {reviews.length > 0 ? (
         <Slider {...settings}>
-          {reviews.map((review, index) => (
-            <div key={index} className="px-2 pt-12">
-              <div className="relative bg-white border shadow-md rounded-xl p-6 pt-16 text-center lg:min-h-[280px]">
-                {/* Gambar */}
-                <div className="absolute -top-10 left-1/2 -translate-x-1/2">
-                  <img
-                    src={review.image}
-                    alt={review.name}
-                    className="w-24 h-24 rounded-full border-4 border-white object-cover shadow-lg bg-white"
-                  />
+          {reviews.map((review) => (
+            <div key={review.id} className="px-2 pt-12">
+              <div className="relative bg-white border shadow-md rounded-xl p-6 pt-16 text-center h-[200px] flex flex-col justify-between">
+                <div>
+                  <div className="absolute -top-10 left-1/2 -translate-x-1/2">
+                    <img
+                      src={getFullImageUrl(review.user?.image)}
+                      alt={review.user?.name}
+                      className="w-24 h-24 rounded-full border-4 border-white object-cover shadow-lg bg-white"
+                    />
+                  </div>
+                  <h3 className="mt-2 text-lg font-semibold">
+                    {review.user?.name}
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-2 leading-relaxed line-clamp-4">
+                    "{review.comment}"
+                  </p>
                 </div>
-                {/* Isi card */}
-                <h3 className="mt-2 text-lg font-semibold">{review.name}</h3>
-                <p className="text-sm text-gray-600 mt-2 leading-relaxed">
-                  {review.testimonial}
-                </p>
-                {/* rating */}
                 <div className="flex justify-center mt-4 text-yellow-400">
-                  {Array(review.rating)
-                    .fill()
-                    .map((_, i) => (
-                      <FaStar key={i} />
-                    ))}
+                  {Array.from({ length: review.rating }).map((_, i) => (
+                    <FaStar key={i} />
+                  ))}
                 </div>
               </div>
             </div>
           ))}
         </Slider>
-      </div>
+      ) : (
+        <p className="text-center text-gray-500">Belum ada ulasan.</p>
+      )}
     </div>
   );
 };

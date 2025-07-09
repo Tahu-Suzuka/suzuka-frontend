@@ -13,7 +13,7 @@ export default function InputField({
   const isAuth = variant === "auth";
 
   const inputClass = isAuth
-    ? "py-4 pl-12 pr-28 border-2 rounded-full"
+    ? "py-4 pl-12 pr-28 border-2 rounded-xl"
     : "px-4 py-2 border rounded-md focus:ring-1 focus:ring-primary";
 
   const labelClass = isAuth

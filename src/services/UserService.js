@@ -44,9 +44,16 @@ export const UserService = {
     return res.data;
   },
 
-  getProfile: async () => {
-    const user = localStorage.getItem("user");
-    if (!user) throw new Error("User not found");
-    return JSON.parse(user);
+  async getProfile() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("Token tidak ditemukan. Silakan login kembali.");
+    }
+    const res = await axios.get(`${API_URL}/auth/profile`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data.data;
   },
 };

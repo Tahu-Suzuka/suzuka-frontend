@@ -1,128 +1,123 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaStar } from "react-icons/fa";
+import { ReviewService } from "../../services/ReviewService";
+import { API_URL } from "../../services/API";
 
-const customerReviews = [
-  {
-    name: "Wildan Fauzan",
-    comment:
-      "Teksturnya padat tapi tetap empuk saat digoreng, dan warna kuningnya alami banget! Enak banget buat dibacem atau sekadar goreng pakai sambal kecap. Suka banget sama kualitas tahunya.",
-    images: ["/images/hero/slider1.png", "/images/hero/slider2.png"],
-    rating: 5,
-  },
-  {
-    name: "M Lutfi Amin Ghifarullah",
-    comment:
-      "Tahu kuningnya mantap! Ukurannya juga pas, saya beli yang ukuran besar buat stok jualan di warung. Fresh banget, kirimannya juga aman.",
-    images: ["/images/hero/slider3.png"],
-    rating: 5,
-  },
-];
-
-const Review = () => {
+const Review = ({ productId }) => {
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState({});
 
-  const handleImageClick = (idx, img) => {
+  useEffect(() => {
+    const fetchReviews = async () => {
+      setLoading(true);
+      try {
+        const response = await ReviewService.getReviewByProduct(productId);
+        setReviews(response.data || []);
+      } catch (error) {
+        console.error("Gagal mengambil data ulasan:", error);
+        setReviews([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReviews();
+  }, [productId]);
+
+  const handleImageClick = (reviewId, image) => {
     setSelectedImage((prev) => ({
       ...prev,
-      [idx]: prev[idx] === img ? null : img,
+      [reviewId]: prev[reviewId] === image ? null : image,
     }));
   };
 
+  const getFullImageUrl = (path) => {
+    if (!path) return "/images/default-profile.png";
+    if (path.startsWith("http")) return path;
+    return `${API_URL}${path}`;
+  };
+
+  if (loading) {
+    return (
+      <div className="max-w-6xl mx-auto bg-white rounded-md p-6 col-span-2 text-center">
+        <p>Memuat ulasan...</p>
+      </div>
+    );
+  }
+
+  if (reviews.length === 0) {
+    return (
+      <div className="max-w-6xl mx-auto bg-white rounded-md p-6 col-span-2">
+        <h1 className="text-2xl font-bold mb-6 text-center">Ulasan</h1>
+        <p className="text-center text-gray-500">
+          Belum ada ulasan untuk produk ini.
+        </p>
+      </div>
+    );
+  }
+
+  const averageRating =
+    reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
+
   return (
-    <div className="max-w-6xl mx-auto bg-white rounded-md p-6  col-span-2">
-      <h1 className="text-2xl font-bold mb-6 text-center">Ulasan</h1>
-
-      {/* Sorting rating */}
-      <div className="space-y-3 mb-6">
-        {[5, 4, 3, 2, 1].map((rating) => {
-          const totalReviews = customerReviews.filter(
-            (review) => review.rating === rating
-          ).length;
-
-          return (
-            <div
-              key={rating}
-              className="flex items-center justify-center gap-4"
-            >
-              <div className="flex gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <FaStar
-                    key={i}
-                    className={`text-lg ${
-                      i < rating ? "text-primary" : "text-gray-300"
-                    }`}
-                  />
-                ))}
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-32 h-[3px] bg-gray-300 relative rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-primary"
-                    style={{
-                      width: `${
-                        (totalReviews / customerReviews.length) * 100
-                      }%`,
-                    }}
-                  ></div>
-                </div>
-                <span className="text-sm text-gray-700">{totalReviews}</span>
-              </div>
-            </div>
-          );
-        })}
+    <div className="max-w-6xl mx-auto bg-white rounded-md p-6 col-span-2">
+      <h1 className="text-2xl font-bold mb-2 text-center">Ulasan Pelanggan</h1>
+      <div className="flex items-center justify-center gap-2 mb-6">
+        <FaStar className="text-primary text-xl" />
+        <span className="font-bold text-lg">{averageRating.toFixed(1)}</span>
+        <span className="text-gray-500 text-sm">({reviews.length} ulasan)</span>
       </div>
 
-      {/* Ulasan Pelanggan */}
       <div className="space-y-6">
-        {customerReviews.map((review, idx) => (
+        {reviews.map((review) => (
           <div
-            key={idx}
+            key={review.id}
             className="bg-white rounded-md shadow-md p-6 space-y-3"
           >
             <div className="flex items-center gap-4">
               <img
-                src="/images/default-profile.png"
-                alt="Avatar"
+                src={getFullImageUrl(review.user?.image)}
+                alt={review.user?.name || "User"}
                 className="w-14 h-14 rounded-full object-cover"
               />
               <div>
-                <h2 className="font-semibold text-gray-800">{review.name}</h2>
-                <div className="flex text-red-500">
+                <h2 className="font-semibold text-gray-800">
+                  {review.user?.name}
+                </h2>
+                <div className="flex text-primary">
                   {[...Array(5)].map((_, i) => (
                     <FaStar
                       key={i}
-                      className={`${i < review.rating ? "" : "text-gray-300"}`}
+                      className={`${
+                        i < review.rating ? "text-primary" : "text-gray-300"
+                      }`}
                     />
                   ))}
                 </div>
               </div>
             </div>
-
             <p className="text-gray-700 leading-relaxed text-sm">
               {review.comment}
             </p>
-
-            {/* Thumbnails */}
             <div className="flex gap-2">
-              {review.images.map((img, i) => (
+              {[review.image1, review.image2].filter(Boolean).map((img, i) => (
                 <img
                   key={i}
-                  src={img}
-                  alt="ulasan"
-                  onClick={() => handleImageClick(idx, img)}
+                  src={getFullImageUrl(img)}
+                  alt={`Ulasan ${i + 1}`}
+                  onClick={() => handleImageClick(review.id, img)}
                   className={`w-20 h-20 object-cover rounded-md cursor-pointer border-2 ${
-                    selectedImage[idx] === img
-                      ? "border-red-500"
+                    selectedImage[review.id] === img
+                      ? "border-primary"
                       : "border-transparent"
                   }`}
                 />
               ))}
             </div>
-
-            {/* Gambar Besar */}
-            {selectedImage[idx] && (
+            {selectedImage[review.id] && (
               <img
-                src={selectedImage[idx]}
+                src={getFullImageUrl(selectedImage[review.id])}
                 alt="Preview"
                 className="mt-4 w-full max-w-md rounded-md object-cover"
               />

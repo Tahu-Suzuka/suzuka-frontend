@@ -107,7 +107,7 @@ const ChangePassword = () => {
       <Button
         type="button"
         onClick={handleChangePassword}
-        className="w-full text-white font-semibold py-2 rounded-full mt-2 transition"
+        className="w-full text-white font-semibold py-2 rounded-xl mt-2 transition"
         disabled={loading}
       >
         {loading ? "Loading..." : "Ubah Kata Sandi"}

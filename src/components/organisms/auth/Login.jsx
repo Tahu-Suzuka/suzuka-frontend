@@ -44,11 +44,9 @@ export default function Login() {
     try {
       const res = await AuthService.login(email, password);
 
-      // ✅ Simpan token dan user ke localStorage
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      // ✅ Arahkan admin ke dashboard, lainnya ke beranda
       if (res.data.user.role === "admin") {
         navigate("/dashboard");
       } else {
@@ -112,7 +110,7 @@ export default function Login() {
           </a>
         </div>
 
-        <Button type="submit" text="Masuk" className="rounded-full py-3" />
+        <Button type="submit" text="Masuk" className="rounded-xl py-3" />
         <Divider />
         <GoogleButton text="Masuk Dengan Google" />
 

@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, ShoppingCart } from "lucide-react";
 import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
 import { LuNotebookText } from "react-icons/lu";
 import { TbLogout } from "react-icons/tb";
-import Button from "../atoms/Button";
-import NavbarLinks from "../atoms/NavbarLink";
 import CartSidebar from "../organisms/sidebar/CartSidebar";
 import Avatar from "../atoms/Avatar";
+
+const NavbarLinks = [
+  { name: "Beranda", link: "/" },
+  { name: "Tentang Kami", link: "/about" },
+  { name: "Produk", link: "/product" },
+  { name: "Kontak", link: "/contact" },
+];
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,26 +23,33 @@ const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  const toggleMenu = () => setIsOpen(!isOpen);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
+
+    const token = localStorage.getItem("token");
+    if (token) {
+      const storedUser = localStorage.getItem("user");
+      setUser(storedUser ? JSON.parse(storedUser) : null);
+      setIsLoggedIn(true);
+    }
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-      setIsLoggedIn(true);
-    } else {
-      setUser(null);
-      setIsLoggedIn(false);
-    }
-  }, []);
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setIsLoggedIn(false);
+    setUser(null);
+    setIsDropdownOpen(false);
+    navigate("/");
+  };
 
-  const mobileActive = isOpen && window.innerWidth < 768;
+  const mobileActive =
+    isOpen && typeof window !== "undefined" && window.innerWidth < 768;
 
   return (
     <>
@@ -51,184 +63,186 @@ const Navbar = () => {
             : "bg-gradient-to-b from-black/60 via-black/30 to-transparent text-white"
         }`}
       >
-        {/* Logo */}
-        <div className="flex items-center gap-2 z-50 w-32">
+        <div className="flex items-center gap-2 z-50">
           <Link to="/">
             <img src="/images/logo/logo.png" alt="Logo" className="w-10 h-10" />
           </Link>
         </div>
 
-        {/* Avatar & Menu Toggle (Mobile only) */}
-        <div className="absolute right-4 top-4 md:hidden flex items-center gap-2 z-50">
+        <div className="hidden md:flex flex-1 justify-center">
+          <ul className="flex flex-row gap-12">
+            {NavbarLinks.map((link) => (
+              <li
+                key={link.name}
+                className={`font-semibold hover:text-primary transition-colors ${
+                  scrolled ? "text-black" : "text-white"
+                }`}
+              >
+                <Link to={link.link}>{link.name}</Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="flex items-center gap-4 z-50">
           {isLoggedIn && (
-            <div className="relative">
-              <img
-                src={user?.image || "/images/default-profile.png"}
-                alt="Avatar"
-                className="w-10 h-10 rounded-full border-2 bg-white p-0.5"
-                onClick={() => setIsDropdownOpen((prev) => !prev)}
+            <div
+              className="relative cursor-pointer"
+              onClick={() => setIsCartOpen(true)}
+            >
+              <ShoppingCart
+                className={`w-7 h-7 ${
+                  scrolled || mobileActive ? "text-black" : "text-white"
+                }`}
               />
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-52 bg-white text-black rounded shadow-md z-50">
-                  <div className="px-4 py-2 border-b border-gray-300">
-                    <p className="text-sm font-bold text-center">{user.name}</p>
-                  </div>
-                  <ul className="py-1">
-                    <li>
-                      <Link
-                        to="/profile"
-                        className="flex items-center gap-2 px-4 py-2 hover:bg-primary hover:bg-opacity-10 cursor-pointer"
-                      >
-                        <CgProfile className="text-lg" />
-                        <span className="text-sm hover:font-bold">
-                          Profil Saya
-                        </span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="/order"
-                        className="flex items-center gap-2 px-4 py-2 hover:bg-primary hover:bg-opacity-10 cursor-pointer"
-                      >
-                        <LuNotebookText className="text-lg" />
-                        <span className="text-sm hover:font-bold">
-                          Pesanan Saya
-                        </span>
-                      </Link>
-                    </li>
-                    <li
-                      className="flex items-center gap-2 px-4 py-2 hover:bg-primary hover:bg-opacity-10 cursor-pointer text-primary hover:font-bold"
-                      onClick={() => {
-                        localStorage.removeItem("user");
-                        window.location.reload();
-                      }}
-                    >
-                      <TbLogout className="text-lg" />
-                      <span className="text-sm">Keluar</span>
-                    </li>
-                  </ul>
-                </div>
-              )}
             </div>
           )}
 
-          {/* Menu Icon */}
-          <div onClick={toggleMenu}>
+          <div className="hidden md:block">
+            {!isLoggedIn ? (
+              <Link
+                to="/login"
+                className={`px-6 py-2 text-sm font-semibold rounded-md transition-colors ${
+                  scrolled
+                    ? "bg-primary text-white"
+                    : "border border-white text-white hover:bg-white hover:text-primary"
+                }`}
+              >
+                Masuk
+              </Link>
+            ) : (
+              <div className="relative">
+                <div
+                  onClick={() => setIsDropdownOpen((prev) => !prev)}
+                  className="flex items-center cursor-pointer"
+                >
+                  <Avatar src={user?.image || "/images/default-profile.png"} />
+                  {isDropdownOpen ? (
+                    <RiArrowDropUpLine
+                      className={`h-9 w-9 ${
+                        scrolled ? "text-black" : "text-white"
+                      }`}
+                    />
+                  ) : (
+                    <RiArrowDropDownLine
+                      className={`h-9 w-9 ${
+                        scrolled ? "text-black" : "text-white"
+                      }`}
+                    />
+                  )}
+                </div>
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-4 w-52 bg-white text-black rounded shadow-lg z-50 border">
+                    <div className="px-4 py-3 border-b">
+                      <p className="text-sm font-bold truncate">{user?.name}</p>
+                    </div>
+                    <ul className="py-1">
+                      <li>
+                        <Link
+                          to="/profile"
+                          onClick={() => setIsDropdownOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100"
+                        >
+                          <CgProfile className="text-lg" />
+                          <span className="text-sm">Profil Saya</span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          to="/profile"
+                          onClick={() => {
+                            setIsDropdownOpen(false);
+                            navigate("/profile", {
+                              state: { initialMenu: "pesanan" },
+                            });
+                          }}
+                          className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100"
+                        >
+                          <LuNotebookText className="text-lg" />
+                          <span className="text-sm">Pesanan Saya</span>
+                        </Link>
+                      </li>
+                      <li
+                        onClick={handleLogout}
+                        className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 cursor-pointer text-primary"
+                      >
+                        <TbLogout className="text-lg" />
+                        <span className="text-sm">Keluar</span>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
             {isOpen ? (
-              <X className="w-6 h-6 text-black cursor-pointer" />
+              <X className="text-black" />
             ) : (
               <Menu
-                className={`w-6 h-6 cursor-pointer ${
-                  scrolled ? "text-black" : "text-white"
+                className={`${
+                  scrolled || mobileActive ? "text-black" : "text-white"
                 }`}
               />
             )}
           </div>
         </div>
 
-        {/* Links + Button */}
-        <div className="flex-1 flex justify-center">
-          <div
-            className={`md:flex md:flex-row md:gap-12 absolute md:static w-full md:w-auto left-0 top-0 md:top-auto transition-all duration-300 ease-in-out ${
-              isOpen
-                ? "flex flex-col pt-24 bg-white min-h-screen md:bg-transparent"
-                : "hidden md:flex"
-            }`}
-          >
-            <ul className="flex flex-col md:flex-row md:gap-12">
-              {NavbarLinks.map((link, index) => (
+        {isOpen && (
+          <div className="absolute top-0 left-0 w-full bg-white min-h-screen pt-24 px-6 flex flex-col md:hidden">
+            <ul className="flex flex-col gap-6">
+              {NavbarLinks.map((link) => (
                 <li
-                  key={index}
-                  className={`p-4 md:p-0 font-montserrat font-semibold hover:text-primary hover:font-bold ${
-                    mobileActive || scrolled ? "text-black" : "text-white"
-                  }`}
+                  key={link.name}
+                  className="text-black font-semibold text-lg"
+                  onClick={() => setIsOpen(false)}
                 >
-                  <a href={link.link}>{link.name}</a>
+                  <Link to={link.link}>{link.name}</Link>
                 </li>
               ))}
             </ul>
-
-            {!isLoggedIn && isOpen && (
-              <div className="flex justify-start px-4 pt-4 md:hidden">
-                <Button
-                  to={"/login"}
-                  text="Masuk"
-                  width="w-32"
-                  className="rounded-full shadow-md py-2"
-                />
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Cart & Avatar */}
-        <div className="hidden md:flex items-center gap-4 z-50 w-32 justify-end relative">
-          <ShoppingCart
-            className={`w-7 h-7 cursor-pointer ${
-              scrolled ? "text-black" : "text-white"
-            }`}
-            onClick={() => setIsCartOpen(true)}
-          />
-          {!isLoggedIn ? (
-            <Button
-              to={"/login"}
-              text="Masuk"
-              width="w-32"
-              className={
-                scrolled
-                  ? "text-black py-2 border-white rounded-full shadow-md"
-                  : "py-2 text-white border-white rounded-full shadow-md "
-              }
-            />
-          ) : (
-            <div className="relative">
-              <div
-                onClick={() => setIsDropdownOpen((prev) => !prev)}
-                className="flex items-center cursor-pointer"
-              >
-                <Avatar src={user?.image || "/images/default-profile.png"} />
-                {isDropdownOpen ? (
-                  <RiArrowDropUpLine className="h-9 w-9" />
-                ) : (
-                  <RiArrowDropDownLine className="h-9 w-9" />
-                )}
-              </div>
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-52 bg-white text-black rounded shadow-md z-50">
-                  <div className="px-4 py-2 border-b border-gray-300">
-                    <p className="text-sm font-bold text-center">
-                      {user?.name}
-                    </p>
+            <div className="mt-8 border-t pt-6">
+              {!isLoggedIn ? (
+                <Link
+                  to="/login"
+                  onClick={() => setIsOpen(false)}
+                  className="w-full text-center block bg-primary text-white py-3 rounded-md font-semibold"
+                >
+                  Masuk
+                </Link>
+              ) : (
+                <div className="space-y-4">
+                  <Link
+                    to="/profile"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center gap-3 text-black font-semibold"
+                  >
+                    <CgProfile className="text-xl" /> Profil Saya
+                  </Link>
+                  <Link
+                    to="/profile"
+                    onClick={() => {
+                      setIsOpen(false);
+                      navigate("/profile", {
+                        state: { initialMenu: "pesanan" },
+                      });
+                    }}
+                    className="flex items-center gap-3 text-black font-semibold"
+                  >
+                    <LuNotebookText className="text-xl" /> Pesanan Saya
+                  </Link>
+                  <div
+                    onClick={handleLogout}
+                    className="flex items-center gap-3 text-primary font-semibold cursor-pointer"
+                  >
+                    <TbLogout className="text-xl" /> Keluar
                   </div>
-                  <ul className="py-1">
-                    <li className="flex items-center gap-2 px-4 py-2 hover:bg-primary hover:bg-opacity-10 cursor-pointer">
-                      <CgProfile className="text-lg" />
-                      <span className="text-sm hover:font-bold">
-                        Profil Saya
-                      </span>
-                    </li>
-                    <li className="flex items-center gap-2 px-4 py-2 hover:bg-primary hover:bg-opacity-10 cursor-pointer">
-                      <LuNotebookText className="text-lg" />
-                      <span className="text-sm hover:font-bold">
-                        Pesanan Saya
-                      </span>
-                    </li>
-                    <li
-                      className="flex items-center gap-2 px-4 py-2 hover:bg-primary hover:bg-opacity-10 cursor-pointer text-primary hover:font-bold"
-                      onClick={() => {
-                        localStorage.removeItem("user");
-                        window.location.reload();
-                      }}
-                    >
-                      <TbLogout className="text-lg" />
-                      <span className="text-sm">Keluar</span>
-                    </li>
-                  </ul>
                 </div>
               )}
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </nav>
 
       {isCartOpen && <CartSidebar onClose={() => setIsCartOpen(false)} />}

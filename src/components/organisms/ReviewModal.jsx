@@ -9,9 +9,6 @@ const ReviewModal = ({ isOpen, onClose, items, onAfterSubmit }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
-  // ✅ --- INI ADALAH KUNCI PERBAIKANNYA ---
-  // useEffect ini akan memastikan state 'reviews' di dalam modal
-  // selalu diperbarui setiap kali modal dibuka dengan 'items' yang baru.
   useEffect(() => {
     if (isOpen && Array.isArray(items)) {
       const initialData = items.map((item) => ({
@@ -25,7 +22,7 @@ const ReviewModal = ({ isOpen, onClose, items, onAfterSubmit }) => {
       }));
       setReviews(initialData);
     }
-  }, [isOpen, items]); // Dijalankan ulang setiap kali `isOpen` atau `items` berubah
+  }, [isOpen, items]);
 
   const handleChange = (index, field, value) => {
     setReviews((prev) => {

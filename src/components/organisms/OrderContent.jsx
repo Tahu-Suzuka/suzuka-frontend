@@ -3,8 +3,8 @@ import Tabs from "../atoms/Tabs";
 import OrderCard from "../atoms/OrderCard";
 import { OrderService } from "../../services/OrderService";
 
-const OrderContent = () => {
-  const [activeTab, setActiveTab] = useState("Semua");
+const OrderContent = ({ initialTab }) => {
+  const [activeTab, setActiveTab] = useState(initialTab || "Semua");
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -30,7 +30,6 @@ const OrderContent = () => {
     fetchOrders();
   }, []);
 
-  // Fungsi ini hanya untuk update status order, bukan review
   const handleStatusChange = (orderId, newStatus) => {
     setOrders((prevOrders) =>
       prevOrders.map((o) =>
@@ -64,10 +63,9 @@ const OrderContent = () => {
         ) : filteredOrders.length > 0 ? (
           filteredOrders.map((order) => (
             <OrderCard
-              key={order.id} // ✅ Kunci yang benar sudah ada di sini
+              key={order.id}
               order={order}
               onStatusChange={handleStatusChange}
-              // ❌ Tidak ada lagi prop onReviewSubmitted
             />
           ))
         ) : (

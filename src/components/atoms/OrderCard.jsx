@@ -247,15 +247,14 @@ const OrderCard = ({ order, onStatusChange }) => {
               </p>
               <p className="text-sm text-gray-500">x{item.quantity}</p>
             </div>
-            <p className="font-semibold text-gray-900">
+            <p className="text-sm font-semibold text-gray-900">
               {formatRupiah(item.price)}
             </p>
           </div>
         );
       })}
-      <hr />
       <div className="flex justify-end items-center">
-        <p className="text-lg font-bold text-gray-900">
+        <p className="text-sm lg:text-base font-bold text-gray-900">
           Total: {formatRupiah(totalAmount)}
         </p>
       </div>

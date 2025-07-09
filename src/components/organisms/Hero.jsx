@@ -47,11 +47,13 @@ const Hero = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-3 items-center justify-center px-4">
             <Button
+              to="/product"
               text="Pesan Sekarang"
               className="rounded-full py-2 "
               width=" w-44"
             />
             <Button
+              to="/about"
               text="Tentang Kami"
               className="rounded-full py-2"
               width=" w-44"

@@ -27,26 +27,27 @@ export const ReviewService = {
   },
 
   getReviewByProduct: async (productId) => {
-    const res = await axios.get(`${API_URL}/reviews/product/${productId}`);
-    return res.data.data;
+    const url = productId
+      ? `${API_URL}/reviews/product/${productId}`
+      : `${API_URL}/reviews`;
+    const res = await axios.get(url);
+    return res.data;
   },
 
   checkReviewStatus: async (orderId, productId) => {
     const token = localStorage.getItem("token");
     try {
       const response = await axios.get(
-        `${API_URL}/reviews/order/${orderId}/product/${productId}/check`, // Sesuaikan dengan endpoint Anda
+        `${API_URL}/reviews/order/${orderId}/product/${productId}/check`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      // Backend Anda mengembalikan { hasReviewed: true/false }
       return response.data;
     } catch (error) {
       console.error("Gagal memeriksa status review:", error);
-      // Jika gagal, anggap saja belum direview untuk menghindari error
       return { hasReviewed: false };
     }
   },

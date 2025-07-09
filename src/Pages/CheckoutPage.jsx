@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaTicketAlt } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { MdSpeakerNotes } from "react-icons/md";
 import Button from "../components/atoms/Button";
-import { CartService } from "../services/CartService";
+import Alert from "../components/atoms/Alert";
 import { UserService } from "../services/UserService";
 import { OrderService } from "../services/OrderService";
 
 const CheckoutPage = () => {
+  const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [checkoutMode, setCheckoutMode] = useState("cart");
   const [profile, setProfile] = useState(null);
+  const [showCloseAlert, setShowCloseAlert] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,23 +33,14 @@ const CheckoutPage = () => {
         }
 
         const profileRes = await UserService.getProfile();
-        setProfile(profileRes.data);
+        setProfile(profileRes);
       } catch (error) {
         console.error("Gagal mengambil data checkout:", error);
       } finally {
         setLoading(false);
       }
     };
-
     fetchData();
-
-    return () => {
-      if (checkoutMode === "buyNow") {
-        sessionStorage.removeItem("buyNowItems");
-        sessionStorage.removeItem("checkoutMode");
-        sessionStorage.removeItem("buyNowOrderId");
-      }
-    };
   }, []);
 
   const subtotal = cartItems.reduce(
@@ -60,82 +54,62 @@ const CheckoutPage = () => {
   const handlePayment = async () => {
     try {
       const token = localStorage.getItem("token");
+      let orderId;
 
       if (checkoutMode === "cart") {
         const orderRes = await OrderService.createFromCart(token);
-        const orderId = orderRes?.data?.id;
-        const paymentRes = await OrderService.createPayment(orderId, token);
-        const snapToken = paymentRes.token;
-
-        window.snap.pay(snapToken, {
-          onSuccess: () => (window.location.href = "/order"),
-          onPending: () => (window.location.href = "/order"),
-          onError: (error) => {
-            console.error("Pembayaran gagal", error);
-            alert("Terjadi kesalahan saat memproses pembayaran.");
-          },
-          onClose: () => {
-            console.warn("User menutup popup tanpa menyelesaikan pembayaran");
-          },
-        });
-      } else if (checkoutMode === "buyNow") {
-        const orderId = sessionStorage.getItem("buyNowOrderId");
-        if (!orderId)
-          throw new Error("Order ID tidak ditemukan untuk Beli Sekarang");
-
-        const paymentRes = await OrderService.createPayment(orderId, token);
-        const snapToken = paymentRes.token;
-
-        window.snap.pay(snapToken, {
-          onSuccess: () => (window.location.href = "/orders"),
-          onPending: () => (window.location.href = "/orders"),
-          onError: (error) => {
-            console.error("Pembayaran gagal", error);
-            alert("Terjadi kesalahan saat memproses pembayaran.");
-          },
-          onClose: () => {
-            console.warn("User menutup popup tanpa menyelesaikan pembayaran");
-          },
-        });
+        orderId = orderRes?.data?.id;
       } else {
-        alert("Pesanan berhasil dibuat.");
-        window.location.href = "/orders";
+        orderId = sessionStorage.getItem("buyNowOrderId");
       }
+
+      if (!orderId) throw new Error("Gagal membuat atau menemukan ID pesanan.");
+
+      const paymentRes = await OrderService.createPayment(orderId, token);
+      const snapToken = paymentRes.token;
+
+      window.snap.pay(snapToken, {
+        onSuccess: () =>
+          navigate("/profile", {
+            state: { initialMenu: "pesanan", initialTab: "Diproses" },
+          }),
+        onPending: () =>
+          navigate("/profile", {
+            state: {
+              initialMenu: "pesanan",
+              initialTab: "Menunggu Pembayaran",
+            },
+          }),
+        onError: () => alert("Pembayaran gagal."),
+        onClose: () => setShowCloseAlert(true),
+      });
     } catch (error) {
-      console.error("Gagal memproses pembayaran:", error);
       alert(error.message || "Terjadi kesalahan saat pembayaran.");
     }
   };
 
-  if (loading) {
-    return <p className="text-center text-gray-500">Memuat data checkout...</p>;
-  }
+  const handleClosePaymentAlert = () => {
+    setShowCloseAlert(false);
+    navigate("/order", {
+      state: { initialMenu: "pesanan", initialTab: "Menunggu Pembayaran" },
+    });
+  };
 
-  if (cartItems.length === 0) {
+  if (loading) {
     return (
-      <div className="max-w-6xl mx-auto p-4 text-center">
-        <p className="text-gray-500">Tidak ada produk untuk di-checkout.</p>
-        <Button
-          to="/"
-          text="Kembali Belanja"
-          className="mt-4 rounded-md px-6 py-2"
-        />
-      </div>
+      <p className="text-center text-gray-500 py-10">Memuat data checkout...</p>
     );
   }
 
-  const isProfileIncomplete =
-    !profile?.name || !profile?.phone || !profile?.address;
-
-  if (isProfileIncomplete) {
+  if (!profile?.name || !profile?.phone || !profile?.address) {
     return (
       <div className="max-w-3xl mx-auto text-center mt-12 bg-white p-6 rounded-lg shadow">
         <h2 className="text-lg font-semibold text-gray-700 mb-4">
           Data diri belum lengkap
         </h2>
         <p className="text-gray-600 mb-6">
-          Untuk melanjutkan checkout, silakan lengkapi data diri terlebih
-          dahulu.
+          Untuk melanjutkan checkout, silakan lengkapi data diri terlebih dahulu
+          pada halaman profil.
         </p>
         <Button
           to="/profile"
@@ -148,7 +122,15 @@ const CheckoutPage = () => {
 
   return (
     <div className="px-6 lg:px-20 mx-auto p-4 space-y-6">
-      {/* Alamat Penerima */}
+      {showCloseAlert && (
+        <Alert
+          message="Anda belum menyelesaikan pembayaran."
+          confirmText="Tutup"
+          onConfirm={handleClosePaymentAlert}
+        />
+      )}
+
+      {/* Sisa JSX tidak berubah */}
       <div className="bg-white p-4 rounded-lg shadow">
         <h2 className="text-primary font-bold mb-2 flex items-center gap-2">
           <FaLocationDot className="text-xl" />
@@ -166,8 +148,6 @@ const CheckoutPage = () => {
           </div>
         </div>
       </div>
-
-      {/* Produk */}
       <div className="bg-white p-4 rounded-lg shadow">
         <h2 className="font-bold mb-4">
           {checkoutMode === "buyNow" ? "Produk yang Dipilih" : "Produk Dipesan"}
@@ -223,8 +203,6 @@ const CheckoutPage = () => {
           </span>
         </p>
       </div>
-
-      {/* Pesan, Voucher, Ringkasan */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
         <div className="space-y-4">
           <div className="bg-white p-4 rounded-lg shadow h-fit">
@@ -251,8 +229,6 @@ const CheckoutPage = () => {
             </div>
           </div>
         </div>
-
-        {/* Ringkasan Pembayaran */}
         <div className="bg-white p-4 rounded-lg shadow">
           <div className="space-y-2 text-xs lg:text-sm text-gray-700">
             <div className="flex justify-between">

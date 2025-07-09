@@ -49,11 +49,12 @@ const WaveFooter = () => {
 
         <div className="text-center lg:text-right mt-3 mx-9 lg:mx-12 lg:-mt-16">
           <Button
+            to="/product"
             text="Pesan Sekarang"
             width="w-40"
             bgColor="bg-white"
             textColor="text-black"
-            className="rounded-full py-2"
+            className="rounded-xl py-2"
           />
         </div>
 

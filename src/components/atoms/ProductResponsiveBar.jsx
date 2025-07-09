@@ -18,13 +18,13 @@ const BarIcon = ({ bars = 3 }) => {
 
 const ProductResponsiveBar = ({ active, setActive }) => {
   return (
-    <div className="items-center gap-2 hidden lg:flex">
+    <div className="items-center gap-2 hidden lg:flex pl-24">
       {[2, 3].map((bars, i) => (
         <button
           key={i}
           onClick={() => setActive(i)}
-          className={`p-2 rounded hover:bg-gray-200 ${
-            active === i ? "bg-yellow-200 hover:bg-yellow-300" : ""
+          className={`p-2 rounded ${
+            active === i ? "bg-gray-200 hover:bg-gray-300" : ""
           }`}
         >
           <BarIcon bars={bars} />

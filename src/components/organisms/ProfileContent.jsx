@@ -4,70 +4,77 @@ import Button from "../atoms/Button";
 import axios from "axios";
 import { API_URL } from "../../services/API";
 import Alert from "../atoms/Alert";
+import { UserService } from "../../services/UserService";
 
 const ProfileContent = () => {
-  const user = JSON.parse(localStorage.getItem("user")) || {};
   const token = localStorage.getItem("token");
 
-  const [name, setName] = useState(user.name || "");
-  const [email, setEmail] = useState(user.email || "");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [image, setImage] = useState(null); // bisa string (path) atau File
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axios.get(`${API_URL}/auth/profile`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const { phone, address, image } = res.data.data;
-        setPhone(phone || "");
-        setAddress(address || "");
-        setImage(image || null); // path dari server
+        const profileData = await UserService.getProfile();
+        setName(profileData.name || "");
+        setEmail(profileData.email || "");
+        setPhone(profileData.phone || "");
+        setAddress(profileData.address || "");
+        if (profileData.image) {
+          setImagePreview(`${API_URL}${profileData.image}`);
+        }
       } catch (err) {
         console.error("Gagal mengambil profil:", err);
       }
     };
+    fetchProfile();
+  }, []);
 
-    if (token) fetchProfile();
-  }, [token]);
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
 
   const handleSubmit = async () => {
+    setLoading(true);
     try {
+      // Update data teks
       await axios.patch(
         `${API_URL}/auth/profile`,
-        { address, phone },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { name, address, phone },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      if (image && typeof image !== "string") {
+      if (imageFile) {
         const formData = new FormData();
-        formData.append("profile_picture", image);
-
-        const res = await axios.patch(
-          `${API_URL}/auth/profile/picture`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-
-        setImage(res.data.data.image);
+        formData.append("profile_picture", imageFile);
+        await axios.patch(`${API_URL}/auth/profile/picture`, formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
       }
 
-      // Tampilkan alert
+      const updatedProfile = await UserService.getProfile();
+      localStorage.setItem("user", JSON.stringify(updatedProfile));
+      window.dispatchEvent(new CustomEvent("profileUpdated"));
+
       setShowSuccessAlert(true);
-      setTimeout(() => setShowSuccessAlert(false), 2000);
     } catch (err) {
       console.error(err);
-      alert("Gagal memperbarui profil");
+      alert("Gagal memperbarui profil.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -79,14 +86,12 @@ const ProfileContent = () => {
       </p>
 
       <div className="border-t border-gray-200 pt-6 flex flex-col md:flex-row gap-8">
-        {/* Form kiri */}
-        <div className="w-full md:w-2/3 space-y-5">
+        <div className="w-full md:w-2/3 space-y-5 order-1">
           <Input
             id="name"
             label="Nama"
             value={name}
-            readOnly
-            className="bg-gray-100 cursor-not-allowed"
+            onChange={(e) => setName(e.target.value)}
             variant="profile"
           />
           <Input
@@ -113,35 +118,18 @@ const ProfileContent = () => {
             placeholder="Masukkan alamat lengkap"
             variant="profile"
           />
-
-          <div className="flex justify-start pt-2">
-            <Button
-              onClick={handleSubmit}
-              text="Simpan"
-              width="w-32"
-              className="rounded-md py-1 lg:py-2"
-            />
-          </div>
         </div>
-
-        {/* Gambar profil */}
-        <div className="w-full md:w-1/3 flex flex-col items-center md:items-start">
+        <div className="w-full md:w-1/3 flex flex-col items-center md:items-start order-2 md:order-last">
           <img
-            src={
-              image
-                ? typeof image === "string"
-                  ? `${API_URL}/${image}`
-                  : URL.createObjectURL(image)
-                : "/images/default-profile.png"
-            }
+            src={imagePreview || "/images/default-profile.png"}
             alt="Avatar"
             className="w-24 h-24 rounded-full object-cover mb-4"
           />
           <input
             type="file"
             accept="image/png, image/jpeg"
-            onChange={(e) => setImage(e.target.files[0])}
-            className="text-sm"
+            onChange={handleImageChange}
+            className="text-sm w-full max-w-xs"
           />
           <p className="text-xs text-gray-500 mt-1">
             Ukuran maks. 1 MB <br />
@@ -150,12 +138,21 @@ const ProfileContent = () => {
         </div>
       </div>
 
-      {/* Alert Berhasil */}
+      <div className="flex justify-start pt-6 mt-4 border-t">
+        <Button
+          onClick={handleSubmit}
+          text={loading ? "Menyimpan..." : "Simpan"}
+          width="w-32"
+          className="rounded-md py-1 lg:py-2"
+          disabled={loading}
+        />
+      </div>
+
       {showSuccessAlert && (
         <Alert
           message="Profil berhasil diperbarui!"
-          onCancel={() => setShowSuccessAlert(false)}
-          cancelText="Tutup"
+          onConfirm={() => setShowSuccessAlert(false)}
+          confirmText="Tutup"
         />
       )}
     </div>

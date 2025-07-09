@@ -10,7 +10,7 @@ import Slider from "react-slick";
 import { ProductService } from "../services/ProductService";
 import { CartService } from "../services/CartService";
 import { OrderService } from "../services/OrderService";
-
+import Alert from "../components/atoms/Alert";
 Modal.setAppElement("#root");
 
 const DetailProductPage = () => {
@@ -24,6 +24,8 @@ const DetailProductPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [relatedProducts, setRelatedProducts] = useState([]);
+
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -47,17 +49,14 @@ const DetailProductPage = () => {
       try {
         const res = await ProductService.getAll();
         const allProducts = res.data || [];
-
         const filtered = allProducts.filter((p) => p.id !== id);
         const shuffled = filtered.sort(() => 0.5 - Math.random());
-        const selected = shuffled.slice(0, 3);
-
+        const selected = shuffled.slice(0, 4);
         setRelatedProducts(selected);
       } catch (error) {
         console.error("Gagal ambil produk serupa:", error);
       }
     };
-
     fetchRelatedProducts();
   }, [id]);
 
@@ -74,21 +73,25 @@ const DetailProductPage = () => {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+  const closeModal = () => setIsModalOpen(false);
 
   const selectedVariation = product?.variations?.find((v) => v.name === size);
   const price = selectedVariation?.price ?? 0;
   const total = price * quantity;
 
   const handleAddToCart = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
     try {
       if (!selectedVariation) return alert("Variasi tidak dipilih.");
       await CartService.addItems([
         { variationId: selectedVariation.id, quantity },
       ]);
-      alert("Produk ditambahkan ke keranjang.");
+      setShowSuccessAlert(true);
     } catch (err) {
       console.error("Gagal tambah ke keranjang:", err);
       alert("Gagal menambahkan ke keranjang.");
@@ -96,23 +99,20 @@ const DetailProductPage = () => {
   };
 
   const handleBuyNow = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
     try {
       if (!selectedVariation) return alert("Variasi tidak dipilih.");
-
       const payload = {
-        items: [
-          {
-            variationId: selectedVariation.id,
-            quantity,
-          },
-        ],
+        items: [{ variationId: selectedVariation.id, quantity }],
       };
-
-      // Buat pesanan dulu
       const orderRes = await OrderService.createBuyNowOrder(payload);
       const orderId = orderRes?.data?.id;
 
-      // Simpan item dan order ID ke session
       sessionStorage.setItem("checkoutMode", "buyNow");
       sessionStorage.setItem(
         "buyNowItems",
@@ -133,7 +133,6 @@ const DetailProductPage = () => {
       );
       sessionStorage.setItem("buyNowOrderId", orderId);
 
-      // Arahkan ke halaman checkout
       navigate("/checkout");
     } catch (error) {
       console.error("Error Buy Now:", error);
@@ -145,11 +144,14 @@ const DetailProductPage = () => {
   if (!product)
     return <p className="text-center py-10">Produk tidak ditemukan.</p>;
 
-  const thumbnails = [product.mainImage, ...(product.additionalImages || [])];
+  const thumbnails = [
+    product.mainImage,
+    ...(product.additionalImages || []),
+  ].filter(Boolean);
 
   const sliderSettings = {
     dots: false,
-    infinite: true,
+    infinite: thumbnails.length > 1,
     speed: 500,
     initialSlide: selectedImageIndex,
     slidesToShow: 1,
@@ -159,11 +161,18 @@ const DetailProductPage = () => {
 
   return (
     <div className="bg-[#F3F4F6]">
-      <Header imageSrc="/images/product/header.png" title="Detail Produk" />
+      {/* ✅ 4. Render Alert di sini */}
+      {showSuccessAlert && (
+        <Alert
+          message="Produk berhasil ditambahkan ke keranjang!"
+          confirmText="Tutup"
+          onConfirm={() => setShowSuccessAlert(false)}
+        />
+      )}
 
+      <Header imageSrc="/images/product/header.png" title="Detail Produk" />
       <div className="px-6 lg:px-20 pb-40">
         <div className="max-w-6xl mx-auto bg-white rounded-md px-6 py-10 flex flex-col lg:flex-row gap-6 mt-6">
-          {/* Gambar Produk */}
           <div className="flex-1">
             <img
               src={product.mainImage}
@@ -175,15 +184,13 @@ const DetailProductPage = () => {
                 <img
                   key={i}
                   src={src}
-                  alt="Thumbnail"
+                  alt={`Thumbnail ${i + 1}`}
                   onClick={() => openModal(i)}
                   className="h-20 object-cover rounded-md w-full cursor-pointer hover:opacity-80"
                 />
               ))}
             </div>
           </div>
-
-          {/* Detail Produk */}
           <div className="flex-1">
             <h1 className="text-3xl font-bold mb-2">{product.product_name}</h1>
             <div className="flex items-center gap-1 text-primary mb-1">
@@ -196,8 +203,6 @@ const DetailProductPage = () => {
             <div className="mb-4 text-2xl font-bold">
               Rp {price.toLocaleString("id-ID")}
             </div>
-
-            {/* Pilih Ukuran */}
             <div className="flex items-center gap-2 mb-4">
               <span className="text-sm font-medium">Ukuran :</span>
               {product.variations.map((item) => (
@@ -214,8 +219,6 @@ const DetailProductPage = () => {
                 </button>
               ))}
             </div>
-
-            {/* Jumlah */}
             <div className="flex items-center gap-2 mb-4">
               <span className="text-sm font-medium">Banyaknya :</span>
               <div className="flex items-center border rounded-md shadow overflow-hidden">
@@ -228,45 +231,38 @@ const DetailProductPage = () => {
                 </button>
               </div>
             </div>
-
             <div className="mb-4 text-lg">
               <span className="font-medium">Total</span> : Rp{" "}
               {total.toLocaleString("id-ID")}
             </div>
-
-            {/* Aksi */}
             <div className="flex gap-4 mb-4">
               <Button
                 text="Masukan Keranjang"
                 bgColor="bg-white"
                 textColor="text-primary"
                 className="border border-primary rounded-sm shadow-md hover:text-white py-2"
-                py="py-2"
                 onClick={handleAddToCart}
               />
               <Button
                 text="Beli Sekarang"
-                py="py-2"
                 className="rounded-sm shadow-md"
+                py="py-2"
                 onClick={handleBuyNow}
               />
             </div>
-
             <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
-              <FaTruck className="text-lg text-secondary" />
-              Pengiriman sesuai dengan tanggal yang anda tentukan
+              <FaTruck className="text-lg text-secondary" /> Pengiriman sesuai
+              dengan tanggal yang anda tentukan
             </div>
             <div className="flex items-center gap-2 text-sm text-gray-600">
-              <FaTicketAlt className="text-lg text-secondary" />
-              Anda dapat memasukan voucher diskon ataupun gratis ongkir
+              <FaTicketAlt className="text-lg text-secondary" /> Anda dapat
+              memasukan voucher diskon ataupun gratis ongkir
             </div>
           </div>
         </div>
-
-        {/* Review + Produk Serupa */}
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
           <div className="col-span-2">
-            <Review />
+            <Review productId={id} />
           </div>
           <div className="bg-white rounded-md p-6 hidden lg:block self-start">
             <h1 className="text-xl font-bold mb-6">Produk Serupa</h1>
@@ -280,15 +276,13 @@ const DetailProductPage = () => {
                   showButton={false}
                   showRating={false}
                   showHorizontalLayout={true}
-                  onClick={() => navigate(`/product/${p.id}`)}
+                  onClick={() => navigate(`/produk/${p.id}`)}
                 />
               ))}
             </div>
           </div>
         </div>
       </div>
-
-      {/* Modal Gambar */}
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}

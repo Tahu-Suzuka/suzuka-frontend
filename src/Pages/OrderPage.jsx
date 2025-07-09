@@ -6,6 +6,7 @@ import OrderContent from "../components/organisms/OrderContent";
 const OrdersPage = () => {
   const location = useLocation();
   const [showSuccess, setShowSuccess] = useState(false);
+  const initialTab = location.state?.initialTab;
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
@@ -16,7 +17,7 @@ const OrdersPage = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-4">
-      <h1 className="text-xl font-semibold text-gray-800">Pesanan Saya</h1>
+      <h1 className="text-xl font-bold text-gray-800">Pesanan Saya</h1>
 
       {showSuccess && (
         <Alert
@@ -25,7 +26,7 @@ const OrdersPage = () => {
         />
       )}
 
-      <OrderContent />
+      <OrderContent initialTab={initialTab} />
     </div>
   );
 };
