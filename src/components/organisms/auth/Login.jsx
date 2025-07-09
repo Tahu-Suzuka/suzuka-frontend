@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthService } from "../../../services/AuthServices";
+import { AuthService } from "../../../services/AuthService";
 import Input from "../../atoms/Input";
 import PasswordField from "../../atoms/auth/PasswordField";
 import Divider from "../../atoms/auth/Divider";
@@ -43,9 +43,17 @@ export default function Login() {
 
     try {
       const res = await AuthService.login(email, password);
+
+      // ✅ Simpan token dan user ke localStorage
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
-      navigate("/");
+
+      // ✅ Arahkan admin ke dashboard, lainnya ke beranda
+      if (res.data.user.role === "admin") {
+        navigate("/dashboard");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       const msg = err.response?.data?.message || "Email atau kata sandi salah.";
       setLoginError(msg);
@@ -66,7 +74,6 @@ export default function Login() {
         onSubmit={handleLogin}
         className="space-y-6 w-full max-w-md mx-auto px-4 md:px-0 font-montserrat"
       >
-        {/* Error global */}
         {loginError && (
           <p className="text-primary text-center text-sm -mt-3">{loginError}</p>
         )}

@@ -8,46 +8,49 @@ const OrderContent = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Helper untuk normalisasi status
-  const normalize = (str) => str?.toLowerCase().replace(/\s+/g, "");
-
-  const fetchOrders = async () => {
-    try {
-      setLoading(true);
-      const response = await OrderService.getByCustomer();
-      setOrders(Array.isArray(response.data) ? response.data : []);
-    } catch (error) {
-      console.error("Gagal mengambil data pesanan:", error.message);
-      setOrders([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const normalize = (str) => str?.toLowerCase().replace(/\s+/g, "") || "";
 
   useEffect(() => {
+    const fetchOrders = async () => {
+      setLoading(true);
+      try {
+        const response = await OrderService.getByCustomer();
+        const fetchedOrders = Array.isArray(response.data) ? response.data : [];
+        fetchedOrders.sort(
+          (a, b) => new Date(b.orderDate) - new Date(a.orderDate)
+        );
+        setOrders(fetchedOrders);
+      } catch (error) {
+        console.error("Gagal mengambil data pesanan:", error.message);
+        setOrders([]);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchOrders();
   }, []);
 
-  // Auto-fetch ulang jika kembali dari Midtrans
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get("payment") === "success") {
-      fetchOrders();
-    }
-  }, []);
+  // Fungsi ini hanya untuk update status order, bukan review
+  const handleStatusChange = (orderId, newStatus) => {
+    setOrders((prevOrders) =>
+      prevOrders.map((o) =>
+        o.id === orderId ? { ...o, orderStatus: newStatus } : o
+      )
+    );
+  };
 
   const filteredOrders = orders.filter((order) => {
     if (activeTab === "Semua") return true;
-    return normalize(order.status) === normalize(activeTab);
+    return normalize(order.orderStatus) === normalize(activeTab);
   });
 
   const emptyMessages = {
-    MenungguPembayaran: "Belum ada pesanan",
-    Diproses: "Belum ada pesanan yang sedang diproses.",
-    Dikirim: "Belum ada pesanan yang sedang dikirim.",
-    Selesai: "Kamu belum menyelesaikan pesanan apapun.",
-    Dibatalkan: "Tidak ada pesanan yang dibatalkan.",
-    Semua: "Belum ada pesanan apapun saat ini.",
+    menunggupembayaran: "Belum ada pesanan menunggu pembayaran.",
+    diproses: "Belum ada pesanan yang sedang diproses.",
+    dikirim: "Belum ada pesanan yang sedang dikirim.",
+    selesai: "Kamu belum menyelesaikan pesanan apapun.",
+    dibatalkan: "Tidak ada pesanan yang dibatalkan.",
+    semua: "Belum ada pesanan apapun saat ini.",
   };
 
   return (
@@ -57,20 +60,25 @@ const OrderContent = () => {
       </div>
       <div className="space-y-4">
         {loading ? (
-          <p className="text-center text-gray-500">Memuat pesanan...</p>
+          <p className="text-center text-gray-500 py-10">Memuat pesanan...</p>
         ) : filteredOrders.length > 0 ? (
           filteredOrders.map((order) => (
-            <OrderCard key={order.id} order={order} refresh={fetchOrders} />
+            <OrderCard
+              key={order.id} // ✅ Kunci yang benar sudah ada di sini
+              order={order}
+              onStatusChange={handleStatusChange}
+              // ❌ Tidak ada lagi prop onReviewSubmitted
+            />
           ))
         ) : (
-          <div className="bg-white p-6 rounded-lg shadow-sm text-center text-gray-500 text-sm border border-gray-200 flex flex-col items-center space-y-4">
+          <div className="bg-white p-6 rounded-lg shadow-sm text-center text-gray-500 border border-gray-200 flex flex-col items-center space-y-4">
             <img
               src="/images/no-order.png"
               alt="No Orders"
               className="w-40 h-40 object-contain"
             />
             <p className="text-sm font-normal text-gray-700">
-              {emptyMessages[activeTab] || "Tidak Ada Pesanan"}
+              {emptyMessages[normalize(activeTab)] || "Tidak Ada Pesanan"}
             </p>
           </div>
         )}

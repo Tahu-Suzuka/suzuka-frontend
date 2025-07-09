@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import PasswordField from "../atoms/auth/PasswordField";
-import { AuthService } from "../../services/AuthService";
-import Button from "../atoms/Button";
-import Alert from "../atoms/Alert";
+import PasswordField from "../components/atoms/auth/PasswordField";
+import { AuthService } from "../services/AuthService";
+import Button from "../components/atoms/Button";
+import Alert from "../components/atoms/Alert";
 
-const ChangePassword = () => {
+const ChangePasswordPage = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -42,7 +42,7 @@ const ChangePassword = () => {
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");
-      setShowAlert(true); // ✅ Tampilkan Alert saat sukses
+      setShowAlert(true);
     } catch (err) {
       const errorMsg =
         err.response?.data?.message || "Gagal mengubah kata sandi.";
@@ -125,4 +125,4 @@ const ChangePassword = () => {
   );
 };
 
-export default ChangePassword;
+export default ChangePasswordPage;

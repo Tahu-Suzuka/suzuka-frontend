@@ -5,7 +5,7 @@ import Input from "../../../components/atoms/Input";
 import Button from "../../../components/atoms/Button";
 import { ProductService } from "../../../services/ProductService";
 import { OrderService } from "../../../services/OrderService";
-import { useAuthToken } from "../../../services/useAuthToken";
+import { getAuthToken } from "../../../services/getAuthToken";
 import Alert from "../../../components/atoms/Alert";
 
 export default function AddOrderPage() {
@@ -19,7 +19,7 @@ export default function AddOrderPage() {
   const [suggestions, setSuggestions] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState("");
   const [showAlert, setShowAlert] = useState(false);
-  const token = useAuthToken();
+  const token = getAuthToken();
   const navigate = useNavigate();
 
   useEffect(() => {

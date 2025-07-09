@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import ProductResponsiveBar from "../atoms/ProductResponsiveBar";
 import Filter from "../atoms/Filter";
+import SearchBar from "../atoms/SearchBar";
 
 const ProductToolbar = ({ active, setActive }) => {
   const [sortBy, setSortBy] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const sortOptions = [
+    { value: "semua", label: "Semua" },
     { value: "termurah", label: "Termurah" },
     { value: "termahal", label: "Termahal" },
   ];
@@ -18,9 +21,17 @@ const ProductToolbar = ({ active, setActive }) => {
 
       {/* ProductResponsiveBar */}
       <ProductResponsiveBar active={active} setActive={setActive} />
-
-      {/* ProductFilter */}
-      <Filter value={sortBy} onChange={setSortBy} options={sortOptions} />
+      <div className="flex  gap-4">
+        <div className="w-full">
+          <SearchBar
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            placeholder="Cari Produk..."
+          />
+        </div>
+        {/* ProductFilter */}
+        <Filter value={sortBy} onChange={setSortBy} options={sortOptions} />
+      </div>
     </div>
   );
 };

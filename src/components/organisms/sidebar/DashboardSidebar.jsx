@@ -10,13 +10,17 @@ import { FiUsers } from "react-icons/fi";
 
 const menu = [
   { name: "Dashboard", path: "/dashboard", icon: PiPresentationChart },
-  { name: "Pesanan", path: "/dashboard/order", icon: TbFileInvoice },
-  { name: "Kategori", path: "/dashboard/category", icon: RxDashboard },
-  { name: "Produk", path: "/dashboard/product", icon: BiBox },
-  { name: "Voucher", path: "/dashboard/voucher", icon: CiDiscount1 },
-  { name: "Penjualan", path: "/dashboard/sales", icon: MdInsertChartOutlined },
-  { name: "Pelanggan", path: "/dashboard/customer", icon: FiUsers },
-  { name: "Ulasan", path: "/dashboard/review", icon: CiStar },
+  { name: "Pesanan", path: "/dashboard/orderDashboard", icon: TbFileInvoice },
+  { name: "Kategori", path: "/dashboard/categoryDashboard", icon: RxDashboard },
+  { name: "Produk", path: "/dashboard/productDashboard", icon: BiBox },
+  { name: "Voucher", path: "/dashboard/voucherDashboard", icon: CiDiscount1 },
+  {
+    name: "Penjualan",
+    path: "/dashboard/salesDashboard",
+    icon: MdInsertChartOutlined,
+  },
+  { name: "Pelanggan", path: "/dashboard/customerDashboard", icon: FiUsers },
+  { name: "Ulasan", path: "/dashboard/reviewDashboard", icon: CiStar },
 ];
 
 const DashboardSidebar = () => (

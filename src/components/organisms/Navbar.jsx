@@ -87,7 +87,7 @@ const Navbar = () => {
                     </li>
                     <li>
                       <Link
-                        to="/profile"
+                        to="/order"
                         className="flex items-center gap-2 px-4 py-2 hover:bg-primary hover:bg-opacity-10 cursor-pointer"
                       >
                         <LuNotebookText className="text-lg" />

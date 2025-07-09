@@ -16,7 +16,7 @@ const Tabs = ({ activeTab, setActiveTab }) => {
   return (
     <div
       ref={scrollRef}
-      className="overflow-x-auto scroll-hide flex gap-6 lg:gap-[70px] px-4 border-b border-gray-200 text-sm cursor-grab select-none whitespace-nowrap"
+      className="overflow-x-auto scroll-hide flex gap-6 lg:gap-[60px] px-4 border-b border-gray-200 text-sm cursor-grab select-none whitespace-nowrap"
     >
       {tabs.map((tab) => (
         <button

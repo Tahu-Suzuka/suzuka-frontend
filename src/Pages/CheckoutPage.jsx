@@ -68,8 +68,8 @@ const CheckoutPage = () => {
         const snapToken = paymentRes.token;
 
         window.snap.pay(snapToken, {
-          onSuccess: () => (window.location.href = "/orders"),
-          onPending: () => (window.location.href = "/orders"),
+          onSuccess: () => (window.location.href = "/order"),
+          onPending: () => (window.location.href = "/order"),
           onError: (error) => {
             console.error("Pembayaran gagal", error);
             alert("Terjadi kesalahan saat memproses pembayaran.");

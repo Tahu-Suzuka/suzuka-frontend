@@ -4,7 +4,7 @@ import PasswordField from "../../atoms/auth/PasswordField";
 import Button from "../../atoms/Button";
 import { FiMail } from "react-icons/fi";
 import { IoKeyOutline } from "react-icons/io5";
-import { AuthService } from "../../../services/AuthServices";
+import { AuthService } from "../../../services/AuthService";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");

@@ -56,7 +56,7 @@ const OrderContent = () => {
   const handleStatusChange = async (id, newStatus) => {
     try {
       await OrderService.updateStatus(id, newStatus);
-      fetchOrders(); // refresh setelah update
+      fetchOrders();
     } catch (error) {
       console.error("❌ Gagal mengubah status:", error);
     }

@@ -26,14 +26,14 @@ const ProductCard = ({ onCartUpdate }) => {
   }, []);
 
   const handleAddToCart = async (product, e) => {
-    e.stopPropagation(); // supaya tidak trigger navigate
+    e.stopPropagation();
     try {
       const variation = product.variations?.[0];
       if (!variation) return alert("Produk tidak memiliki variasi");
 
       await CartService.addItems([{ variationId: variation.id, quantity: 1 }]);
 
-      if (onCartUpdate) onCartUpdate(); // ⬅️ untuk trigger refresh cartSidebar
+      if (onCartUpdate) onCartUpdate();
     } catch (err) {
       console.error("Gagal menambahkan ke keranjang:", err);
       alert("Gagal menambahkan ke keranjang.");

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { API_URL } from "./API";
+import { getAuthToken } from "./getAuthToken";
 
 export const OrderService = {
   createManualOrder: async (data, token) => {
@@ -122,12 +123,11 @@ export const OrderService = {
     return response.data;
   },
 
-  // Simpel kalau backend udah ngatur:
   createPayment: async (orderId) => {
     const token = localStorage.getItem("token");
     const response = await axios.post(
       `${API_URL}/orders/${orderId}/create-payment`,
-      {}, // kosongin body
+      {},
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -135,5 +135,22 @@ export const OrderService = {
       }
     );
     return response.data;
+  },
+
+  updateUserStatus: async (orderId, status) => {
+    const token = localStorage.getItem("token"); // Ambil token dari localStorage
+
+    const res = await axios.patch(
+      `${API_URL}/orders/${orderId}/user-status`,
+      { status }, // ✅ kirim body: { status: "Selesai" }
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // ✅ kirim token
+          "Content-Type": "application/json", // opsional, tapi baik ditambahkan
+        },
+      }
+    );
+
+    return res.data;
   },
 };

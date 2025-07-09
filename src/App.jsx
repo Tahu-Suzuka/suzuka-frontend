@@ -17,7 +17,11 @@ import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import ProductPage from "./pages/ProductPage";
 import DetailProductPage from "./pages/DetailProductPage";
+
+// Settings
 import ProfilePage from "./pages/ProfilePage";
+import OrderPage from "./pages/OrderPage";
+import ChangePasswordPage from "./pages/ChangePasswordPage";
 
 // Checkout
 import CheckoutLayout from "./layouts/CheckoutLayout";
@@ -46,6 +50,8 @@ import EditCategoryPage from "./pages/Dashboard/category/EditCategoryPage";
 
 // Error Pages
 import ErrorPage from "./pages/ErrorPage";
+import ChangePassword from "./pages/ChangePasswordPage";
+import SettingLayout from "./layouts/SettingLayout";
 
 const App = () => {
   return (
@@ -61,13 +67,13 @@ const App = () => {
           }
         >
           <Route index element={<DashboardPage />} />
-          <Route path="order" element={<OrderContent />} />
-          <Route path="product" element={<ProductContent />} />
-          <Route path="category" element={<CategoryContent />} />
-          <Route path="customer" element={<CustomerContent />} />
-          <Route path="voucher" element={<VoucherContent />} />
-          <Route path="sales" element={<SalesContent />} />
-          <Route path="review" element={<ReviewContent />} />
+          <Route path="orderDashboard" element={<OrderContent />} />
+          <Route path="productDashboard" element={<ProductContent />} />
+          <Route path="categoryDashboard" element={<CategoryContent />} />
+          <Route path="customerDashboard" element={<CustomerContent />} />
+          <Route path="voucherDashboard" element={<VoucherContent />} />
+          <Route path="salesDashboard" element={<SalesContent />} />
+          <Route path="revieDashboard" element={<ReviewContent />} />
           <Route path="add-order" element={<AddOrderPage />} />
           <Route path="order/:id" element={<ReadOrderPage />} />
           <Route path="add-product" element={<AddProductPage />} />
@@ -86,7 +92,13 @@ const App = () => {
           <Route path="about" element={<AboutPage />} />
           <Route path="product" element={<ProductPage />} />
           <Route path="/produk/:id" element={<DetailProductPage />} />
+        </Route>
+
+        {/* Setting Layout */}
+        <Route element={<SettingLayout />}>
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/order" element={<OrderPage />} />
+          <Route path="/changePassword" element={<ChangePasswordPage />} />
         </Route>
 
         {/* Checkout Layout */}
