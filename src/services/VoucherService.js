@@ -2,11 +2,13 @@ import axios from "axios";
 import { API_URL } from "./API";
 
 export const VoucherService = {
-  getAll: async (token) => {
+  getAll: async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("Token tidak ditemukan, silakan login kembali.");
+    }
     const res = await axios.get(`${API_URL}/vouchers`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     });
     return res.data.data;
   },
@@ -45,5 +47,25 @@ export const VoucherService = {
       },
     });
     return res.data;
+  },
+
+  applyVoucher: async (code) => {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("Anda harus login untuk menggunakan voucher.");
+
+    try {
+      const response = await axios.post(
+        `${API_URL}/vouchers/apply`,
+        { code },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error(error?.response?.data?.message || "Voucher tidak valid.");
+    }
   },
 };

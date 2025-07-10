@@ -69,7 +69,7 @@ const AddVoucherPage = () => {
       await VoucherService.create(payload, token);
 
       setAlert({ message: "Voucher berhasil ditambahkan!", show: true });
-      setTimeout(() => navigate("/dashboard/voucher"), 1500);
+      setTimeout(() => navigate("/dashboard/voucherDashboard"), 1500);
     } catch (err) {
       setAlert({
         message: err?.message || "Gagal menambahkan voucher",

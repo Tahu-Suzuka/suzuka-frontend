@@ -5,8 +5,10 @@ import { FaLocationDot } from "react-icons/fa6";
 import { MdSpeakerNotes } from "react-icons/md";
 import Button from "../components/atoms/Button";
 import Alert from "../components/atoms/Alert";
+import { CartService } from "../services/CartService";
 import { UserService } from "../services/UserService";
 import { OrderService } from "../services/OrderService";
+import { VoucherService } from "../services/VoucherService";
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
@@ -15,23 +17,42 @@ const CheckoutPage = () => {
   const [checkoutMode, setCheckoutMode] = useState("cart");
   const [profile, setProfile] = useState(null);
   const [showCloseAlert, setShowCloseAlert] = useState(false);
+  const [note, setNote] = useState("");
+
+  const [voucherCode, setVoucherCode] = useState("");
+  const [discount, setDiscount] = useState(0);
+  const [appliedVoucher, setAppliedVoucher] = useState(null);
+  const [voucherError, setVoucherError] = useState("");
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      if (cartItems.length > 0) {
+        event.preventDefault();
+        event.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [cartItems]);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const mode = sessionStorage.getItem("checkoutMode");
         setCheckoutMode(mode || "cart");
-
+        let itemsToSet = [];
         if (mode === "buyNow") {
-          const buyNowItems = JSON.parse(
+          itemsToSet = JSON.parse(
             sessionStorage.getItem("buyNowItems") || "[]"
           );
-          setCartItems(buyNowItems);
         } else {
           const cartRes = await CartService.getAll();
-          setCartItems(cartRes.carts || []);
+          itemsToSet = cartRes.carts || [];
         }
-
+        setCartItems(itemsToSet);
         const profileRes = await UserService.getProfile();
         setProfile(profileRes);
       } catch (error) {
@@ -44,26 +65,71 @@ const CheckoutPage = () => {
   }, []);
 
   const subtotal = cartItems.reduce(
-    (acc, item) => acc + item.variation.price * item.quantity,
+    (acc, item) => acc + (item.variation?.price || 0) * item.quantity,
     0
   );
   const serviceFee = 4000;
-  const discount = 0;
   const total = subtotal + serviceFee - discount;
+
+  const handleApplyVoucher = async () => {
+    setVoucherError("");
+    if (!voucherCode.trim()) {
+      setVoucherError("Kode voucher tidak boleh kosong.");
+      return;
+    }
+
+    try {
+      const response = await VoucherService.applyVoucher(voucherCode);
+      const voucherData = response.data;
+
+      if (subtotal < voucherData.minPurchase) {
+        throw new Error(
+          `Minimal pembelian untuk voucher ini adalah Rp${voucherData.minPurchase.toLocaleString(
+            "id-ID"
+          )}`
+        );
+      }
+
+      setDiscount(voucherData.value);
+      setAppliedVoucher(voucherData);
+      setVoucherError("");
+    } catch (error) {
+      setDiscount(0);
+      setAppliedVoucher(null);
+      setVoucherError(error.message);
+    }
+  };
+
+  const handleRemoveVoucher = () => {
+    setVoucherCode("");
+    setDiscount(0);
+    setAppliedVoucher(null);
+    setVoucherError("");
+  };
 
   const handlePayment = async () => {
     try {
       const token = localStorage.getItem("token");
       let orderId;
 
+      const payload = {
+        items: cartItems.map((item) => ({
+          variationId: item.variation.id,
+          quantity: item.quantity,
+        })),
+        note: note,
+        voucher: appliedVoucher ? appliedVoucher.code : null,
+      };
+
       if (checkoutMode === "cart") {
-        const orderRes = await OrderService.createFromCart(token);
+        const orderRes = await OrderService.createFromCart(payload, token);
         orderId = orderRes?.data?.id;
       } else {
-        orderId = sessionStorage.getItem("buyNowOrderId");
+        const orderRes = await OrderService.createBuyNowOrder(payload);
+        orderId = orderRes?.data?.id;
       }
 
-      if (!orderId) throw new Error("Gagal membuat atau menemukan ID pesanan.");
+      if (!orderId) throw new Error("Gagal membuat pesanan.");
 
       const paymentRes = await OrderService.createPayment(orderId, token);
       const snapToken = paymentRes.token;
@@ -84,13 +150,15 @@ const CheckoutPage = () => {
         onClose: () => setShowCloseAlert(true),
       });
     } catch (error) {
-      alert(error.message || "Terjadi kesalahan saat pembayaran.");
+      alert(
+        error.response?.data?.message || "Terjadi kesalahan saat pembayaran."
+      );
     }
   };
 
   const handleClosePaymentAlert = () => {
     setShowCloseAlert(false);
-    navigate("/order", {
+    navigate("/profile", {
       state: { initialMenu: "pesanan", initialTab: "Menunggu Pembayaran" },
     });
   };
@@ -124,17 +192,14 @@ const CheckoutPage = () => {
     <div className="px-6 lg:px-20 mx-auto p-4 space-y-6">
       {showCloseAlert && (
         <Alert
-          message="Anda belum menyelesaikan pembayaran."
-          confirmText="Tutup"
+          message="Anda menutup popup tanpa menyelesaikan pembayaran."
+          confirmText="Lihat Pesanan"
           onConfirm={handleClosePaymentAlert}
         />
       )}
-
-      {/* Sisa JSX tidak berubah */}
       <div className="bg-white p-4 rounded-lg shadow">
         <h2 className="text-primary font-bold mb-2 flex items-center gap-2">
-          <FaLocationDot className="text-xl" />
-          Alamat Penerima
+          <FaLocationDot className="text-xl" /> Alamat Penerima
         </h2>
         <div className="border-t pt-2 text-sm text-gray-700">
           <div className="flex flex-col lg:flex-row justify-between lg:items-start">
@@ -211,7 +276,9 @@ const CheckoutPage = () => {
             </h2>
             <input
               type="text"
-              placeholder="Tulis pesan atau catatan untuk penjual..."
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Tulis pesan atau catatan..."
               className="border w-full px-4 py-2 mt-4 rounded text-sm"
             />
           </div>
@@ -219,14 +286,41 @@ const CheckoutPage = () => {
             <h2 className="text-primary font-semibold flex items-center gap-2">
               <FaTicketAlt /> Voucher
             </h2>
-            <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 mt-4">
-              <input
-                type="text"
-                placeholder="Masukan kode voucher anda disini"
-                className="border w-full px-4 py-2 rounded text-sm"
-              />
-              <Button text="Gunakan" className="rounded-md px-6 text-sm py-2" />
-            </div>
+            {!appliedVoucher ? (
+              <>
+                <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 mt-4">
+                  <input
+                    type="text"
+                    value={voucherCode}
+                    onChange={(e) =>
+                      setVoucherCode(e.target.value.toUpperCase())
+                    }
+                    placeholder="Masukan kode voucher"
+                    className="border w-full px-4 py-2 rounded text-sm"
+                  />
+                  <Button
+                    text="Gunakan"
+                    onClick={handleApplyVoucher}
+                    className="rounded-md px-6 text-sm py-2"
+                  />
+                </div>
+                {voucherError && (
+                  <p className="text-red-500 text-xs mt-2">{voucherError}</p>
+                )}
+              </>
+            ) : (
+              <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
+                <p className="text-sm text-green-700 font-semibold">
+                  Voucher "{appliedVoucher.code}" berhasil digunakan!
+                </p>
+                <button
+                  onClick={handleRemoveVoucher}
+                  className="text-xs text-red-500 hover:underline mt-1"
+                >
+                  Hapus
+                </button>
+              </div>
+            )}
           </div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
@@ -236,14 +330,10 @@ const CheckoutPage = () => {
               <span>Rp{subtotal.toLocaleString("id-ID")}</span>
             </div>
             <div className="flex justify-between">
-              <span>Subtotal Pengiriman</span>
-              <span>Rp0</span>
-            </div>
-            <div className="flex justify-between">
               <span>Biaya Layanan</span>
               <span>Rp{serviceFee.toLocaleString("id-ID")}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between  font-medium">
               <span>Total Diskon</span>
               <span>-Rp{discount.toLocaleString("id-ID")}</span>
             </div>
