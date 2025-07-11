@@ -7,6 +7,8 @@ import { CiDiscount1, CiStar } from "react-icons/ci";
 import { BiBox } from "react-icons/bi";
 import { MdInsertChartOutlined } from "react-icons/md";
 import { FiUsers } from "react-icons/fi";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const menu = [
   { name: "Dashboard", path: "/dashboard", icon: PiPresentationChart },
@@ -27,7 +29,12 @@ const DashboardSidebar = () => (
   <aside className="w-64 h-screen bg-white shadow-md fixed top-0 left-0 z-40">
     {/* Header Logo */}
     <div className="flex items-center h-16 border-b px-4">
-      <img src="/images/logo/logo.png" alt="Logo" className="w-8 h-8" />
+      <LazyLoadImage
+        src="/images/logo/logo.png"
+        alt="Logo"
+        className="w-8 h-8"
+        effect="blur"
+      />
       <h1 className="ml-3 text-xl font-semibold text-slate-800">Tahu Suzuka</h1>
     </div>
 

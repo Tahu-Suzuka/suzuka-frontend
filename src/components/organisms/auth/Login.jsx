@@ -64,8 +64,11 @@ export default function Login() {
 
   return (
     <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-center left-14">
-      <h1 className="text-3xl lg:text-4xl text-center tracking-wide mb-8">
+      <h1 className="lg:block hidden text-3xl lg:text-4xl text-center tracking-wide mb-8">
         Selamat Datang
+      </h1>
+      <h1 className="lg:hidden block text-3xl lg:text-4xl text-center tracking-wide mb-8">
+        Login
       </h1>
 
       <form

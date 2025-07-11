@@ -7,6 +7,8 @@ import { ProductService } from "../../../services/ProductService";
 import { OrderService } from "../../../services/OrderService";
 import { getAuthToken } from "../../../services/getAuthToken";
 import Alert from "../../../components/atoms/Alert";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 export default function AddOrderPage() {
   const [products, setProducts] = useState([]);
@@ -173,10 +175,11 @@ export default function AddOrderPage() {
               key={p.id}
               className="bg-white rounded-xl shadow p-2 flex items-center gap-4"
             >
-              <img
+              <LazyLoadImage
                 src={p.img}
                 alt={p.product_name}
                 className="w-16 h-16 object-cover rounded-md"
+                effect="blur"
               />
               <div className="flex flex-col items-center justify-center h-full">
                 <span className="text-sm font-medium mb-2">
@@ -254,10 +257,11 @@ export default function AddOrderPage() {
               key={item.id + item.size}
               className="flex items-center gap-4 border-b pb-2"
             >
-              <img
+              <LazyLoadImage
                 src={item.img}
                 alt={item.product_name}
                 className="w-16 h-16 object-cover rounded"
+                effect="blur"
               />
               <div className="flex-1">
                 <p className="font-medium text-sm pb-2">{item.product_name}</p>

@@ -9,6 +9,8 @@ import { CartService } from "../services/CartService";
 import { UserService } from "../services/UserService";
 import { OrderService } from "../services/OrderService";
 import { VoucherService } from "../services/VoucherService";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
@@ -226,12 +228,13 @@ const CheckoutPage = () => {
               }`}
             >
               <div className="flex items-center gap-4">
-                <img
+                <LazyLoadImage
                   src={
                     item.variation.product.mainImage || "/images/default.png"
                   }
                   alt={item.variation.product.product_name}
                   className="w-12 h-12 lg:w-24 lg:h-20 object-cover rounded"
+                  effect="blur"
                 />
                 <div>
                   <p className="font-semibold">

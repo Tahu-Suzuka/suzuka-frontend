@@ -1,5 +1,7 @@
 import React from "react";
 import { FaStar } from "react-icons/fa";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const Card = ({
   name,
@@ -13,11 +15,13 @@ const Card = ({
 }) => {
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden text-center">
-      <img
+      <LazyLoadImage
         src={image}
         alt={name}
+        effect="blur"
         className="w-full h-48 object-cover block rounded-t-xl"
       />
+
       <div className="p-4">
         {showHorizontalLayout ? (
           <div className="flex justify-between items-center">
@@ -30,7 +34,7 @@ const Card = ({
           </div>
         ) : (
           <>
-            <h2 className="text-xl lg:text-2xl font-semibold lg:font-bold">
+            <h2 className="text-lg lg:text-xl font-semibold lg:font-bold">
               {name}
             </h2>
 

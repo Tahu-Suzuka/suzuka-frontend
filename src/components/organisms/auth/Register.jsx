@@ -83,6 +83,9 @@ export default function Register() {
 
   return (
     <div className="w-full lg:w-1/2 p-6 flex flex-col justify-center left-14 mt-7">
+      <h1 className="lg:hidden block text-3xl lg:text-4xl text-center tracking-wide mb-8">
+        Daftar Akun Baru
+      </h1>
       <form
         onSubmit={handleSubmit}
         className="space-y-4 w-full max-w-md mx-auto px-4"

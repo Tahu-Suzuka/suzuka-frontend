@@ -82,7 +82,7 @@ const ProductPage = () => {
       />
 
       <div
-        className={`p-6 pb-28 lg:pb-32 lg:px-20 md:p-12 grid grid-cols-1 ${getGridCols()} gap-10`}
+        className={`p-6 px-8 pb-28 lg:pb-32 lg:px-20 lg:p-12 grid grid-cols-1 ${getGridCols()} gap-10`}
       >
         <ProductCard products={displayedProducts} loading={loading} />
       </div>

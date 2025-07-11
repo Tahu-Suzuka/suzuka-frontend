@@ -7,6 +7,8 @@ import { LuNotebookText } from "react-icons/lu";
 import { TbLogout } from "react-icons/tb";
 import CartSidebar from "../organisms/sidebar/CartSidebar";
 import Avatar from "../atoms/Avatar";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const NavbarLinks = [
   { name: "Beranda", link: "/" },
@@ -65,7 +67,12 @@ const Navbar = () => {
       >
         <div className="flex items-center gap-2 z-50">
           <Link to="/">
-            <img src="/images/logo/logo.png" alt="Logo" className="w-10 h-10" />
+            <LazyLoadImage
+              src="/images/logo/logo.png"
+              alt="Logo"
+              className="w-10 h-10 "
+              effect="blur"
+            />
           </Link>
         </div>
 

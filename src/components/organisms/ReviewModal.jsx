@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FaStar, FaRegStar, FaCamera } from "react-icons/fa";
 import { ReviewService } from "../../services/ReviewService";
 import Alert from "../../components/atoms/Alert";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const ReviewModal = ({ isOpen, onClose, items, onAfterSubmit }) => {
   const [reviews, setReviews] = useState([]);
@@ -82,10 +84,11 @@ const ReviewModal = ({ isOpen, onClose, items, onAfterSubmit }) => {
           {reviews.map((r, index) => (
             <div key={r.productId || index} className="border-t pt-4 space-y-3">
               <div className="flex items-start gap-3">
-                <img
+                <LazyLoadImage
                   src={r.image}
                   alt={r.name}
                   className="w-14 h-14 rounded object-cover flex-shrink-0"
+                  effect="blur"
                 />
                 <h3 className="font-semibold text-sm sm:text-base pt-1">
                   {r.name}

@@ -9,6 +9,8 @@ import Pagination from "../../atoms/Pagination";
 import Filter from "../../atoms/Filter";
 import Alert from "../../atoms/Alert";
 import { ProductService } from "../../../services/ProductService";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const ProductContent = () => {
   const navigate = useNavigate();
@@ -105,10 +107,11 @@ const ProductContent = () => {
               <td className="py-2 px-4">{idx + 1}</td>
               <td className="py-2 px-4">
                 <div className="flex items-center gap-3">
-                  <img
+                  <LazyLoadImage
                     src={item.mainImage}
                     alt={item.product_name}
                     className="w-10 h-10 object-cover rounded"
+                    effect="blur"
                   />
                   <span className="text-sm font-medium text-gray-800">
                     {item.product_name}

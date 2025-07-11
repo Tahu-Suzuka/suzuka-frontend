@@ -1,5 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const AboutShort = () => {
   return (
@@ -7,16 +9,18 @@ const AboutShort = () => {
       <div className="flex flex-col lg:flex-row items-center gap-8 relative z-10">
         <div className="relative w-full lg:w-[40%]">
           {/* Blob */}
-          <img
+          <LazyLoadImage
             src="/images/about/blob.png"
             alt="Blob"
-            className="absolute w-[99%] z-0 pointer-events-none hidden lg:block"
+            className="absolute w-[82%] z-0 pointer-events-none hidden lg:block"
+            effect="blur"
           />
 
-          <img
+          <LazyLoadImage
             src="/images/about/short.png"
             alt="Tentang Kami"
-            className="relative z-10 w-full object-cover hidden lg:block"
+            className="relative z-10 w-92 h-72 object-cover hidden lg:block"
+            effect="blur"
           />
         </div>
 

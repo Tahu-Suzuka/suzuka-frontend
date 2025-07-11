@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Button from "../atoms/Button";
 import { FaTruck, FaStore, FaCheckCircle } from "react-icons/fa";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const images = [
   "/images/hero/slider1.png",
@@ -26,7 +28,7 @@ const Hero = () => {
     <div className="relative w-full h-[500px]">
       {/* Background Slider */}
       {images.map((image, index) => (
-        <img
+        <LazyLoadImage
           key={index}
           src={image}
           alt={`slide-${index}`}

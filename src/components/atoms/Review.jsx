@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FaStar } from "react-icons/fa";
 import { ReviewService } from "../../services/ReviewService";
 import { API_URL } from "../../services/API";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const Review = ({ productId }) => {
   const [reviews, setReviews] = useState([]);
@@ -76,10 +78,11 @@ const Review = ({ productId }) => {
             className="bg-white rounded-md shadow-md p-6 space-y-3"
           >
             <div className="flex items-center gap-4">
-              <img
+              <LazyLoadImage
                 src={getFullImageUrl(review.user?.image)}
                 alt={review.user?.name || "User"}
                 className="w-14 h-14 rounded-full object-cover"
+                effect="blur"
               />
               <div>
                 <h2 className="font-semibold text-gray-800">
@@ -102,11 +105,12 @@ const Review = ({ productId }) => {
             </p>
             <div className="flex gap-2">
               {[review.image1, review.image2].filter(Boolean).map((img, i) => (
-                <img
+                <LazyLoadImage
                   key={i}
                   src={getFullImageUrl(img)}
                   alt={`Ulasan ${i + 1}`}
                   onClick={() => handleImageClick(review.id, img)}
+                  effect="blur"
                   className={`w-20 h-20 object-cover rounded-md cursor-pointer border-2 ${
                     selectedImage[review.id] === img
                       ? "border-primary"
@@ -116,10 +120,11 @@ const Review = ({ productId }) => {
               ))}
             </div>
             {selectedImage[review.id] && (
-              <img
+              <LazyLoadImage
                 src={getFullImageUrl(selectedImage[review.id])}
                 alt="Preview"
                 className="mt-4 w-full max-w-md rounded-md object-cover"
+                effect="blur"
               />
             )}
           </div>

@@ -5,6 +5,8 @@ import axios from "axios";
 import { API_URL } from "../../services/API";
 import Alert from "../atoms/Alert";
 import { UserService } from "../../services/UserService";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const ProfileContent = () => {
   const token = localStorage.getItem("token");
@@ -120,10 +122,11 @@ const ProfileContent = () => {
           />
         </div>
         <div className="w-full md:w-1/3 flex flex-col items-center md:items-start order-2 md:order-last">
-          <img
+          <LazyLoadImage
             src={imagePreview || "/images/default-profile.png"}
             alt="Avatar"
             className="w-24 h-24 rounded-full object-cover mb-4"
+            effect="blur"
           />
           <input
             type="file"

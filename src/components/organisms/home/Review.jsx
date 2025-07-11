@@ -4,6 +4,8 @@ import { FaStar } from "react-icons/fa";
 import Title from "../../atoms/Title";
 import { ReviewService } from "../../../services/ReviewService";
 import { API_URL } from "../../../services/API";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -76,10 +78,11 @@ const Review = () => {
               <div className="relative bg-white border shadow-md rounded-xl p-6 pt-16 text-center h-[200px] flex flex-col justify-between">
                 <div>
                   <div className="absolute -top-10 left-1/2 -translate-x-1/2">
-                    <img
+                    <LazyLoadImage
                       src={getFullImageUrl(review.user?.image)}
                       alt={review.user?.name}
                       className="w-24 h-24 rounded-full border-4 border-white object-cover shadow-lg bg-white"
+                      effect="blur"
                     />
                   </div>
                   <h3 className="mt-2 text-lg font-semibold">

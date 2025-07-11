@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { IoIosClose } from "react-icons/io";
 import { CategoryService } from "../../../services/CategoryService";
 import Alert from "../../../components/atoms/Alert";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const EditCategoryPage = () => {
   const navigate = useNavigate();
@@ -126,10 +128,11 @@ const EditCategoryPage = () => {
                 >
                   <IoIosClose className="w-8 h-8" />
                 </button>
-                <img
+                <LazyLoadImage
                   src={form.preview}
                   alt="Preview"
                   className="w-32 h-32 object-cover rounded-md border"
+                  effect="blur"
                 />
               </div>
             )}

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Tabs from "../atoms/Tabs";
 import OrderCard from "../atoms/OrderCard";
 import { OrderService } from "../../services/OrderService";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const OrderContent = ({ initialTab }) => {
   const [activeTab, setActiveTab] = useState(initialTab || "Semua");
@@ -70,10 +72,11 @@ const OrderContent = ({ initialTab }) => {
           ))
         ) : (
           <div className="bg-white p-6 rounded-lg shadow-sm text-center text-gray-500 border border-gray-200 flex flex-col items-center space-y-4">
-            <img
+            <LazyLoadImage
               src="/images/no-order.png"
               alt="No Orders"
               className="w-40 h-40 object-contain"
+              effect="blur"
             />
             <p className="text-sm font-normal text-gray-700">
               {emptyMessages[normalize(activeTab)] || "Tidak Ada Pesanan"}

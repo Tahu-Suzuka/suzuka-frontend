@@ -9,6 +9,8 @@ import SearchBar from "../../atoms/SearchBar";
 import Pagination from "../../atoms/Pagination";
 import Alert from "../../atoms/Alert";
 import { UserService } from "../../../services/UserService";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const CustomerContent = () => {
   const navigate = useNavigate();
@@ -98,10 +100,11 @@ const CustomerContent = () => {
             <tr key={customer.id} className="border-t">
               <td className="py-2 px-4">
                 <div className="flex items-center gap-3">
-                  <img
+                  <LazyLoadImage
                     src={customer.image || "/images/default-profile.png"}
                     alt={customer.name}
                     className="w-10 h-10 object-cover rounded"
+                    effect="blur"
                   />
                   <span className="text-sm font-medium text-gray-800">
                     {customer.name}

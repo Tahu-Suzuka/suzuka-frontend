@@ -4,6 +4,8 @@ import ReviewModal from "../organisms/ReviewModal";
 import { OrderService } from "../../services/OrderService";
 import { ReviewService } from "../../services/ReviewService";
 import Alert from "../atoms/Alert";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const formatRupiah = (value) =>
   new Intl.NumberFormat("id-ID", {
@@ -233,11 +235,13 @@ const OrderCard = ({ order, onStatusChange }) => {
             key={index}
             className="flex items-start space-x-3 border-b pb-3 last:border-b-0"
           >
-            <img
+            <LazyLoadImage
               src={product.mainImage}
               alt={product.product_name}
+              effect="blur"
               className="w-16 h-16 object-cover rounded-lg"
             />
+
             <div className="flex-1">
               <h4 className="font-medium text-gray-900">
                 {product.product_name}

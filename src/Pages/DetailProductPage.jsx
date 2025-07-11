@@ -11,6 +11,8 @@ import { ProductService } from "../services/ProductService";
 import { CartService } from "../services/CartService";
 import { OrderService } from "../services/OrderService";
 import Alert from "../components/atoms/Alert";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 Modal.setAppElement("#root");
 
 const DetailProductPage = () => {
@@ -161,7 +163,6 @@ const DetailProductPage = () => {
 
   return (
     <div className="bg-[#F3F4F6]">
-      {/* ✅ 4. Render Alert di sini */}
       {showSuccessAlert && (
         <Alert
           message="Produk berhasil ditambahkan ke keranjang!"
@@ -174,25 +175,27 @@ const DetailProductPage = () => {
       <div className="px-6 lg:px-20 pb-40">
         <div className="max-w-6xl mx-auto bg-white rounded-md px-6 py-10 flex flex-col lg:flex-row gap-6 mt-6">
           <div className="flex-1">
-            <img
+            <LazyLoadImage
               src={product.mainImage}
               alt={product.product_name}
               className="w-full h-80 object-cover rounded-md"
+              effect="blur"
             />
             <div className="grid grid-cols-3 gap-2 mt-4">
               {thumbnails.map((src, i) => (
-                <img
+                <LazyLoadImage
                   key={i}
                   src={src}
                   alt={`Thumbnail ${i + 1}`}
                   onClick={() => openModal(i)}
                   className="h-20 object-cover rounded-md w-full cursor-pointer hover:opacity-80"
+                  effect="blur"
                 />
               ))}
             </div>
           </div>
           <div className="flex-1">
-            <h1 className="text-3xl font-bold mb-2">{product.product_name}</h1>
+            <h1 className="text-2xl font-bold mb-2">{product.product_name}</h1>
             <div className="flex items-center gap-1 text-primary mb-1">
               {[...Array(5)].map((_, i) => (
                 <FaStar key={i} className="text-lg" />
@@ -200,7 +203,7 @@ const DetailProductPage = () => {
               <span className="text-sm text-black ml-1">3 Review</span>
             </div>
             <p className="text-gray-700 mb-4">{product.description}</p>
-            <div className="mb-4 text-2xl font-bold">
+            <div className="mb-4 text-xl font-bold">
               Rp {price.toLocaleString("id-ID")}
             </div>
             <div className="flex items-center gap-2 mb-4">
@@ -265,7 +268,9 @@ const DetailProductPage = () => {
             <Review productId={id} />
           </div>
           <div className="bg-white rounded-md p-6 hidden lg:block self-start">
-            <h1 className="text-xl font-bold mb-6">Produk Serupa</h1>
+            <h1 className="text-xl font-bold mb-6 text-center">
+              Produk Serupa
+            </h1>
             <div className="space-y-4">
               {relatedProducts.map((p) => (
                 <Card
@@ -293,10 +298,11 @@ const DetailProductPage = () => {
         <Slider {...sliderSettings}>
           {thumbnails.map((src, i) => (
             <div key={i} className="w-full">
-              <img
+              <LazyLoadImage
                 src={src}
                 alt={`Slide ${i + 1}`}
                 className="w-full max-h-[200px] lg:max-h-[400px] object-contain rounded"
+                effect="blur"
               />
             </div>
           ))}

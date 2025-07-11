@@ -88,10 +88,9 @@ export default function ForgotPassword() {
 
   return (
     <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-center left-14 mt-7">
-      <h1 className="text-2xl lg:text-3xl text-center tracking-wide mb-8">
+      <h1 className="lg:hidden block text-3xl lg:text-4xl text-center tracking-wide mb-8">
         Lupa Kata Sandi
       </h1>
-
       <form
         onSubmit={handleResetPassword}
         className="space-y-6 w-full max-w-md mx-auto px-4 md:px-0"
@@ -115,7 +114,7 @@ export default function ForgotPassword() {
             <button
               type="button"
               onClick={handleSendOtp}
-              className="text-sm text-white bg-primary rounded-e-full w-24 h-14 -mr-4 hover:font-bold"
+              className="text-sm text-white bg-primary rounded-e-md w-24 h-14 -mr-4 hover:font-bold"
             >
               Kirim Kode
             </button>

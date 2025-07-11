@@ -5,6 +5,8 @@ import Button from "../../atoms/Button";
 import Alert from "../../atoms/Alert";
 import { CartService } from "../../../services/CartService";
 import { ProductService } from "../../../services/ProductService";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const CartSidebar = ({ onClose, refresh }) => {
   const [items, setItems] = useState([]);
@@ -131,10 +133,11 @@ const CartSidebar = ({ onClose, refresh }) => {
         <div className="flex-1 overflow-y-auto px-4 pt-4 space-y-4">
           {items.map((item) => (
             <div key={item.id} className="flex items-start gap-3 border-b pb-4">
-              <img
+              <LazyLoadImage
                 src={item.image}
                 alt={item.name}
                 className="w-16 h-16 object-cover rounded"
+                effect="blur"
               />
               <div className="flex-1 space-y-1">
                 <div className="flex justify-between items-start">

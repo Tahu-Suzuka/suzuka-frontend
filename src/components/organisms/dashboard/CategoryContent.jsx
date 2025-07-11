@@ -7,6 +7,8 @@ import Button from "../../atoms/Button";
 import Table from "../../atoms/Table";
 import Alert from "../../atoms/Alert";
 import { CategoryService } from "../../../services/CategoryService";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const CategoryContent = () => {
   const navigate = useNavigate();
@@ -88,7 +90,7 @@ const CategoryContent = () => {
                 <div className="flex items-center gap-3">
                   {category.image && (
                     <div className="flex items-center gap-3">
-                      <img
+                      <LazyLoadImage
                         src={
                           category.image?.startsWith("http")
                             ? category.image
@@ -99,6 +101,7 @@ const CategoryContent = () => {
                         }
                         alt={category.category_name}
                         className="w-10 h-10 object-cover rounded"
+                        effect="blur"
                       />
                     </div>
                   )}
