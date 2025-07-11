@@ -29,8 +29,6 @@ const Header = () => {
 
   return (
     <header className="relative z-30 flex h-16 items-center justify-between border-b bg-white px-6 shadow">
-      {/* --- PERBAIKAN DI SINI --- */}
-      {/* Tampilkan sapaan hanya jika user sudah ada */}
       <div className="ml-20 text-base font-semibold text-gray-800">
         {user ? `Hello, ${user.name}!` : "..."}
       </div>
@@ -40,16 +38,12 @@ const Header = () => {
           onClick={() => setOpen(!open)}
           className="flex items-center gap-2 focus:outline-none"
         >
-          {/* Menggunakan optional chaining di sini sudah benar */}
           <Avatar src={user?.image || "/images/default-profile.png"} />
           <FaChevronDown className="text-sm text-gray-500" />
         </button>
-
-        {/* Tampilkan dropdown hanya jika user ada dan state open true */}
         {open && user && (
           <div className="absolute right-0 z-50 mt-2 w-56 rounded-md bg-white text-sm shadow-md">
             <div className="border-b p-4">
-              {/* --- PERBAIKAN DI SINI (Gunakan optional chaining) --- */}
               <p className="font-medium text-gray-800">{user?.name}</p>
             </div>
             <button

@@ -30,6 +30,22 @@ const OrderCard = ({ order, onStatusChange }) => {
   const [showDoneAlert, setShowDoneAlert] = useState(false);
   const [showPaymentAlert, setShowPaymentAlert] = useState(false);
 
+  useEffect(() => {
+    if (status?.toUpperCase() === "MENUNGGU PEMBAYARAN") {
+      const midtransClientKey = import.meta.env.VITE_MIDTRANS_CLIENT_KEY;
+      const scriptId = "midtrans-snap-script";
+
+      if (!document.getElementById(scriptId)) {
+        const script = document.createElement("script");
+        script.id = scriptId;
+        script.src = "https://app.sandbox.midtrans.com/snap/snap.js";
+        script.setAttribute("data-client-key", midtransClientKey);
+        script.async = true;
+        document.body.appendChild(script);
+      }
+    }
+  }, [status]);
+
   const checkReviewStatus = useCallback(async () => {
     if (status?.toUpperCase() !== "SELESAI") {
       setIsChecking(false);
@@ -48,11 +64,14 @@ const OrderCard = ({ order, onStatusChange }) => {
       setIsReviewed(allReviewed);
     } catch (error) {
       console.error("Gagal memeriksa status review:", error);
+      if (error.response?.status === 500) {
+        navigate("/500");
+      }
       setIsReviewed(false);
     } finally {
       setIsChecking(false);
     }
-  }, [orderId, status, items]);
+  }, [orderId, status, items, navigate]);
 
   useEffect(() => {
     checkReviewStatus();
@@ -69,7 +88,13 @@ const OrderCard = ({ order, onStatusChange }) => {
       await OrderService.updateUserStatus(orderId, "Dibatalkan");
       onStatusChange?.(orderId, "DIBATALKAN");
     } catch (err) {
-      alert("Gagal membatalkan pesanan.");
+      if (err.response?.status === 403) {
+        navigate("/403");
+      } else if (err.response?.status >= 500) {
+        navigate("/500");
+      } else {
+        alert("Gagal membatalkan pesanan.");
+      }
     }
   };
 
@@ -79,11 +104,25 @@ const OrderCard = ({ order, onStatusChange }) => {
       await OrderService.updateUserStatus(orderId, "Selesai");
       onStatusChange?.(orderId, "SELESAI");
     } catch (err) {
-      alert("Gagal menyelesaikan pesanan.");
+      if (err.response?.status === 403) {
+        navigate("/403");
+      } else if (err.response?.status >= 500) {
+        navigate("/500");
+      } else {
+        alert("Gagal menyelesaikan pesanan.");
+      }
     }
   };
 
   const handlePay = async () => {
+    if (!window.snap) {
+      alert(
+        "Layanan pembayaran sedang disiapkan, coba lagi dalam beberapa detik."
+      );
+      console.error("Midtrans Snap.js belum termuat.");
+      return;
+    }
+
     try {
       const paymentResponse = await OrderService.createPayment(orderId);
       const snapToken = paymentResponse.token;
@@ -107,7 +146,13 @@ const OrderCard = ({ order, onStatusChange }) => {
         },
       });
     } catch (error) {
-      alert(error.message || "Terjadi kesalahan saat mencoba membayar.");
+      if (error.response?.status === 403) {
+        navigate("/403");
+      } else if (error.response?.status === 500) {
+        navigate("/500");
+      } else {
+        alert(error.message || "Terjadi kesalahan saat mencoba membayar.");
+      }
     }
   };
 

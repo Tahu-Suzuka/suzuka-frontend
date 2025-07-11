@@ -140,17 +140,22 @@ export default function AddOrderPage() {
         quantity: i.qty,
       })),
       note,
-      paymentMethod: paymentMethod === "tunai" ? "Cash" : "QRIS",
+      paymentMethod:
+        paymentMethod === "tunai"
+          ? "Cash"
+          : paymentMethod === "transfer"
+          ? "Transfer Manual"
+          : "",
     };
 
     try {
       setLoading(true);
       const res = await OrderService.createManualOrder(payload, token);
-      console.log("Res:", res);
-      setShowAlert(true); // ✅ Ini yang bikin alert muncul
+      console.log("Order sukses:", res);
+      setShowAlert(true);
     } catch (er) {
-      console.error(er);
-      setAlert({ type: "danger", message: "Gagal membuat pesanan!" });
+      console.error("Error detail:", er.message);
+      setAlert({ type: "danger", message: er.message });
     } finally {
       setLoading(false);
     }
@@ -159,9 +164,9 @@ export default function AddOrderPage() {
   return (
     <div className="w-full grid grid-cols-2 gap-4 items-start">
       {/* LEFT */}
-      <div className="space-y-4 bg-white p-6 rounded-lg shadow">
+      <div className="space-y-4 bg-white p-6 rounded-lg shadow ">
         <Link
-          to="/dashboard/order"
+          to="/dashboard/orderDashboard"
           className="text-primary text-sm mb-4 inline-block"
         >
           &lt; Kembali
@@ -240,7 +245,7 @@ export default function AddOrderPage() {
         >
           <option value="">Pilih Metode Pembayaran</option>
           <option value="tunai">Tunai</option>
-          <option value="qris">QRIS</option>
+          <option value="transfer">Transfer Manual</option>
         </select>
 
         <textarea
@@ -334,7 +339,7 @@ export default function AddOrderPage() {
       {showAlert && (
         <Alert
           message="Pesanan berhasil ditambahkan!"
-          onConfirm={() => navigate("/dashboard/order")}
+          onConfirm={() => navigate("/dashboard/orderDashboard")}
           confirmText="OK"
         />
       )}

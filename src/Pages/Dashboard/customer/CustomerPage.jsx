@@ -3,16 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
-import Button from "../../atoms/Button";
-import Table from "../../atoms/Table";
-import SearchBar from "../../atoms/SearchBar";
-import Pagination from "../../atoms/Pagination";
-import Alert from "../../atoms/Alert";
+import Button from "../../../components/atoms/Button";
+import Table from "../../../components/atoms/Table";
+import SearchBar from "../../../components/atoms/SearchBar";
+import Pagination from "../../../components/atoms/Pagination";
+import Alert from "../../../components/atoms/Alert";
 import { UserService } from "../../../services/UserService";
+import { API_URL } from "../../../services/API";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 
-const CustomerContent = () => {
+const CustomerPage = () => {
   const navigate = useNavigate();
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,12 +21,16 @@ const CustomerContent = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+
   const fetchCustomers = async () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
       const res = await UserService.getAll(token);
-      setCustomers(res.data);
+      setCustomers(res.data || []);
     } catch (err) {
       console.error("Gagal mengambil data pelanggan:", err);
       alert("Gagal memuat data pelanggan");
@@ -62,17 +67,45 @@ const CustomerContent = () => {
     setSelectedId(null);
   };
 
-  const headers = ["Nama", "Email", "No. Telepon", "Jumlah Pesanan", "Aksi"];
+  const getFullImageUrl = (path) => {
+    if (!path) return "/images/default-profile.png";
+    if (path.startsWith("http")) return path;
+    return `${API_URL}${path}`;
+  };
 
+  const headers = [
+    "No",
+    "Nama",
+    "Email",
+    "No. Telepon",
+    "Jumlah Pesanan",
+    "Aksi",
+  ];
+
+  // Search + Pagination logic
   const filteredCustomers = customers.filter((cust) =>
     cust.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const totalPages = Math.ceil(filteredCustomers.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentData = filteredCustomers.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+
   return (
     <div className="space-y-6 bg-white p-6 rounded-lg shadow">
+      {showAlert && (
+        <Alert
+          message="Apakah Anda yakin ingin menghapus pelanggan ini?"
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+        />
+      )}
+
       <div className="flex w-full justify-between items-center">
         <h1 className="text-xl font-bold text-gray-800">Daftar Pelanggan</h1>
-
         <div className="flex flex-wrap justify-end gap-4">
           <div className="w-44">
             <SearchBar
@@ -96,12 +129,13 @@ const CustomerContent = () => {
         <p className="text-center text-gray-500 py-10">Memuat data...</p>
       ) : (
         <Table headers={headers}>
-          {filteredCustomers.map((customer) => (
+          {currentData.map((customer, idx) => (
             <tr key={customer.id} className="border-t">
+              <td className="py-2 px-4">{startIndex + idx + 1}</td>
               <td className="py-2 px-4">
                 <div className="flex items-center gap-3">
                   <LazyLoadImage
-                    src={customer.image || "/images/default-profile.png"}
+                    src={getFullImageUrl(customer.image)}
                     alt={customer.name}
                     className="w-10 h-10 object-cover rounded"
                     effect="blur"
@@ -113,7 +147,9 @@ const CustomerContent = () => {
               </td>
               <td className="py-2 px-4">{customer.email}</td>
               <td className="py-2 px-4">{customer.phone || "-"}</td>
-              <td className="py-2 px-4">{customer.orderCount || 0}</td>
+              <td className="py-2 px-4 text-center">
+                {customer.orderCount || 0}
+              </td>
               <td className="py-2 px-4 flex gap-3">
                 <button
                   className="text-green-500 hover:text-green-700"
@@ -135,20 +171,15 @@ const CustomerContent = () => {
         </Table>
       )}
 
-      {/* Alert */}
-      {showAlert && (
-        <Alert
-          title="Konfirmasi Hapus"
-          message="Apakah Anda yakin ingin menghapus pelanggan ini?"
-          onConfirm={handleConfirmDelete}
-          onCancel={handleCancelDelete}
+      {!loading && totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
         />
       )}
-
-      {/* Pagination */}
-      <Pagination />
     </div>
   );
 };
 
-export default CustomerContent;
+export default CustomerPage;

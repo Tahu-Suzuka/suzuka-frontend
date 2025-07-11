@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Input from "../atoms/Input";
 import Button from "../atoms/Button";
 import axios from "axios";
@@ -10,7 +11,7 @@ import "react-lazy-load-image-component/src/effects/blur.css";
 
 const ProfileContent = () => {
   const token = localStorage.getItem("token");
-
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -32,7 +33,13 @@ const ProfileContent = () => {
           setImagePreview(`${API_URL}${profileData.image}`);
         }
       } catch (err) {
-        console.error("Gagal mengambil profil:", err);
+        if (err.response?.status === 403) {
+          navigate("/403");
+        } else if (err.response?.status >= 500) {
+          navigate("/500");
+        } else {
+          alert("Gagal mengambil profil.");
+        }
       }
     };
     fetchProfile();
@@ -49,7 +56,6 @@ const ProfileContent = () => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      // Update data teks
       await axios.patch(
         `${API_URL}/auth/profile`,
         { name, address, phone },
@@ -73,8 +79,13 @@ const ProfileContent = () => {
 
       setShowSuccessAlert(true);
     } catch (err) {
-      console.error(err);
-      alert("Gagal memperbarui profil.");
+      if (err.response?.status === 403) {
+        navigate("/403");
+      } else if (err.response?.status >= 500) {
+        navigate("/500");
+      } else {
+        alert("Gagal memperbarui profil.");
+      }
     } finally {
       setLoading(false);
     }

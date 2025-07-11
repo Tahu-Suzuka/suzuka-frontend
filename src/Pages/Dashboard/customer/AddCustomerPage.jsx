@@ -51,7 +51,7 @@ const AddCustomerPage = () => {
 
   const handleAlertClose = () => {
     setAlertVisible(false);
-    navigate("/dashboard/customer");
+    navigate("/dashboard/customerDashboard");
   };
 
   return (

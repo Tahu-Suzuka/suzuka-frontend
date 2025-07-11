@@ -15,7 +15,7 @@ const Card = ({
 }) => {
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden text-center">
-      <LazyLoadImage
+      <img
         src={image}
         alt={name}
         effect="blur"

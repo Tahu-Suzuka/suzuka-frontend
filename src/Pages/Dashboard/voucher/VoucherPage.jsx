@@ -3,13 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
-import Button from "../../atoms/Button";
-import Pagination from "../../atoms/Pagination";
-import Table from "../../atoms/Table";
+import Button from "../../../components/atoms/Button";
+import Pagination from "../../../components/atoms/Pagination";
+import Table from "../../../components/atoms/Table";
 import { VoucherService } from "../../../services/VoucherService";
-import Alert from "../../atoms/Alert";
+import Alert from "../../../components/atoms/Alert";
 
-const VoucherContent = () => {
+const VoucherPage = () => {
   const navigate = useNavigate();
   const [vouchers, setVouchers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,6 +21,7 @@ const VoucherContent = () => {
   });
 
   const headers = [
+    "No",
     "Kode",
     "Tipe",
     "Minimum Pembelian",
@@ -137,8 +138,9 @@ const VoucherContent = () => {
             </td>
           </tr>
         ) : (
-          vouchers.map((voucher) => (
+          vouchers.map((voucher, idx) => (
             <tr key={voucher.id} className="border-t">
+              <td className="py-2 px-4">{idx + 1}</td>
               <td className="px-4 py-2">{voucher.code}</td>
               <td className="px-4 py-2">
                 <span
@@ -154,15 +156,38 @@ const VoucherContent = () => {
               <td className="px-4 py-2">{formatRupiah(voucher.value)}</td>
               <td className="px-4 py-2">{formatTanggal(voucher.validUntil)}</td>
               <td className="px-4 py-2">
-                <span
-                  className={`rounded px-2 py-1 text-xs font-medium capitalize ${
-                    badgeStatusClasses[getStatus(voucher)] ||
-                    "bg-gray-100 text-gray-700"
-                  }`}
+                <select
+                  className="capitalize rounded px-2 py-1 text-xs font-medium border"
+                  value={voucher.isActive ? "aktif" : "kedaluwarsa"}
+                  onChange={async (e) => {
+                    const token = localStorage.getItem("token");
+                    const newStatus = e.target.value === "aktif";
+                    try {
+                      await VoucherService.update(
+                        voucher.id,
+                        { isActive: newStatus },
+                        token
+                      );
+                      fetchData();
+                    } catch (error) {
+                      setAlert({
+                        show: true,
+                        message: "Gagal mengubah status voucher.",
+                        onCancel: () => setAlert({ ...alert, show: false }),
+                      });
+                    }
+                  }}
+                  style={{
+                    backgroundColor: voucher.isActive ? "#d1fae5" : "#fee2e2",
+                    color: voucher.isActive ? "#047857" : "#b91c1c",
+                    borderColor: voucher.isActive ? "#a7f3d0" : "#fecaca",
+                  }}
                 >
-                  {getStatus(voucher)}
-                </span>
+                  <option value="aktif">Aktif</option>
+                  <option value="kedaluwarsa">Kedaluwarsa</option>
+                </select>
               </td>
+
               <td className="flex gap-3 px-4 py-2">
                 <button
                   onClick={() =>
@@ -197,4 +222,4 @@ const VoucherContent = () => {
   );
 };
 
-export default VoucherContent;
+export default VoucherPage;

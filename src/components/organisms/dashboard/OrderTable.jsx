@@ -8,6 +8,8 @@ const OrderTable = ({
   showAction = true,
   showPayment = true,
   onStatusChange,
+  currentPage = 1,
+  itemsPerPage = 10,
 }) => {
   const navigate = useNavigate();
 
@@ -20,6 +22,7 @@ const OrderTable = ({
   ];
 
   const headers = [
+    "No",
     "No. Pesanan",
     "Pelanggan",
     "Total",
@@ -40,16 +43,17 @@ const OrderTable = ({
       ) : (
         data.map((order, idx) => (
           <tr key={order.id || idx} className="border-t">
+            <td className="py-2 px-4 ">
+              {(currentPage - 1) * itemsPerPage + idx + 1}
+            </td>
             <td className="py-2 px-4">{`${order.id?.slice(0, 6)}`}</td>
             <td className="py-2 px-4">{order.user.name || "-"}</td>
             <td className="py-2 px-4">
               Rp{order.totalPayment?.toLocaleString("id-ID")}
             </td>
-
             {showPayment && (
               <td className="py-2 px-4">{order.paymentMethod || "-"}</td>
             )}
-
             <td className="py-2 px-4">
               <select
                 className={`text-xs px-2 py-1 rounded-sm ${
@@ -73,10 +77,7 @@ const OrderTable = ({
                 ))}
               </select>
             </td>
-
-            {/* ✅ Kolom Note */}
             <td className="py-2 px-4">{order.note || "-"}</td>
-
             {showAction && (
               <td className="py-2 px-4">
                 <button

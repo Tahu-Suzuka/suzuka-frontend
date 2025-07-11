@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
-import Button from "../../atoms/Button";
+import Button from "../../../components/atoms/Button";
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
-import Table from "../../atoms/Table";
-import Pagination from "../../atoms/Pagination";
-import Filter from "../../atoms/Filter";
-import Alert from "../../atoms/Alert";
+import Table from "../../../components/atoms/Table";
+import Pagination from "../../../components/atoms/Pagination";
+import Filter from "../../../components/atoms/Filter";
+import Alert from "../../../components/atoms/Alert";
 import { ProductService } from "../../../services/ProductService";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 
-const ProductContent = () => {
+const ProductDashboardPage = () => {
   const navigate = useNavigate();
   const [sortBy, setSortBy] = useState("");
   const [products, setProducts] = useState([]);
@@ -158,4 +158,4 @@ const ProductContent = () => {
   );
 };
 
-export default ProductContent;
+export default ProductDashboardPage;

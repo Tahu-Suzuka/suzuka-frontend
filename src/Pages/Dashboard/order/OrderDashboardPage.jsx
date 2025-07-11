@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaPrint, FaPlus } from "react-icons/fa";
-import Button from "../../atoms/Button";
-import OrderTable from "../../organisms/dashboard/OrderTable";
-import Pagination from "../../atoms/Pagination";
-import Filter from "../../atoms/Filter";
+import Button from "../../../components/atoms/Button";
+import OrderTable from "../../../components/organisms/dashboard/OrderTable";
+import Pagination from "../../../components/atoms/Pagination";
+import Filter from "../../../components/atoms/Filter";
 import { OrderService } from "../../../services/OrderService";
 import { ReportService } from "../../../services/ReportService";
 
-const OrderContent = () => {
+const OrderDashboardPage = () => {
   const [sortBy, setSortBy] = useState("");
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -33,21 +33,20 @@ const OrderContent = () => {
   const fetchOrders = async () => {
     try {
       setLoading(true);
+
       const response = await OrderService.getAll({
         page: currentPage,
+        limit: 8,
         status: sortBy,
       });
 
-      const orders = Array.isArray(response.data)
-        ? response.data
-        : response.data?.orders || response.orders || [];
+      const ordersData = response.data || []; // ambil dari "data"
+      const totalPagesData = response.pagination?.totalPages || 1; // ambil dari "pagination"
 
-      const totalPages = response.totalPages || response.data?.totalPages || 1;
-
-      setOrders(orders);
-      setTotalPages(totalPages);
+      setOrders(ordersData);
+      setTotalPages(totalPagesData);
     } catch (err) {
-      console.error("❌ Gagal load orders:", err);
+      console.error("❌ Gagal memuat pesanan:", err);
     } finally {
       setLoading(false);
     }
@@ -66,7 +65,6 @@ const OrderContent = () => {
     try {
       const blob = await ReportService.downloadProcessingPDF();
       const url = window.URL.createObjectURL(blob);
-
       const a = document.createElement("a");
       a.href = url;
       a.download = `laporan-diproses-${new Date()
@@ -75,7 +73,6 @@ const OrderContent = () => {
       document.body.appendChild(a);
       a.click();
       a.remove();
-
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("❌ Gagal download PDF:", error);
@@ -85,7 +82,6 @@ const OrderContent = () => {
 
   return (
     <div className="space-y-6 bg-white p-6 rounded-lg shadow">
-      {/* Toolbar */}
       <div className="flex w-full justify-between items-center">
         <h1 className="text-xl font-bold text-gray-800">Daftar Pesanan</h1>
         <div className="flex flex-auto justify-end gap-4">
@@ -109,7 +105,6 @@ const OrderContent = () => {
         </div>
       </div>
 
-      {/* Table */}
       <OrderTable
         data={orders}
         loading={loading}
@@ -118,7 +113,6 @@ const OrderContent = () => {
         onStatusChange={handleStatusChange}
       />
 
-      {/* Pagination */}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
@@ -128,4 +122,4 @@ const OrderContent = () => {
   );
 };
 
-export default OrderContent;
+export default OrderDashboardPage;

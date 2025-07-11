@@ -34,8 +34,15 @@ export const ReviewService = {
     return res.data;
   },
 
+  getAllReviews: async ({ page = 1, limit = 8 } = {}) => {
+    const res = await axios.get(`${API_URL}/reviews`, {
+      params: { page, limit },
+    });
+    return res.data;
+  },
+
   checkReviewStatus: async (orderId, productId) => {
-    const token = localStorage.getItem("token");
+    const token = getAuthToken();
     try {
       const response = await axios.get(
         `${API_URL}/reviews/order/${orderId}/product/${productId}/check`,

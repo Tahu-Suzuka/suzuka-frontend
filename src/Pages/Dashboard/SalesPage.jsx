@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { FaPrint } from "react-icons/fa";
-import Button from "../../atoms/Button";
-import Table from "../../atoms/Table";
-import Pagination from "../../atoms/Pagination";
-import { API_URL } from "../../../services/API";
-import Alert from "../../atoms/Alert";
-import Filter from "../../atoms/Filter";
+import Button from "../../components/atoms/Button";
+import Table from "../../components/atoms/Table";
+import Pagination from "../../components/atoms/Pagination";
+import { API_URL } from "../../services/API";
+import Alert from "../../components/atoms/Alert";
+import Filter from "../../components/atoms/Filter";
 
 const SalesContent = () => {
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState("year");
   const [alertMessage, setAlertMessage] = useState("");
   const [sales, setSales] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const headers = ["Produk", "Variasi", "Jumlah Terjual", "Total Pendapatan"];
+  const headers = [
+    "No",
+    "Produk",
+    "Variasi",
+    "Jumlah Terjual",
+    "Total Pendapatan",
+  ];
 
   const filterOptions = [
     { label: "Hari Ini", value: "today" },
@@ -29,8 +37,7 @@ const SalesContent = () => {
   const fetchSalesData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const url = `/reports/product-sales?period=${selectedPeriod}`;
-
+      const url = `/reports/product-sales?period=${selectedPeriod}&page=${currentPage}&limit=5`;
       const res = await fetch(`${API_URL}${url}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -38,7 +45,6 @@ const SalesContent = () => {
       });
 
       if (!res.ok) throw new Error("Gagal mengambil data penjualan");
-
       const json = await res.json();
 
       const newSales =
@@ -50,6 +56,7 @@ const SalesContent = () => {
         })) || [];
 
       setSales(newSales);
+      setTotalPages(json?.data?.pagination?.totalPages || 1);
     } catch (error) {
       console.error("Gagal mengambil data penjualan:", error);
     }
@@ -57,22 +64,18 @@ const SalesContent = () => {
 
   useEffect(() => {
     fetchSalesData();
-  }, [selectedPeriod]);
+  }, [selectedPeriod, currentPage]);
 
   const handlePrint = async () => {
     const url = `/reports/product-sales/pdf?period=${selectedPeriod}`;
-
     try {
       const token = localStorage.getItem("token");
-
       const response = await fetch(`${API_URL}${url}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-
       if (!response.ok) throw new Error("Gagal mencetak laporan");
-
       const blob = await response.blob();
       const fileURL = URL.createObjectURL(blob);
       window.open(fileURL, "_blank");
@@ -110,6 +113,7 @@ const SalesContent = () => {
       <Table headers={headers}>
         {sales.map((sale, idx) => (
           <tr key={idx} className="border-t">
+            <td className="py-2 px-4 ">{idx + 1}</td>
             <td className="py-2 px-4">{sale.productName}</td>
             <td className="py-2 px-4">{sale.variationName}</td>
             <td className="py-2 px-4">{sale.totalQuantitySold}</td>
@@ -118,7 +122,11 @@ const SalesContent = () => {
         ))}
       </Table>
 
-      <Pagination />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={(page) => setCurrentPage(page)}
+      />
 
       {/* Modal Cetak */}
       {isPrintModalOpen && (
@@ -127,7 +135,6 @@ const SalesContent = () => {
             <h2 className="text-lg font-semibold text-center">
               Pilih Tipe Laporan
             </h2>
-
             <div className="flex flex-col gap-4">
               <div>
                 <label className="text-sm font-medium">Periode:</label>
@@ -143,7 +150,6 @@ const SalesContent = () => {
                 </select>
               </div>
             </div>
-
             <div className="flex justify-end gap-4 pt-4">
               <button
                 onClick={() => setIsPrintModalOpen(false)}

@@ -8,28 +8,46 @@ export const OrderService = {
       const response = await axios.post(`${API_URL}/orders/manual`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
       });
       return response.data;
     } catch (error) {
-      throw new Error(
-        error?.response?.data?.message || "Gagal mengirim pesanan manual"
-      );
+      const errData = error?.response?.data;
+      console.log("Manual order error response:", errData);
+
+      let message = "Gagal mengirim pesanan manual";
+      if (Array.isArray(errData?.errors) && errData.errors.length > 0) {
+        const first = errData.errors[0];
+        message = first.message || JSON.stringify(first);
+      } else if (errData?.message) {
+        message = errData.message;
+      }
+
+      throw new Error(message);
     }
   },
 
-  getAll: async ({ page = 1, status = "" }) => {
+  getAll: async ({ page = 1, limit = 7, status = "" }) => {
     const token = localStorage.getItem("token");
-    const response = await axios.get(`${API_URL}/orders/all`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      params: {
-        page,
-        status,
-      },
-    });
-    return response.data;
+    const params = new URLSearchParams();
+    params.append("page", page);
+    params.append("limit", limit);
+    if (status) params.append("status", status);
+
+    const response = await axios.get(
+      `${API_URL}/orders/all?${params.toString()}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return {
+      data: response.data.data,
+      pagination: response.data.pagination,
+    };
   },
 
   getAllOrders: async () => {
@@ -62,6 +80,7 @@ export const OrderService = {
         Authorization: `Bearer ${token}`,
       },
     });
+    // return langsung body data, misalnya { data: {...} }
     return response.data;
   },
 
@@ -138,15 +157,15 @@ export const OrderService = {
   },
 
   updateUserStatus: async (orderId, status) => {
-    const token = localStorage.getItem("token"); // Ambil token dari localStorage
+    const token = localStorage.getItem("token");
 
     const res = await axios.patch(
       `${API_URL}/orders/${orderId}/user-status`,
-      { status }, // ✅ kirim body: { status: "Selesai" }
+      { status },
       {
         headers: {
-          Authorization: `Bearer ${token}`, // ✅ kirim token
-          "Content-Type": "application/json", // opsional, tapi baik ditambahkan
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
       }
     );

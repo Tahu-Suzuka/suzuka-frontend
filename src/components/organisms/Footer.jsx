@@ -10,7 +10,6 @@ const WaveFooter = () => {
       const scrollY = window.scrollY;
       setRotation(scrollY * 0.3);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -21,7 +20,7 @@ const WaveFooter = () => {
         fill="#dc2626"
         paused={true}
         options={{
-          height: 50,
+          height: 70,
           amplitude: 50,
           speed: 0.2,
           points: 5,
@@ -29,24 +28,21 @@ const WaveFooter = () => {
         className="w-full block"
         style={{ display: "block", margin: 0, padding: 0 }}
       />
-
-      <div className="bg-primary relative z-10 lg:px-6 pt-10 pb-10 font-normal tracking-wider">
+      <div className="bg-primary relative  lg:px-8 pt-10 pb-10 font-normal tracking-wider">
         <img
           src="/images/footer/footer.png"
           alt="Tahu Suzuka"
-          className="mx-auto w-48 h-44 lg:w-52 lg:h-44 rounded-full -mt-40 object-cover"
+          className="mx-auto w-48 h-44 lg:w-52 lg:h-44 rounded-full -mt-40 object-cover relative z-30"
           style={{
             transform: `rotate(${rotation}deg)`,
             transition: "transform 0.1s linear",
           }}
         />
-
         <h1 className="mt-16 text-white text-lg lg:text-xl max-w-2xl mx-2 lg:mx-12 leading-relaxed text-center lg:text-left">
           PESAN SEKARANG DAN NIKMATI BERBAGAI VARIAN TAHU KAMI YANG DIBUAT
           DENGAN BAHAN YANG BERKUALITAS DAN PROSES HIGIENIS CIRI KHAS BANDUNG
           CIBUNTU
         </h1>
-
         <div className="text-center lg:text-right mt-3 mx-9 lg:mx-12 lg:-mt-16">
           <Button
             to="/product"
@@ -57,9 +53,8 @@ const WaveFooter = () => {
             className="rounded-xl py-2"
           />
         </div>
-
         <div className="mx-7 lg:mx-12">
-          <hr className="border-white/40 mb-10 mt-3 lg:my-10 max-w-6xl" />
+          <hr className="border-white/40 mb-10 mt-3 lg:my-10 max-w-7xl" />
           <div className="flex flex-col sm:flex-row justify-between gap-5 lg:gap-8 text-left text-sm -mt-6">
             <div>
               <h1 className="font-semibold text-white mb-2 text-lg lg:text-xl">
@@ -93,20 +88,18 @@ const WaveFooter = () => {
             </div>
           </div>
         </div>
-
         <div className="text-center text-sm text-white/80 mt-10 lg:mt-7">
           Copyright © Tahu Suzuka 2025
         </div>
-
         <img
           src="/images/footer/line1.png"
           alt="Line Left"
-          className="absolute bottom-[550px] right-80 lg:bottom-40 lg:right-[250px] w-32 sm:w-40"
+          className="absolute bottom-[550px] right-80 lg:bottom-40 lg:right-[250px] w-32 sm:w-40 z-20"
         />
         <img
           src="/images/footer/line2.png"
           alt="Line Right"
-          className="absolute bottom-[50px] left-72 lg:bottom-[330px] lg:left-72  w-32 sm:w-40"
+          className="absolute bottom-[50px] left-72 lg:bottom-[330px] lg:left-72 w-32 sm:w-40 z-20"
         />
       </div>
     </div>

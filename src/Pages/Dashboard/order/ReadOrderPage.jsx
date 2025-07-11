@@ -13,8 +13,8 @@ const ReadOrderPage = () => {
     const fetchOrder = async () => {
       try {
         const res = await OrderService.getByIdAdmin(id);
-
-        setOrder(res.data?.data);
+        // jika response: { message, data: { ... } }
+        setOrder(res.data);
       } catch (err) {
         console.error("Gagal mengambil data pesanan:", err);
         setError("Pesanan tidak ditemukan.");

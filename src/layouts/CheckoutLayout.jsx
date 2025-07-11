@@ -6,7 +6,7 @@ import "react-lazy-load-image-component/src/effects/blur.css";
 
 const CheckoutLayout = () => {
   return (
-    <div className="bg-gray-100 min-h-screen pb-32">
+    <div className="bg-gray-100 min-h-screen pb-10">
       {/* Header */}
       <div className="bg-white px-6 lg:px-20 py-4 shadow flex items-center gap-3">
         <Link to="/">

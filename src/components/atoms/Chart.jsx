@@ -9,7 +9,7 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { API_URL } from "../../services/API";
+import { OrderService } from "../../services/OrderService";
 
 ChartJS.register(
   CategoryScale,
@@ -24,35 +24,55 @@ const Chart = () => {
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
-    const fetchChartData = async () => {
+    const fetchData = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const res = await fetch(
-          `${API_URL}/reports/product-sales?period=week`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+        const res = await OrderService.getAllOrders();
+        const orders = res.data || [];
+
+        console.log("Orders:", orders);
+
+        const dayLabels = [
+          "Senin",
+          "Selasa",
+          "Rabu",
+          "Kamis",
+          "Jumat",
+          "Sabtu",
+          "Minggu",
+        ];
+
+        const salesPerDay = Object.fromEntries(
+          dayLabels.map((day) => [day, 0])
         );
 
-        const json = await res.json();
+        orders.forEach((order) => {
+          const dateStr = order.createdAt || order.orderDate;
+          if (!dateStr) return;
 
-        const labels = json?.data?.sales?.map(
-          (item) => `${item.productName} (${item.variationName})`
-        );
+          const orderDate = new Date(dateStr);
+          const dayIndex = orderDate.getDay();
+          const label = dayLabels[(dayIndex + 6) % 7];
 
-        const revenues = json?.data?.sales?.map(
-          (item) => Number(item.totalRevenueRaw) || 0
-        );
+          const totalQty = Array.isArray(order.items)
+            ? order.items.reduce((sum, item) => sum + item.quantity, 0)
+            : 0;
+
+          salesPerDay[label] += totalQty;
+        });
+
+        const labels = dayLabels;
+        const data = labels.map((day) => salesPerDay[day]);
 
         setChartData({
           labels,
           datasets: [
             {
-              label: "Pendapatan",
-              data: revenues,
+              label: "Produk Terjual",
+              data,
               backgroundColor: "#DC2626",
-              borderWidth: 1,
-              hoverBackgroundColor: "#be123c",
+              hoverBackgroundColor: "#FBBF24",
+              borderRadius: 4,
+              barThickness: 30,
             },
           ],
         });
@@ -61,7 +81,7 @@ const Chart = () => {
       }
     };
 
-    fetchChartData();
+    fetchData();
   }, []);
 
   const options = {
@@ -71,20 +91,16 @@ const Chart = () => {
       title: { display: false },
       tooltip: {
         callbacks: {
-          label: function (context) {
-            const value = context.parsed.y;
-            return `Rp ${value.toLocaleString("id-ID")}`;
-          },
+          label: (context) => `${context.parsed.y} pcs`,
         },
       },
     },
     scales: {
       y: {
         beginAtZero: true,
+        precision: 0,
         ticks: {
-          callback: function (value) {
-            return `Rp ${value.toLocaleString("id-ID")}`;
-          },
+          callback: (value) => `${value} pcs`,
         },
       },
     },

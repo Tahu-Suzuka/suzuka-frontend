@@ -18,7 +18,7 @@ const BarIcon = ({ bars = 3 }) => {
 
 const ProductResponsiveBar = ({ active, setActive }) => {
   return (
-    <div className="items-center gap-2 hidden lg:flex pl-24">
+    <div className="items-center gap-2 hidden lg:flex pl-40">
       {[2, 3].map((bars, i) => (
         <button
           key={i}

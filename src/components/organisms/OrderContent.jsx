@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Tabs from "../atoms/Tabs";
 import OrderCard from "../atoms/OrderCard";
 import { OrderService } from "../../services/OrderService";
@@ -6,6 +7,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 
 const OrderContent = ({ initialTab }) => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(initialTab || "Semua");
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,8 +25,14 @@ const OrderContent = ({ initialTab }) => {
         );
         setOrders(fetchedOrders);
       } catch (error) {
-        console.error("Gagal mengambil data pesanan:", error.message);
-        setOrders([]);
+        if (error.response?.status === 403) {
+          navigate("/403");
+        } else if (error.response?.status >= 500) {
+          navigate("/500");
+        } else {
+          console.error("Gagal mengambil data pesanan:", error.message);
+          setOrders([]);
+        }
       } finally {
         setLoading(false);
       }

@@ -1,17 +1,41 @@
 import React from "react";
 
-const Pagination = () => {
+const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+  const pages = [];
+
+  for (let i = 1; i <= totalPages; i++) {
+    pages.push(i);
+  }
+
   return (
-    <div>
-      <div className="flex justify-end mt-4 space-x-1">
-        <button className="px-3 py-1 border rounded-md text-sm">&lt;</button>
-        <button className="px-3 py-1 border rounded-md text-sm bg-primary text-white">
-          1
+    <div className="flex justify-end mt-4 space-x-1">
+      <button
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        className="px-3 py-1 border rounded-md text-sm disabled:opacity-50"
+      >
+        &lt;
+      </button>
+
+      {pages.map((page) => (
+        <button
+          key={page}
+          onClick={() => onPageChange(page)}
+          className={`px-3 py-1 border rounded-md text-sm ${
+            currentPage === page ? "bg-primary text-white" : ""
+          }`}
+        >
+          {page}
         </button>
-        <button className="px-3 py-1 border rounded-md text-sm">2</button>
-        <button className="px-3 py-1 border rounded-md text-sm">3</button>
-        <button className="px-3 py-1 border rounded-md text-sm">&gt;</button>
-      </div>
+      ))}
+
+      <button
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className="px-3 py-1 border rounded-md text-sm disabled:opacity-50"
+      >
+        &gt;
+      </button>
     </div>
   );
 };

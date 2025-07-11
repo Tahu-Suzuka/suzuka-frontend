@@ -27,6 +27,26 @@ const CheckoutPage = () => {
   const [voucherError, setVoucherError] = useState("");
 
   useEffect(() => {
+    const midtransClientKey = import.meta.env.VITE_MIDTRANS_CLIENT_KEY;
+    const scriptId = "midtrans-snap-script";
+    let script = document.getElementById(scriptId);
+
+    if (!script) {
+      script = document.createElement("script");
+      script.id = scriptId;
+      script.src = "https://app.sandbox.midtrans.com/snap/snap.js";
+      script.setAttribute("data-client-key", midtransClientKey);
+      script.async = true;
+      document.body.appendChild(script);
+    }
+
+    return () => {
+      if (script && document.body.contains(script)) {
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     const handleBeforeUnload = (event) => {
       if (cartItems.length > 0) {
         event.preventDefault();
@@ -110,6 +130,12 @@ const CheckoutPage = () => {
   };
 
   const handlePayment = async () => {
+    if (!window.snap) {
+      alert("Layanan pembayaran sedang dimuat, silakan coba lagi sesaat.");
+      console.error("Midtrans Snap.js belum termuat.");
+      return;
+    }
+
     try {
       const token = localStorage.getItem("token");
       let orderId;
@@ -142,7 +168,7 @@ const CheckoutPage = () => {
             state: { initialMenu: "pesanan", initialTab: "Diproses" },
           }),
         onPending: () =>
-          navigate("/profile", {
+          navigate("/order", {
             state: {
               initialMenu: "pesanan",
               initialTab: "Menunggu Pembayaran",
@@ -191,6 +217,7 @@ const CheckoutPage = () => {
   }
 
   return (
+    // ... Sisa JSX Anda tetap sama ...
     <div className="px-6 lg:px-20 mx-auto p-4 space-y-6">
       {showCloseAlert && (
         <Alert
@@ -236,6 +263,7 @@ const CheckoutPage = () => {
                   className="w-12 h-12 lg:w-24 lg:h-20 object-cover rounded"
                   effect="blur"
                 />
+
                 <div>
                   <p className="font-semibold">
                     {item.variation.product.product_name}

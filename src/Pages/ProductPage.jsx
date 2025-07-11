@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { useLocation } from "react-router-dom";
 import Header from "../components/atoms/Header";
 import ProductCard from "../components/organisms/ProductCard";
 import ProductToolbar from "../components/organisms/ProductToolbar";
 import { ProductService } from "../services/ProductService";
 
 const ProductPage = () => {
+  const location = useLocation();
+  const categoryIdFromState = location.state?.categoryId;
+
   const [activeLayout, setActiveLayout] = useState(1);
   const [allProducts, setAllProducts] = useState([]);
-  const [displayedProducts, setDisplayedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("semua");
@@ -17,9 +20,7 @@ const ProductPage = () => {
       setLoading(true);
       try {
         const response = await ProductService.getAll();
-        const productData = response.data || [];
-        setAllProducts(productData);
-        setDisplayedProducts(productData);
+        setAllProducts(response.data || []);
       } catch (error) {
         console.error("Gagal mengambil produk:", error);
       } finally {
@@ -29,8 +30,14 @@ const ProductPage = () => {
     fetchAllProducts();
   }, []);
 
-  useEffect(() => {
+  const displayedProducts = useMemo(() => {
     let productsToProcess = [...allProducts];
+
+    if (categoryIdFromState) {
+      productsToProcess = productsToProcess.filter(
+        (p) => p.categoryId === categoryIdFromState
+      );
+    }
 
     if (searchTerm) {
       productsToProcess = productsToProcess.filter((p) =>
@@ -50,8 +57,8 @@ const ProductPage = () => {
       );
     }
 
-    setDisplayedProducts(productsToProcess);
-  }, [searchTerm, sortBy, allProducts]);
+    return productsToProcess;
+  }, [searchTerm, sortBy, allProducts, categoryIdFromState]);
 
   const getGridCols = () => {
     switch (activeLayout) {
@@ -82,7 +89,7 @@ const ProductPage = () => {
       />
 
       <div
-        className={`p-6 px-8 pb-28 lg:pb-32 lg:px-20 lg:p-12 grid grid-cols-1 ${getGridCols()} gap-10`}
+        className={`p-6 pb-28 lg:pb-32 lg:px-20 md:p-12 grid grid-cols-1 ${getGridCols()} gap-10`}
       >
         <ProductCard products={displayedProducts} loading={loading} />
       </div>

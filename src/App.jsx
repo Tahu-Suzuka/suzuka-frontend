@@ -19,6 +19,7 @@ import ProductPage from "./pages/ProductPage";
 import DetailProductPage from "./pages/DetailProductPage";
 
 // Settings
+import SettingLayout from "./layouts/SettingLayout";
 import ProfilePage from "./pages/ProfilePage";
 import OrderPage from "./pages/OrderPage";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
@@ -30,13 +31,13 @@ import CheckoutPage from "./pages/CheckoutPage";
 // Dashboard
 import DashboardPage from "./pages/Dashboard/DashboardPage";
 import DashboardLayout from "./layouts/dashboard/DashboardLayout";
-import OrderContent from "./components/organisms/dashboard/OrderContent";
-import ProductContent from "./components/organisms/dashboard/ProductContent";
-import CategoryContent from "./components/organisms/dashboard/CategoryContent";
-import CustomerContent from "./components/organisms/dashboard/CustomerContent";
-import VoucherContent from "./components/organisms/dashboard/VoucherContent";
-import SalesContent from "./components/organisms/dashboard/SalesContent";
-import ReviewContent from "./components/organisms/dashboard/ReviewContent";
+import OrderDashboardPage from "./pages/Dashboard/order/OrderDashboardPage";
+import ProductDashboardPage from "./pages/Dashboard/product/ProductDashboardPage";
+import CategoryPage from "./pages/Dashboard/category/CategoryPage";
+import CustomerPage from "./pages/Dashboard/customer/CustomerPage";
+import VoucherPage from "./pages/Dashboard/voucher/VoucherPage";
+import SalesPage from "./pages/Dashboard/SalesPage";
+import ReviewPage from "./pages/Dashboard/ReviewPage";
 import AddOrderPage from "./pages/Dashboard/order/AddOrderPage";
 import ReadOrderPage from "./pages/Dashboard/order/ReadOrderPage";
 import AddProductPage from "./pages/Dashboard/product/AddProductPage";
@@ -49,9 +50,9 @@ import AddCategoryPage from "./pages/Dashboard/category/AddCategoryPage";
 import EditCategoryPage from "./pages/Dashboard/category/EditCategoryPage";
 
 // Error Pages
-import ErrorPage from "./pages/ErrorPage";
-import ChangePassword from "./pages/ChangePasswordPage";
-import SettingLayout from "./layouts/SettingLayout";
+import NotFoundPage from "./pages/Error/NotFoundPage";
+import ServerErrorPage from "./pages/Error/ServerErrorPage";
+import ForbiddenPage from "./pages/Error/ForbiddenPage";
 
 const App = () => {
   return (
@@ -67,13 +68,13 @@ const App = () => {
           }
         >
           <Route index element={<DashboardPage />} />
-          <Route path="orderDashboard" element={<OrderContent />} />
-          <Route path="productDashboard" element={<ProductContent />} />
-          <Route path="categoryDashboard" element={<CategoryContent />} />
-          <Route path="customerDashboard" element={<CustomerContent />} />
-          <Route path="voucherDashboard" element={<VoucherContent />} />
-          <Route path="salesDashboard" element={<SalesContent />} />
-          <Route path="revieDashboard" element={<ReviewContent />} />
+          <Route path="orderDashboard" element={<OrderDashboardPage />} />
+          <Route path="productDashboard" element={<ProductDashboardPage />} />
+          <Route path="categoryDashboard" element={<CategoryPage />} />
+          <Route path="customerDashboard" element={<CustomerPage />} />
+          <Route path="voucherDashboard" element={<VoucherPage />} />
+          <Route path="salesDashboard" element={<SalesPage />} />
+          <Route path="reviewDashboard" element={<ReviewPage />} />
           <Route path="add-order" element={<AddOrderPage />} />
           <Route path="order/:id" element={<ReadOrderPage />} />
           <Route path="add-product" element={<AddProductPage />} />
@@ -108,14 +109,16 @@ const App = () => {
 
         {/* Auth Layout */}
         <Route path="/" element={<AuthLayout />}>
-          {" "}
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
           <Route path="otp" element={<Otp />} />
           <Route path="forgot-password" element={<ForgotPasswordPage />} />
         </Route>
 
-        <Route path="/error" element={<ErrorPage />} />
+        {/* Error pages */}
+        <Route path="/403" element={<ForbiddenPage />} />
+        <Route path="/500" element={<ServerErrorPage />} />
+        <Route path="/404" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );

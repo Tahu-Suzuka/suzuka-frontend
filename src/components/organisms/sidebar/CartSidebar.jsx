@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import Button from "../../atoms/Button";
@@ -9,6 +10,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 
 const CartSidebar = ({ onClose, refresh }) => {
+  const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
   const [deleteItemId, setDeleteItemId] = useState(null);
@@ -36,7 +38,15 @@ const CartSidebar = ({ onClose, refresh }) => {
       );
       setItems(mapped);
     } catch (error) {
-      console.error("Gagal mengambil keranjang:", error);
+      if (error.response?.status === 401) {
+        navigate("/login");
+      } else if (error.response?.status === 403) {
+        navigate("/403");
+      } else if (error.response?.status >= 500) {
+        navigate("/500");
+      } else {
+        console.error("Gagal mengambil keranjang:", error);
+      }
     }
   };
 
@@ -83,10 +93,21 @@ const CartSidebar = ({ onClose, refresh }) => {
   };
 
   const handleDeleteConfirmed = async () => {
-    await CartService.deleteItem(deleteItemId);
-    setItems((prev) => prev.filter((item) => item.id !== deleteItemId));
-    setShowAlert(false);
-    setDeleteItemId(null);
+    try {
+      await CartService.deleteItem(deleteItemId);
+      setItems((prev) => prev.filter((item) => item.id !== deleteItemId));
+    } catch (error) {
+      if (error.response?.status === 403) {
+        navigate("/403");
+      } else if (error.response?.status >= 500) {
+        navigate("/500");
+      } else {
+        alert("Gagal menghapus item.");
+      }
+    } finally {
+      setShowAlert(false);
+      setDeleteItemId(null);
+    }
   };
 
   const handleCancelDelete = () => {
