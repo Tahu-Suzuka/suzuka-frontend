@@ -5,9 +5,9 @@ import "slick-carousel/slick/slick-theme.css";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 // Auth
-import AuthLayout from "./layouts/AuthLayout";
-import LoginPage from "./pages/Auth/LoginPage";
-import RegisterPage from "./pages/Auth/RegisterPage";
+import AuthLayout from "./layouts/authLayout";
+import LoginPage from "./pages/auth/LoginPage";
+import RegisterPage from "./pages/auth/RegisterPage";
 import Otp from "./components/organisms/Otp";
 import ForgotPasswordPage from "./pages/Auth/ForgotPasswordPage";
 
