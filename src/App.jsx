@@ -92,7 +92,7 @@ const App = () => {
           <Route index element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="product" element={<ProductPage />} />
-          <Route path="/produk/:id" element={<DetailProductPage />} />
+          <Route path="produk/:id" element={<DetailProductPage />} />
         </Route>
 
         {/* Setting Layout */}
@@ -104,21 +104,21 @@ const App = () => {
 
         {/* Checkout Layout */}
         <Route element={<CheckoutLayout />}>
-          <Route path="checkout" element={<CheckoutPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
         </Route>
 
-        {/* Auth Layout */}
-        <Route path="/" element={<AuthLayout />}>
-          <Route path="login" element={<LoginPage />} />
-          <Route path="register" element={<RegisterPage />} />
-          <Route path="otp" element={<Otp />} />
-          <Route path="forgot-password" element={<ForgotPasswordPage />} />
+        {/* Auth Layout (Sudah Benar) */}
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/otp" element={<Otp />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         </Route>
 
         {/* Error pages */}
         <Route path="/403" element={<ForbiddenPage />} />
         <Route path="/500" element={<ServerErrorPage />} />
-        <Route path="/404" element={<NotFoundPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );
