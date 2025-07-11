@@ -5,11 +5,11 @@ import "slick-carousel/slick/slick-theme.css";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 // Auth
-import AuthLayout from "./layouts/authLayout";
+import AuthLayout from "./layouts/AuthLayout";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import Otp from "./components/organisms/Otp";
-import ForgotPasswordPage from "./pages/Auth/ForgotPasswordPage";
+import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 
 // Home
 import AppLayout from "./layouts/AppLayout";
@@ -29,30 +29,30 @@ import CheckoutLayout from "./layouts/CheckoutLayout";
 import CheckoutPage from "./pages/CheckoutPage";
 
 // Dashboard
-import DashboardPage from "./pages/Dashboard/DashboardPage";
+import DashboardPage from "./pages/dashboard/DashboardPage";
 import DashboardLayout from "./layouts/dashboard/DashboardLayout";
-import OrderDashboardPage from "./pages/Dashboard/order/OrderDashboardPage";
-import ProductDashboardPage from "./pages/Dashboard/product/ProductDashboardPage";
-import CategoryPage from "./pages/Dashboard/category/CategoryPage";
-import CustomerPage from "./pages/Dashboard/customer/CustomerPage";
-import VoucherPage from "./pages/Dashboard/voucher/VoucherPage";
-import SalesPage from "./pages/Dashboard/SalesPage";
-import ReviewPage from "./pages/Dashboard/ReviewPage";
-import AddOrderPage from "./pages/Dashboard/order/AddOrderPage";
-import ReadOrderPage from "./pages/Dashboard/order/ReadOrderPage";
-import AddProductPage from "./pages/Dashboard/product/AddProductPage";
-import EditProductPage from "./pages/Dashboard/product/EditProductPage";
-import AddVoucherPage from "./pages/Dashboard/voucher/AddVoucherPage";
-import EditVoucherPage from "./pages/Dashboard/voucher/EditVoucherPage";
-import AddCustomerPage from "./pages/Dashboard/customer/AddCustomerPage";
-import EditCustomerPage from "./pages/Dashboard/customer/EditCustomerPage";
-import AddCategoryPage from "./pages/Dashboard/category/AddCategoryPage";
-import EditCategoryPage from "./pages/Dashboard/category/EditCategoryPage";
+import OrderDashboardPage from "./pages/dashboard/order/OrderDashboardPage";
+import ProductDashboardPage from "./pages/dashboard/product/ProductDashboardPage";
+import CategoryPage from "./pages/dashboard/category/CategoryPage";
+import CustomerPage from "./pages/dashboard/customer/CustomerPage";
+import VoucherPage from "./pages/dashboard/voucher/VoucherPage";
+import SalesPage from "./pages/dashboard/SalesPage";
+import ReviewPage from "./pages/dashboard/ReviewPage";
+import AddOrderPage from "./pages/dashboard/order/AddOrderPage";
+import ReadOrderPage from "./pages/dashboard/order/ReadOrderPage";
+import AddProductPage from "./pages/dashboard/product/AddProductPage";
+import EditProductPage from "./pages/dashboard/product/EditProductPage";
+import AddVoucherPage from "./pages/dashboard/voucher/AddVoucherPage";
+import EditVoucherPage from "./pages/dashboard/voucher/EditVoucherPage";
+import AddCustomerPage from "./pages/dashboard/customer/AddCustomerPage";
+import EditCustomerPage from "./pages/dashboard/customer/EditCustomerPage";
+import AddCategoryPage from "./pages/dashboard/category/AddCategoryPage";
+import EditCategoryPage from "./pages/dashboard/category/EditCategoryPage";
 
 // Error Pages
-import NotFoundPage from "./pages/Error/NotFoundPage";
-import ServerErrorPage from "./pages/Error/ServerErrorPage";
-import ForbiddenPage from "./pages/Error/ForbiddenPage";
+import NotFoundPage from "./pages/error/NotFoundPage";
+import ServerErrorPage from "./pages/error/ServerErrorPage";
+import ForbiddenPage from "./pages/error/ForbiddenPage";
 
 const App = () => {
   return (
