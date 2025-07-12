@@ -164,7 +164,7 @@ const CheckoutPage = () => {
 
       window.snap.pay(snapToken, {
         onSuccess: () =>
-          navigate("/profile", {
+          navigate("/order", {
             state: { initialMenu: "pesanan", initialTab: "Diproses" },
           }),
         onPending: () =>
@@ -186,7 +186,7 @@ const CheckoutPage = () => {
 
   const handleClosePaymentAlert = () => {
     setShowCloseAlert(false);
-    navigate("/profile", {
+    navigate("/order", {
       state: { initialMenu: "pesanan", initialTab: "Menunggu Pembayaran" },
     });
   };
@@ -217,7 +217,6 @@ const CheckoutPage = () => {
   }
 
   return (
-    // ... Sisa JSX Anda tetap sama ...
     <div className="px-6 lg:px-20 mx-auto p-4 space-y-6">
       {showCloseAlert && (
         <Alert

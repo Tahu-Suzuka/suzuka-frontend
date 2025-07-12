@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
 import { Menu, X, ShoppingCart } from "lucide-react";
 import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
@@ -24,6 +26,7 @@ const Navbar = () => {
   const [user, setUser] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const location = useLocation();
 
   const navigate = useNavigate();
 
@@ -78,16 +81,27 @@ const Navbar = () => {
 
         <div className="hidden md:flex flex-1 justify-center">
           <ul className="flex flex-row gap-12">
-            {NavbarLinks.map((link) => (
-              <li
-                key={link.name}
-                className={`font-semibold hover:text-primary transition-colors ${
-                  scrolled ? "text-black" : "text-white"
-                }`}
-              >
-                <Link to={link.link}>{link.name}</Link>
-              </li>
-            ))}
+            {NavbarLinks.map((link) => {
+              const isActive =
+                link.link === "/"
+                  ? location.pathname === "/"
+                  : location.pathname.startsWith(link.link);
+
+              return (
+                <li
+                  key={link.name}
+                  className={`font-semibold transition-colors ${
+                    isActive
+                      ? "text-primary"
+                      : scrolled
+                      ? "text-black"
+                      : "text-white"
+                  } hover:text-primary`}
+                >
+                  <Link to={link.link}>{link.name}</Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
 

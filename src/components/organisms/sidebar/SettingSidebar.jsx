@@ -15,7 +15,7 @@ const ProfileSidebar = () => {
       : "text-gray-700 hover:text-primary";
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200 w-full h-full lg:h-48">
+    <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200 w-full h-full lg:h-52">
       <ul className="space-y-5">
         <li
           onClick={() => navigate("/profile")}

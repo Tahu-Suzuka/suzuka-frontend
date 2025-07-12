@@ -109,11 +109,21 @@ const DetailProductPage = () => {
 
     try {
       if (!selectedVariation) return alert("Variasi tidak dipilih.");
+
+      // --- PERUBAHAN DI SINI ---
       const payload = {
         items: [{ variationId: selectedVariation.id, quantity }],
+        note: "", // Tambahkan note kosong
+        voucher: null, // Tambahkan voucher null
       };
+      // --- BATAS PERUBAHAN ---
+
       const orderRes = await OrderService.createBuyNowOrder(payload);
       const orderId = orderRes?.data?.id;
+
+      if (!orderId) {
+        throw new Error("Gagal mendapatkan ID pesanan dari server.");
+      }
 
       sessionStorage.setItem("checkoutMode", "buyNow");
       sessionStorage.setItem(
@@ -138,7 +148,7 @@ const DetailProductPage = () => {
       navigate("/checkout");
     } catch (error) {
       console.error("Error Buy Now:", error);
-      alert(error.message || "Gagal proses beli sekarang.");
+      alert(error.response?.data?.message || "Gagal proses beli sekarang.");
     }
   };
 
