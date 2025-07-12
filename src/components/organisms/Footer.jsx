@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Wavify from "react-wavify";
 import Button from "../atoms/Button";
 
 const WaveFooter = () => {
@@ -16,19 +15,21 @@ const WaveFooter = () => {
 
   return (
     <div className="relative text-white">
-      <Wavify
-        fill="#dc2626"
-        paused={true}
-        options={{
-          height: 70,
-          amplitude: 50,
-          speed: 0.2,
-          points: 5,
-        }}
+      {/* --- [MODIFIKASI] Tambahkan margin-bottom negatif --- */}
+      <div
         className="w-full block"
-        style={{ display: "block", margin: 0, padding: 0 }}
-      />
-      <div className="bg-primary relative  lg:px-8 pt-10 pb-10 font-normal tracking-wider">
+        style={{ lineHeight: "0", marginBottom: "-1px" }}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+          <path
+            fill="#DC2626"
+            fillOpacity="1"
+            d="M0,96L30,106.7C60,117,120,139,180,170.7C240,203,300,245,360,245.3C420,245,480,203,540,208C600,213,660,267,720,261.3C780,256,840,192,900,170.7C960,149,1020,171,1080,192C1140,213,1200,235,1260,218.7C1320,203,1380,149,1410,122.7L1440,96L1440,320L1410,320C1380,320,1320,320,1260,320C1200,320,1140,320,1080,320C1020,320,960,320,900,320C840,320,780,320,720,320C660,320,600,320,540,320C480,320,420,320,360,320C300,320,240,320,180,320C120,320,60,320,30,320L0,320Z"
+          ></path>
+        </svg>
+      </div>
+
+      <div className="bg-primary relative lg:px-8 pt-10 pb-10 font-normal tracking-wider">
         <img
           src="/images/footer/footer.png"
           alt="Tahu Suzuka"

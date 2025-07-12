@@ -1,10 +1,8 @@
 import React, { useRef } from "react";
-import axios from "axios";
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-
+import { useLocation, useNavigate } from "react-router-dom";
 import { IoShieldCheckmarkOutline } from "react-icons/io5";
 import Button from "../atoms/Button";
+import { AuthService } from "../../services/AuthService";
 
 const Otp = () => {
   const inputRefs = useRef([]);
@@ -29,7 +27,6 @@ const Otp = () => {
     }
   };
 
-  // Kirim OTP
   const handleVerifyOtp = async () => {
     const otp = inputRefs.current.map((ref) => ref.value).join("");
 
@@ -39,18 +36,13 @@ const Otp = () => {
     }
 
     try {
-      // ✅ 1. Verifikasi OTP
-      await axios.post("http://34.101.147.220:8080/auth/verify-otp", {
-        email,
-        otp,
-      }); // ✅ 2. Login otomatis pakai email & password (kamu harus simpan password-nya saat register)
+      await AuthService.verifyOtp(email, otp);
 
-      const res = await axios.post("http://34.101.147.220:8080/auth/login", {
+      const res = await AuthService.login(
         email,
-        password: localStorage.getItem("temp_password"),
-      });
-
-      const { token, user } = res.data.data;
+        localStorage.getItem("temp_password")
+      );
+      const { token, user } = res.data;
 
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
@@ -61,10 +53,9 @@ const Otp = () => {
     }
   };
 
-  // Kirim ulang kode OTP
   const handleResendOtp = async () => {
     try {
-      await axios.post("http://34.101.147.220:8080/auth/resend-otp", { email });
+      await AuthService.resendOtp(email);
       alert("Kode OTP baru telah dikirim.");
     } catch (error) {
       alert(error.response?.data?.message || "Gagal kirim ulang kode.");
@@ -72,7 +63,7 @@ const Otp = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] flex items-center justify-center ">
+    <div className="min-h-screen bg-[#f3f4f6] flex items-center justify-center">
       <div className="bg-white rounded-[20px] shadow-[0_4px_16px_rgba(0,0,0,0.25)] w-[90%] max-w-2xl overflow-hidden">
         <div className="relative h-36 bg-transparent overflow-hidden flex items-center justify-center">
           <svg
@@ -85,13 +76,11 @@ const Otp = () => {
               fill="#FBBF24"
             />
           </svg>
-
-          <div className="z-10 rounded-full p-2 ">
+          <div className="z-10 rounded-full p-2">
             <IoShieldCheckmarkOutline className="text-4xl text-primary w-20 h-20" />
           </div>
         </div>
 
-        {/* Konten OTP */}
         <div className="px-8 pt-5 pb-10 text-center">
           <h1 className="text-lg lg:text-xl font-bold mb-2 tracking-wide">
             VERIFIKASI AKUN
@@ -102,7 +91,6 @@ const Otp = () => {
             mohon cek email untuk memasukan kode
           </p>
 
-          {/* Input OTP */}
           <div className="flex justify-center gap-3 mb-6">
             {[...Array(6)].map((_, i) => (
               <input
@@ -116,14 +104,12 @@ const Otp = () => {
             ))}
           </div>
 
-          {/* Tombol Verifikasi */}
           <Button
             text="Verifikasi Email"
             className="rounded-full py-2"
             onClick={handleVerifyOtp}
           />
 
-          {/* Kirim Ulang */}
           <p className="text-xs mt-4 text-gray-600">
             <button
               onClick={handleResendOtp}

@@ -22,11 +22,10 @@ const EditCategoryPage = () => {
       try {
         const res = await CategoryService.getCategoryById(id);
 
+        const API = import.meta.env.VITE_API_URL;
         const imageUrl = res.data.image?.startsWith("http")
           ? res.data.image
-          : `${import.meta.env.VITE_API_URL || "http://34.101.147.220:8080"}${
-              res.data.image
-            }`;
+          : `${API}${res.data.image}`;
 
         setForm((prev) => ({
           ...prev,

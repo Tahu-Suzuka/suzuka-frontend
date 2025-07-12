@@ -10,6 +10,7 @@ import LoginPage from "./Pages/Auth/LoginPage.jsx";
 import RegisterPage from "./Pages/Auth/RegisterPage.jsx";
 import Otp from "./components/organisms/Otp.jsx";
 import ForgotPasswordPage from "./Pages/Auth/ForgotPasswordPage.jsx";
+import GoogleCallbackPage from "./Pages/Auth/GoogleCallbackPage.jsx";
 
 // Home
 import AppLayout from "./layouts/AppLayout.jsx";
@@ -113,6 +114,10 @@ const App = () => {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/otp" element={<Otp />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route
+            path="/auth/google/callback"
+            element={<GoogleCallbackPage />}
+          />
         </Route>
 
         {/* Error pages */}

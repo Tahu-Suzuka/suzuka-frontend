@@ -30,7 +30,7 @@ const ProfileContent = () => {
         setPhone(profileData.phone || "");
         setAddress(profileData.address || "");
         if (profileData.image) {
-          setImagePreview(`${API_URL}${profileData.image}`);
+          setImagePreview(profileData.image);
         }
       } catch (err) {
         if (err.response?.status === 403) {
@@ -43,7 +43,7 @@ const ProfileContent = () => {
       }
     };
     fetchProfile();
-  }, []);
+  }, [navigate]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -133,7 +133,7 @@ const ProfileContent = () => {
           />
         </div>
         <div className="w-full md:w-1/3 flex flex-col items-center md:items-start order-2 md:order-last">
-          <LazyLoadImage
+          <img
             src={imagePreview || "/images/default-profile.png"}
             alt="Avatar"
             className="w-24 h-24 rounded-full object-cover mb-4"

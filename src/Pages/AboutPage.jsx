@@ -1,5 +1,5 @@
 import React from "react";
-import Wavify from "react-wavify";
+// Wavify sudah tidak digunakan, jadi impornya kita hapus
 import Header from "../components/atoms/Header";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
@@ -10,7 +10,7 @@ const AboutPage = () => {
       <Header imageSrc="/images/about/header.png" title="Tentang Kami" />
 
       <div className="relative bg-red-600 text-white text-center pt-10 pb-32">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl lg:mx-auto mx-8">
           <h1 className="text-xl lg:text-3xl font-bold mb-6">
             Perjalanan Kami dalam pembuatan Tahu Tradisional di Cibuntu Sejak
             Tahun 1983
@@ -37,18 +37,14 @@ const AboutPage = () => {
           </div>
         </div>
 
-        <div className="absolute bottom-[-1px] left-0 w-full leading-none">
-          <Wavify
-            fill="#ffffff"
-            paused={true}
-            options={{
-              height: 60,
-              amplitude: 90,
-              speed: 0.2,
-              points: 3,
-            }}
-            className="w-full"
-          />
+        <div className="absolute bottom-[-28px] left-0 w-full leading-none">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+            <path
+              fill="#ffffff"
+              fillOpacity="1"
+              d="M0,96L30,106.7C60,117,120,139,180,170.7C240,203,300,245,360,245.3C420,245,480,203,540,208C600,213,660,267,720,261.3C780,256,840,192,900,170.7C960,149,1020,171,1080,192C1140,213,1200,235,1260,218.7C1320,203,1380,149,1410,122.7L1440,96L1440,320L1410,320C1380,320,1320,320,1260,320C1200,320,1140,320,1080,320C1020,320,960,320,900,320C840,320,780,320,720,320C660,320,600,320,540,320C480,320,420,320,360,320C300,320,240,320,180,320C120,320,60,320,30,320L0,320Z"
+            ></path>
+          </svg>
         </div>
       </div>
 
@@ -120,6 +116,7 @@ const AboutPage = () => {
         </div>
       </div>
 
+      {/* Sisa kode tetap sama */}
       <div className=" bg-primary p-8 mt-20">
         <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-12">
           <div className="flex-1 relative w-full flex justify-center lg:justify-start">
@@ -129,7 +126,7 @@ const AboutPage = () => {
                 alt="background"
                 effect="blur"
               />
-              <div className="absolute top-24 lg:top-28 -left-4 lg:left-8">
+              <div className="absolute top-24 lg:top-28 left-4 lg:left-8">
                 <LazyLoadImage
                   src="/images/home/tahu-putih.png"
                   alt="Tahu Putih"
@@ -137,7 +134,7 @@ const AboutPage = () => {
                   effect="blur"
                 />
               </div>
-              <div className="absolute top-14 right-24 ">
+              <div className="absolute top-14 right-16 lg:right-24 ">
                 <LazyLoadImage
                   src="/images/home/tahu-kuning.png"
                   alt="Tahu Kuning"
@@ -146,7 +143,7 @@ const AboutPage = () => {
                 />
               </div>
 
-              <div className="absolute top-40 lg:top-44 right-16 lg:right-14">
+              <div className="absolute top-36 lg:top-44 right-10 lg:right-14">
                 <LazyLoadImage
                   src="/images/home/tahu-hijau.png"
                   alt="Tahu Hijau"
@@ -155,7 +152,7 @@ const AboutPage = () => {
                 />
               </div>
 
-              <div className="absolute bottom-2 lg:bottom-8 left-2 lg:left-16">
+              <div className="absolute bottom-2 lg:bottom-8 left-12 lg:left-16">
                 <LazyLoadImage
                   src="/images/home/tahu-pedas.png"
                   alt="Tahu Pedas"
