@@ -335,7 +335,7 @@ const CheckoutPage = () => {
                   />
                 </div>
                 {voucherError && (
-                  <p className="text-red-500 text-xs mt-2">{voucherError}</p>
+                  <p className="text-primary text-xs mt-2">{voucherError}</p>
                 )}
               </>
             ) : (
@@ -345,7 +345,7 @@ const CheckoutPage = () => {
                 </p>
                 <button
                   onClick={handleRemoveVoucher}
-                  className="text-xs text-red-500 hover:underline mt-1"
+                  className="text-xs text-primary hover:underline mt-1"
                 >
                   Hapus
                 </button>

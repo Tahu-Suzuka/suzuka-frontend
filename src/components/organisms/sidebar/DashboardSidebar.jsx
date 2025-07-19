@@ -11,13 +11,12 @@ import { FiUsers } from "react-icons/fi";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 
-// Menu configuration with related paths
 const menu = [
   {
     name: "Dashboard",
     path: "/dashboard",
     icon: PiPresentationChart,
-    exact: true, // 👉 aktif hanya jika path === /dashboard
+    exact: true,
   },
   {
     name: "Pesanan",

@@ -40,7 +40,7 @@ export default function Register() {
         ? "Konfirmasi kata sandi tidak boleh kosong."
         : password !== confirmPassword
         ? "Konfirmasi kata sandi tidak cocok."
-        : ""; // Set state error
+        : "";
 
     setNameError(nameErr);
     setEmailError(emailErr);
@@ -99,7 +99,7 @@ export default function Register() {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-        {nameError && <p className="text-red-500 text-sm mt-1">{nameError}</p>}
+        {nameError && <p className="text-primary text-sm mt-1">{nameError}</p>}
 
         {/* Input Email */}
         <Input
@@ -111,7 +111,7 @@ export default function Register() {
           onChange={(e) => setEmail(e.target.value)}
         />
         {emailError && (
-          <p className="text-red-500 text-sm mt-1">{emailError}</p>
+          <p className="text-primary text-sm mt-1">{emailError}</p>
         )}
 
         {/* Input Kata Sandi */}

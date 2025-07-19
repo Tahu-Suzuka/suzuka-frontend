@@ -1,15 +1,27 @@
 import React from "react";
-// Wavify sudah tidak digunakan, jadi impornya kita hapus
 import Header from "../components/atoms/Header";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
+import { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const AboutPage = () => {
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      once: true,
+    });
+  }, []);
+
   return (
     <div>
       <Header imageSrc="/images/about/header.png" title="Tentang Kami" />
 
-      <div className="relative bg-red-600 text-white text-center pt-10 pb-32">
+      <div
+        className="relative bg-primary text-white text-center pt-10 pb-32"
+        data-aos="fade-up"
+      >
         <div className="max-w-4xl lg:mx-auto mx-8">
           <h1 className="text-xl lg:text-3xl font-bold mb-6">
             Perjalanan Kami dalam pembuatan Tahu Tradisional di Cibuntu Sejak
@@ -26,11 +38,11 @@ const AboutPage = () => {
           </p>
 
           <div className="grid grid-cols-2 gap-8 max-w-md mx-auto">
-            <div>
+            <div data-aos="fade-right">
               <h1 className="text-4xl font-bold">+40</h1>
               <p className="text-sm mt-2">Tahun Pengalaman</p>
             </div>
-            <div>
+            <div data-aos="fade-left">
               <h1 className="text-4xl font-bold">10.000+</h1>
               <p className="text-sm mt-2">Tahu yang sudah dibuat</p>
             </div>
@@ -50,7 +62,10 @@ const AboutPage = () => {
 
       {/* Sejarah Pemilik */}
       <div className="bg-white mt-10 px-6 lg:px-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 items-start gap-8">
+        <div
+          className="grid grid-cols-1 lg:grid-cols-2 items-start gap-8"
+          data-aos="fade-up"
+        >
           <div className="flex flex-col items-center lg:items-start">
             <LazyLoadImage
               src="/images/home/pemilik.jpg"
@@ -64,15 +79,15 @@ const AboutPage = () => {
           </div>
 
           <div className="text-justify">
-            <h2 className="text-2xl lg:text-3xl font-bold text-red-600 mb-6 text-center lg:text-left">
+            <h2 className="text-2xl lg:text-3xl font-bold text-primary mb-6 text-center lg:text-left">
               Sejarah Pemilik & Perjalanan Nama Tahu Suzuka
             </h2>
 
             {/* Timeline */}
             <div className="space-y-6 text-sm text-gray-700 leading-relaxed">
               {/* 1985 */}
-              <div className="flex items-start gap-3">
-                <div className="text-red-600 text-xl font-bold shrink-0 min-w-[50px]">
+              <div className="flex items-start gap-3" data-aos="fade-right">
+                <div className="text-primary text-xl font-bold shrink-0 min-w-[50px]">
                   1985
                 </div>
                 <p>
@@ -85,8 +100,8 @@ const AboutPage = () => {
               </div>
 
               {/* 2017 */}
-              <div className="flex items-start gap-3">
-                <div className="text-red-600 text-xl font-bold shrink-0 min-w-[50px]">
+              <div className="flex items-start gap-3" data-aos="fade-right">
+                <div className="text-primary text-xl font-bold shrink-0 min-w-[50px]">
                   2017
                 </div>
                 <p>
@@ -99,8 +114,8 @@ const AboutPage = () => {
               </div>
 
               {/* 2025 */}
-              <div className="flex items-start gap-3">
-                <div className="text-red-600 text-xl font-bold shrink-0 min-w-[50px]">
+              <div className="flex items-start gap-3" data-aos="fade-right">
+                <div className="text-primary text-xl font-bold shrink-0 min-w-[50px]">
                   2025
                 </div>
                 <p>
@@ -116,10 +131,12 @@ const AboutPage = () => {
         </div>
       </div>
 
-      {/* Sisa kode tetap sama */}
-      <div className=" bg-primary p-8 mt-20">
+      <div className=" bg-primary p-8 mt-20" data-aos="fade-up">
         <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-12">
-          <div className="flex-1 relative w-full flex justify-center lg:justify-start">
+          <div
+            className="flex-1 relative w-full flex justify-center lg:justify-start"
+            data-aos="zoom-in"
+          >
             <div className="relative z-10 w-72 h-72 lg:w-96 lg:h-96 left-0 lg:left-6">
               <LazyLoadImage
                 src="/images/home/bg-tahu-2.png"
@@ -163,7 +180,7 @@ const AboutPage = () => {
             </div>
           </div>
 
-          <div className="flex-1 w-full px-4 lg:px-16">
+          <div className="flex-1 w-full px-4 lg:px-16" data-aos="fade-left">
             <h1 className="text-white text-2xl lg:text-3xl font-bold mb-8 text-center lg:text-left">
               Mengapa harus membeli Tahu dari Suzuka?
             </h1>
@@ -223,10 +240,13 @@ const AboutPage = () => {
         </div>
       </div>
 
-      <div className="pt-20 pb-20 mb-10 bg-gray-100 p-8">
+      <div className="pt-20 pb-20 mb-10 bg-gray-100 p-8" data-aos="fade-up">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-8">
-            <div className="flex-1 relative w-full flex justify-center lg:justify-start">
+            <div
+              className="flex-1 relative w-full flex justify-center lg:justify-start"
+              data-aos="fade-right"
+            >
               <div className="absolute left-16 lg:left-10 inset-0 bg-primary rounded-lg blur-xl opacity-80 w-72 h-80 lg:w-80 lg:h-96"></div>
 
               <div className="relative z-10 p-8 left-0 lg:left-10">
@@ -238,10 +258,10 @@ const AboutPage = () => {
                 />
               </div>
             </div>
-            <div className="flex-1 px-2 lg:px-10">
+            <div className="flex-1 px-2 lg:px-10" data-aos="fade-left">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="bg-white border-2 border-dashed border-red-300 rounded-lg p-6">
-                  <h3 className="text-red-500 text-lg font-bold mb-3">
+                  <h3 className="text-primary text-lg font-bold mb-3">
                     Kualitas
                   </h3>
                   <p className="text-gray-700 text-sm leading-relaxed">
@@ -250,7 +270,7 @@ const AboutPage = () => {
                   </p>
                 </div>
                 <div className="bg-white border-2 border-dashed border-red-300 rounded-lg p-6">
-                  <h3 className="text-red-500 text-lg font-bold mb-3">
+                  <h3 className="text-primary text-lg font-bold mb-3">
                     Higienis
                   </h3>
                   <p className="text-gray-700 text-sm leading-relaxed">
@@ -259,7 +279,7 @@ const AboutPage = () => {
                   </p>
                 </div>
                 <div className="bg-white border-2 border-dashed border-red-300 rounded-lg p-6">
-                  <h3 className="text-red-500 text-lg font-bold mb-3">
+                  <h3 className="text-primary text-lg font-bold mb-3">
                     Business to Business
                   </h3>
                   <p className="text-gray-700 text-sm leading-relaxed">
@@ -269,7 +289,7 @@ const AboutPage = () => {
                   </p>
                 </div>
                 <div className="bg-white border-2 border-dashed border-red-300 rounded-lg p-6">
-                  <h3 className="text-red-500 text-lg font-bold mb-3">
+                  <h3 className="text-primary text-lg font-bold mb-3">
                     Tradisional
                   </h3>
                   <p className="text-gray-700 text-sm leading-relaxed">
@@ -282,15 +302,21 @@ const AboutPage = () => {
           </div>
         </div>
       </div>
-      <div className="bg-white mb-32 px-4 sm:px-6 lg:px-20 py-20">
+      <div
+        className="bg-white mb-32 px-4 sm:px-6 lg:px-20 py-20"
+        data-aos="fade-up"
+      >
         <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-2xl lg:text-3xl font-bold text-red-600 mb-10">
+          <h2 className="text-2xl lg:text-3xl font-bold text-primary mb-10">
             Proses Pembuatan Tahu Tradisional Kami
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
             {/* 1. Perendaman Kedelai */}
-            <div className="bg-white rounded-xl shadow p-6">
-              <h3 className="text-lg font-bold text-red-500 mb-2">
+            <div
+              className="bg-white rounded-xl shadow p-6"
+              data-aos="flip-left"
+            >
+              <h3 className="text-lg font-bold text-primary mb-2">
                 1. Perendaman Kedelai
               </h3>
               <p className="text-sm text-gray-700">
@@ -301,8 +327,12 @@ const AboutPage = () => {
             </div>
 
             {/* 2. Penggilingan Kedelai */}
-            <div className="bg-white rounded-xl shadow p-6">
-              <h3 className="text-lg font-bold text-red-500 mb-2">
+            <div
+              className="bg-white rounded-xl shadow p-6"
+              data-aos="flip-left"
+              data-aos-delay="100"
+            >
+              <h3 className="text-lg font-bold text-primary mb-2">
                 2. Penggilingan Kedelai
               </h3>
               <p className="text-sm text-gray-700">
@@ -312,8 +342,12 @@ const AboutPage = () => {
             </div>
 
             {/* 3. Pemasakan */}
-            <div className="bg-white rounded-xl shadow p-6">
-              <h3 className="text-lg font-bold text-red-500 mb-2">
+            <div
+              className="bg-white rounded-xl shadow p-6"
+              data-aos="flip-left"
+              data-aos-delay="200"
+            >
+              <h3 className="text-lg font-bold text-primary mb-2">
                 3. Pemasakan
               </h3>
               <p className="text-sm text-gray-700">
@@ -323,8 +357,11 @@ const AboutPage = () => {
             </div>
 
             {/* 4. Penyaringan */}
-            <div className="bg-white rounded-xl shadow p-6">
-              <h3 className="text-lg font-bold text-red-500 mb-2">
+            <div
+              className="bg-white rounded-xl shadow p-6"
+              data-aos="flip-left"
+            >
+              <h3 className="text-lg font-bold text-primary mb-2">
                 4. Penyaringan
               </h3>
               <p className="text-sm text-gray-700">
@@ -334,8 +371,12 @@ const AboutPage = () => {
             </div>
 
             {/* 5. Pencetakan */}
-            <div className="bg-white rounded-xl shadow p-6">
-              <h3 className="text-lg font-bold text-red-500 mb-2">
+            <div
+              className="bg-white rounded-xl shadow p-6"
+              data-aos="flip-left"
+              data-aos-delay="100"
+            >
+              <h3 className="text-lg font-bold text-primary mb-2">
                 5. Pencetakan Tahu
               </h3>
               <p className="text-sm text-gray-700">
@@ -345,8 +386,12 @@ const AboutPage = () => {
             </div>
 
             {/* 6. Pemotongan & Pengemasan */}
-            <div className="bg-white rounded-xl shadow p-6">
-              <h3 className="text-lg font-bold text-red-500 mb-2">
+            <div
+              className="bg-white rounded-xl shadow p-6"
+              data-aos="flip-left"
+              data-aos-delay="200"
+            >
+              <h3 className="text-lg font-bold text-primary mb-2">
                 6. Pemotongan & Pengemasan
               </h3>
               <p className="text-sm text-gray-700">

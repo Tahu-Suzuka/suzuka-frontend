@@ -7,10 +7,8 @@ export default function LoginPage() {
   return (
     <div className="lg:overflow-hidden min-h-screen ">
       <div className="flex flex-col md:flex-row h-screen bg-white">
-        {/* Left */}
         <Login />
 
-        {/* Right */}
         <div className="hidden lg:block md:w-1/2 relative h-full mt-5 right-14">
           <div className="absolute inset-9 bg-secondary rounded-t-full mx-8 lg:mx-16 -my-7 left-4 lg:left-20"></div>
           <div className="absolute inset-1 bg-primary rounded-t-full mx-32 my-2 flex flex-col items-center justify-center">

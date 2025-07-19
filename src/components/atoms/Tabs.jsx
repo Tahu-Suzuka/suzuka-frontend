@@ -24,7 +24,7 @@ const Tabs = ({ activeTab, setActiveTab }) => {
           onClick={() => setActiveTab(tab)}
           className={`pb-2 transition-colors ${
             activeTab === tab
-              ? "border-b-2 border-red-500 text-red-500 font-semibold"
+              ? "border-b-2 border-primary text-primary font-semibold"
               : "border-b-2 border-transparent text-gray-600 hover:text-red-500"
           }`}
         >

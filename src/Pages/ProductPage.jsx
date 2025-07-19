@@ -4,6 +4,7 @@ import Header from "../components/atoms/Header";
 import ProductCard from "../components/organisms/ProductCard";
 import ProductToolbar from "../components/organisms/ProductToolbar";
 import { ProductService } from "../services/ProductService";
+import { ReviewService } from "../services/ReviewService";
 
 const ProductPage = () => {
   const location = useLocation();
@@ -11,6 +12,7 @@ const ProductPage = () => {
 
   const [activeLayout, setActiveLayout] = useState(1);
   const [allProducts, setAllProducts] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("semua");
@@ -30,8 +32,34 @@ const ProductPage = () => {
     fetchAllProducts();
   }, []);
 
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const res = await ReviewService.getAllReviews();
+        setReviews(res.data || []);
+      } catch (err) {
+        console.error("Gagal mengambil review:", err);
+      }
+    };
+    fetchReviews();
+  }, []);
+
   const displayedProducts = useMemo(() => {
     let productsToProcess = [...allProducts];
+
+    const productRatings = {};
+    reviews.forEach(({ productId, rating }) => {
+      if (!productRatings[productId]) productRatings[productId] = [];
+      productRatings[productId].push(rating);
+    });
+
+    productsToProcess = productsToProcess.map((product) => {
+      const ratings = productRatings[product.id] || [];
+      const ratingAverage = ratings.length
+        ? ratings.reduce((a, b) => a + b, 0) / ratings.length
+        : 0;
+      return { ...product, ratingAverage };
+    });
 
     if (categoryIdFromState) {
       productsToProcess = productsToProcess.filter(
@@ -58,7 +86,7 @@ const ProductPage = () => {
     }
 
     return productsToProcess;
-  }, [searchTerm, sortBy, allProducts, categoryIdFromState]);
+  }, [searchTerm, sortBy, allProducts, categoryIdFromState, reviews]);
 
   const getGridCols = () => {
     switch (activeLayout) {

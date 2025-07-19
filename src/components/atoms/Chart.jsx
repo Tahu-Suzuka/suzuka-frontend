@@ -9,7 +9,7 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { OrderService } from "../../services/OrderService";
+import { ReportService } from "../../services/ReportService";
 
 ChartJS.register(
   CategoryScale,
@@ -24,44 +24,36 @@ const Chart = () => {
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchAllYearlySales = async () => {
+      let page = 1;
+      let allSales = [];
+
       try {
-        const res = await OrderService.getAllOrders();
-        const orders = res.data || [];
+        while (true) {
+          const response = await ReportService.getProductSalesYearly(page);
+          const sales = response?.data?.sales || [];
+          allSales = [...allSales, ...sales];
 
-        console.log("Orders:", orders);
+          const pagination = response?.data?.pagination;
+          if (!pagination?.hasNextPage) break;
+          page++;
+        }
 
-        const dayLabels = [
-          "Senin",
-          "Selasa",
-          "Rabu",
-          "Kamis",
-          "Jumat",
-          "Sabtu",
-          "Minggu",
-        ];
+        const productMap = {};
 
-        const salesPerDay = Object.fromEntries(
-          dayLabels.map((day) => [day, 0])
-        );
+        allSales.forEach((item) => {
+          const name = item.productName || "Produk Tidak Dikenal";
+          const quantity = item.totalQuantitySold || 0;
 
-        orders.forEach((order) => {
-          const dateStr = order.createdAt || order.orderDate;
-          if (!dateStr) return;
-
-          const orderDate = new Date(dateStr);
-          const dayIndex = orderDate.getDay();
-          const label = dayLabels[(dayIndex + 6) % 7];
-
-          const totalQty = Array.isArray(order.items)
-            ? order.items.reduce((sum, item) => sum + item.quantity, 0)
-            : 0;
-
-          salesPerDay[label] += totalQty;
+          if (productMap[name]) {
+            productMap[name] += quantity;
+          } else {
+            productMap[name] = quantity;
+          }
         });
 
-        const labels = dayLabels;
-        const data = labels.map((day) => salesPerDay[day]);
+        const labels = Object.keys(productMap);
+        const data = Object.values(productMap);
 
         setChartData({
           labels,
@@ -72,23 +64,22 @@ const Chart = () => {
               backgroundColor: "#DC2626",
               hoverBackgroundColor: "#FBBF24",
               borderRadius: 4,
-              barThickness: 30,
+              barThickness: 40,
             },
           ],
         });
-      } catch (err) {
-        console.error("Gagal memuat data chart:", err);
+      } catch (error) {
+        console.error("Gagal mengambil data produk tahunan:", error);
       }
     };
 
-    fetchData();
+    fetchAllYearlySales();
   }, []);
 
   const options = {
     responsive: true,
     plugins: {
       legend: { position: "top" },
-      title: { display: false },
       tooltip: {
         callbacks: {
           label: (context) => `${context.parsed.y} pcs`,
@@ -98,7 +89,6 @@ const Chart = () => {
     scales: {
       y: {
         beginAtZero: true,
-        precision: 0,
         ticks: {
           callback: (value) => `${value} pcs`,
         },
@@ -109,7 +99,7 @@ const Chart = () => {
   return chartData ? (
     <Bar data={chartData} options={options} />
   ) : (
-    <p>Memuat grafik...</p>
+    <p>Memuat grafik produk terjual tahun ini...</p>
   );
 };
 

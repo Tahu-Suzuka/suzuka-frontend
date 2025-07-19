@@ -324,7 +324,7 @@ const AddProductPage = () => {
           confirmText="OK"
           onConfirm={() => {
             setShowAlert(false);
-            navigate("/dashboard/product");
+            navigate("/dashboard/productDashboard");
           }}
         />
       )}

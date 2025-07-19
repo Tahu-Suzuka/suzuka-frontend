@@ -3,13 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
-import Button from "../../../components/atoms/Button";
-import Table from "../../../components/atoms/Table";
-import Alert from "../../../components/atoms/Alert";
 import { CategoryService } from "../../../services/CategoryService";
 import { API_URL } from "../../../services/API";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
+import Button from "../../../components/atoms/Button";
+import Table from "../../../components/atoms/Table";
+import Alert from "../../../components/atoms/Alert";
 
 const CategoryPage = () => {
   const navigate = useNavigate();
@@ -64,7 +64,6 @@ const CategoryPage = () => {
     setSelectedId(null);
   };
 
-  // ✅ 1. Tambahkan "No" di awal header
   const headers = ["No", "Gambar", "Nama", "Aksi"];
 
   return (
@@ -131,7 +130,7 @@ const CategoryPage = () => {
                   <FiEdit className="w-5 h-5" />
                 </button>
                 <button
-                  className="text-primary hover:text-red-800"
+                  className="text-primary hover:text-primary"
                   onClick={() => confirmDelete(category.id)}
                 >
                   <MdDelete className="w-5 h-5" />

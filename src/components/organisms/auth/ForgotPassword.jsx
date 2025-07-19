@@ -95,9 +95,8 @@ export default function ForgotPassword() {
         onSubmit={handleResetPassword}
         className="space-y-6 w-full max-w-md mx-auto px-4 md:px-0"
       >
-        {/* Error atau Success Message */}
         {resetError && (
-          <p className="text-red-500 text-center text-sm">{resetError}</p>
+          <p className="text-primary text-center text-sm">{resetError}</p>
         )}
         {successMessage && (
           <p className="text-green-600 text-center text-sm">{successMessage}</p>
@@ -121,7 +120,7 @@ export default function ForgotPassword() {
           }
         />
         {emailError && (
-          <p className="text-red-500 text-sm mt-1">{emailError}</p>
+          <p className="text-primary text-sm mt-1">{emailError}</p>
         )}
 
         <Input
@@ -132,7 +131,7 @@ export default function ForgotPassword() {
           value={otp}
           onChange={(e) => setOtp(e.target.value)}
         />
-        {otpError && <p className="text-red-500 text-sm mt-1">{otpError}</p>}
+        {otpError && <p className="text-primary text-sm mt-1">{otpError}</p>}
 
         <PasswordField
           id="password"
@@ -143,7 +142,7 @@ export default function ForgotPassword() {
           onChange={(e) => setPassword(e.target.value)}
         />
         {passwordError && (
-          <p className="text-red-500 text-sm mt-1">{passwordError}</p>
+          <p className="text-primary text-sm mt-1">{passwordError}</p>
         )}
 
         <PasswordField
@@ -155,7 +154,7 @@ export default function ForgotPassword() {
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
         {confirmPasswordError && (
-          <p className="text-red-500 text-sm mt-1">{confirmPasswordError}</p>
+          <p className="text-primary text-sm mt-1">{confirmPasswordError}</p>
         )}
 
         <Button type="submit" text="Simpan" className="rounded-full py-3" />

@@ -43,7 +43,7 @@ const AboutShort = () => {
           </p>
 
           <Link
-            to="/AboutPage"
+            to="/about"
             className="inline-block mt-4 text-primary underline text-sm font-semibold"
           >
             Lihat Selengkapnya...

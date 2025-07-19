@@ -140,7 +140,7 @@ const ReviewModal = ({ isOpen, onClose, items, onAfterSubmit }) => {
           ))}
 
           {errorMessage && (
-            <p className="text-sm text-red-500">{errorMessage}</p>
+            <p className="text-sm text-primary">{errorMessage}</p>
           )}
 
           <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">

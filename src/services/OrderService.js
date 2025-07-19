@@ -80,7 +80,6 @@ export const OrderService = {
         Authorization: `Bearer ${token}`,
       },
     });
-    // return langsung body data, misalnya { data: {...} }
     return response.data;
   },
 

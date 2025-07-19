@@ -32,7 +32,7 @@ export default function useHorizontalScroll() {
       if (!isDown) return;
       e.preventDefault();
       const x = e.pageX - el.offsetLeft;
-      const walk = (x - startX) * 1; // bisa ubah 1 jadi multiplier kecepatan
+      const walk = (x - startX) * 1;
       el.scrollLeft = scrollLeft - walk;
     };
 

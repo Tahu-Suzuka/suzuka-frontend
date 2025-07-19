@@ -10,7 +10,6 @@ const EditCustomerPage = () => {
   const [form, setForm] = useState({
     nama: "",
     email: "",
-    password: "",
     noHp: "",
     alamat: "",
   });
@@ -29,7 +28,6 @@ const EditCustomerPage = () => {
         setForm({
           nama: data.name || "",
           email: data.email || "",
-          password: "",
           noHp: data.phone || "",
           alamat: data.address || "",
         });
@@ -64,13 +62,11 @@ const EditCustomerPage = () => {
         address: form.alamat,
       };
 
-      if (form.password) payload.password = form.password;
-
       await UserService.update(id, payload, token);
 
       setAlertMessage("Pelanggan berhasil diperbarui!");
       setTimeout(() => {
-        navigate("/dashboard/customer");
+        navigate("/dashboard/customerDashboard");
       }, 1500);
     } catch (error) {
       console.error("Gagal update:", error);
@@ -121,18 +117,6 @@ const EditCustomerPage = () => {
                 value={form.email}
                 onChange={handleChange}
                 placeholder="Masukan Email Pelanggan"
-                className="w-full border px-4 py-2 rounded-md"
-              />
-            </div>
-
-            <div>
-              <label className="block font-semibold mb-1">Kata Sandi</label>
-              <input
-                type="password"
-                name="password"
-                value={form.password}
-                onChange={handleChange}
-                placeholder="Masukan Kata Sandi (Opsional)"
                 className="w-full border px-4 py-2 rounded-md"
               />
             </div>

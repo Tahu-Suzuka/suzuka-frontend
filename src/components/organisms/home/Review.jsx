@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import { FaStar } from "react-icons/fa";
-import Title from "../../atoms/Title";
 import { ReviewService } from "../../../services/ReviewService";
 import { API_URL } from "../../../services/API";
+import Title from "../../atoms/Title";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
-
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -75,7 +74,7 @@ const Review = () => {
         <Slider {...settings}>
           {reviews.map((review) => (
             <div key={review.id} className="px-2 pt-12">
-              <div className="relative bg-white border shadow-md rounded-xl p-6 pt-16 text-center h-[200px] flex flex-col justify-between">
+              <div className="relative bg-white border shadow rounded-xl p-6 pt-16 text-center h-[250px] flex flex-col justify-between">
                 <div>
                   <div className="absolute -top-10 left-1/2 -translate-x-1/2">
                     <LazyLoadImage
@@ -92,9 +91,15 @@ const Review = () => {
                     "{review.comment}"
                   </p>
                 </div>
+
                 <div className="flex justify-center mt-4 text-yellow-400">
-                  {Array.from({ length: review.rating }).map((_, i) => (
-                    <FaStar key={i} />
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <FaStar
+                      key={i}
+                      className={
+                        i < review.rating ? "text-yellow-400" : "text-gray-300"
+                      }
+                    />
                   ))}
                 </div>
               </div>

@@ -15,7 +15,10 @@ const AddVoucherPage = () => {
     sampai: "",
   });
 
+  const [errors, setErrors] = useState({});
   const [alert, setAlert] = useState({ message: "", show: false });
+
+  const today = new Date().toISOString().split("T")[0];
 
   const formatRupiah = (angka) => {
     const numberString = angka.replace(/[^,\d]/g, "").toString();
@@ -38,6 +41,7 @@ const AddVoucherPage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    setErrors((prev) => ({ ...prev, [name]: "" }));
     if (name === "minPembelian" || name === "nilai") {
       setForm((prev) => ({
         ...prev,
@@ -53,6 +57,20 @@ const AddVoucherPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const newErrors = {};
+    if (!form.kode) newErrors.kode = "Kode voucher wajib diisi";
+    if (!form.tipe) newErrors.tipe = "Tipe voucher wajib dipilih";
+    if (!form.minPembelian)
+      newErrors.minPembelian = "Minimum pembelian wajib diisi";
+    if (!form.nilai) newErrors.nilai = "Nilai voucher wajib diisi";
+    if (!form.mulai) newErrors.mulai = "Tanggal mulai wajib diisi";
+    if (!form.sampai) newErrors.sampai = "Tanggal sampai wajib diisi";
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) return;
+
     try {
       const token = localStorage.getItem("token");
       const payload = {
@@ -80,7 +98,7 @@ const AddVoucherPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <div className="mx-auto max-w-4xl rounded-lg bg-white p-6 shadow-md md:p-10">
+      <div className="mx-auto rounded-lg bg-white p-6 shadow-md md:p-10">
         <button
           onClick={() => navigate(-1)}
           className="mb-4 flex items-center gap-1 text-sm font-semibold text-primary"
@@ -92,7 +110,6 @@ const AddVoucherPage = () => {
           onSubmit={handleSubmit}
           className="grid grid-cols-1 items-start gap-6 md:grid-cols-2"
         >
-          {/* Kolom Kiri */}
           <div className="space-y-4">
             <div>
               <label className="mb-1 block text-sm font-medium">
@@ -105,8 +122,10 @@ const AddVoucherPage = () => {
                 onChange={handleChange}
                 placeholder="Masukkan Kode Voucher"
                 className="w-full rounded-md border px-4 py-2"
-                required
               />
+              {errors.kode && (
+                <p className="text-sm text-primary">{errors.kode}</p>
+              )}
             </div>
             <div>
               <label className="mb-1 block text-sm font-medium">
@@ -119,7 +138,6 @@ const AddVoucherPage = () => {
                 className={`w-full rounded-md border px-4 py-2 ${
                   form.tipe ? "text-black" : "text-gray-400"
                 }`}
-                required
               >
                 <option value="" disabled>
                   Pilih Tipe
@@ -127,6 +145,9 @@ const AddVoucherPage = () => {
                 <option value="Potongan Harga">Potongan Harga</option>
                 <option value="Potongan Ongkir">Potongan Ongkir</option>
               </select>
+              {errors.tipe && (
+                <p className="text-sm text-primary">{errors.tipe}</p>
+              )}
             </div>
             <div>
               <label className="mb-1 block text-sm font-medium">
@@ -139,8 +160,10 @@ const AddVoucherPage = () => {
                 onChange={handleChange}
                 placeholder="Masukkan Minimum Pembelian"
                 className="w-full rounded-md border px-4 py-2"
-                required
               />
+              {errors.minPembelian && (
+                <p className="text-sm text-primary">{errors.minPembelian}</p>
+              )}
             </div>
             <div>
               <label className="mb-1 block text-sm font-medium">Nilai</label>
@@ -151,43 +174,53 @@ const AddVoucherPage = () => {
                 onChange={handleChange}
                 placeholder="Masukkan Nilai"
                 className="w-full rounded-md border px-4 py-2"
-                required
               />
+              {errors.nilai && (
+                <p className="text-sm text-primary">{errors.nilai}</p>
+              )}
             </div>
           </div>
 
-          {/* Kolom Kanan */}
           <div className="flex h-full flex-col justify-between">
             <div>
               <label className="mb-1 block text-sm font-medium">
                 Masa Berlaku
               </label>
               <div className="flex items-center gap-3">
-                <input
-                  type="date"
-                  name="mulai"
-                  value={form.mulai}
-                  onChange={handleChange}
-                  className="w-full rounded-md border px-4 py-2"
-                  required
-                />
+                <div className="w-full">
+                  <input
+                    type="date"
+                    name="mulai"
+                    value={form.mulai}
+                    onChange={handleChange}
+                    min={today}
+                    className="w-full rounded-md border px-4 py-2"
+                  />
+                  {errors.mulai && (
+                    <p className="text-sm text-primary">{errors.mulai}</p>
+                  )}
+                </div>
                 <span className="text-sm font-bold">-</span>
-                <input
-                  type="date"
-                  name="sampai"
-                  value={form.sampai}
-                  onChange={handleChange}
-                  className="w-full rounded-md border px-4 py-2"
-                  required
-                />
+                <div className="w-full">
+                  <input
+                    type="date"
+                    name="sampai"
+                    value={form.sampai}
+                    onChange={handleChange}
+                    min={today}
+                    className="w-full rounded-md border px-4 py-2"
+                  />
+                  {errors.sampai && (
+                    <p className="text-sm text-primary">{errors.sampai}</p>
+                  )}
+                </div>
               </div>
             </div>
 
-            {/* Tombol Submit */}
             <div className="mt-6 text-end md:mt-auto">
               <button
                 type="submit"
-                className="rounded-md bg-red-600 px-6 py-2 text-white hover:bg-red-700"
+                className="rounded-md bg-primary px-6 py-2 text-white hover:bg-red-700"
               >
                 Simpan
               </button>

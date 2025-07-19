@@ -4,7 +4,6 @@ import { IoIosClose } from "react-icons/io";
 import { ProductService } from "../../../services/ProductService";
 import { CategoryService } from "../../../services/CategoryService";
 import Alert from "../../../components/atoms/Alert";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 
 const EditProductPage = () => {
@@ -52,9 +51,9 @@ const EditProductPage = () => {
               harga: "Rp" + v.price.toLocaleString("id-ID"),
             })) || [],
           previewGambarUtama: data.mainImage,
-          previewGambar1: data.additionalImages?.[0] || null,
-          previewGambar2: data.additionalImages?.[1] || null,
-          previewGambar3: data.additionalImages?.[2] || null,
+          previewGambar1: data.additionalImage1 || null,
+          previewGambar2: data.additionalImage2 || null,
+          previewGambar3: data.additionalImage3 || null,
         }));
 
         setKategoriOptions(kategoriRes.data);
@@ -136,6 +135,7 @@ const EditProductPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const token = localStorage.getItem("token");
       const formData = new FormData();
@@ -165,6 +165,8 @@ const EditProductPage = () => {
     } catch (err) {
       console.error("Gagal update produk:", err);
       alert("Gagal memperbarui produk.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -183,7 +185,7 @@ const EditProductPage = () => {
             >
               <IoIosClose className="w-8 h-8" />
             </button>
-            <LazyLoadImage
+            <img
               src={form[previewKey]}
               alt="Preview"
               className="w-32 h-32 object-cover rounded-md border"
@@ -325,9 +327,10 @@ const EditProductPage = () => {
           <div className="pt-4 justify-end flex">
             <button
               type="submit"
-              className="bg-primary text-white px-6 py-2 rounded-md hover:bg-opacity-90"
+              className="bg-primary text-white px-6 py-2 rounded-md hover:bg-opacity-90 disabled:bg-opacity-60"
+              disabled={loading}
             >
-              Simpan Perubahan
+              {loading ? "Menyimpan..." : "Simpan Perubahan"}
             </button>
           </div>
         </form>
@@ -336,7 +339,7 @@ const EditProductPage = () => {
       {showAlert && (
         <Alert
           message="Produk berhasil diperbarui!"
-          onConfirm={() => navigate("/dashboard/product")}
+          onConfirm={() => navigate("/dashboard/productDashboard")}
           confirmText="Tutup"
         />
       )}

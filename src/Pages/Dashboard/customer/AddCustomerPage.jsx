@@ -14,17 +14,29 @@ const AddCustomerPage = () => {
     address: "",
   });
 
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    setErrors((prev) => ({ ...prev, [name]: "" }));
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const newErrors = {};
+    if (!form.name) newErrors.name = "Nama wajib diisi";
+    if (!form.email) newErrors.email = "Email wajib diisi";
+    if (!form.password) newErrors.password = "Password wajib diisi";
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) return;
+
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
@@ -87,8 +99,10 @@ const AddCustomerPage = () => {
                 onChange={handleChange}
                 placeholder="Masukan Nama Pelanggan"
                 className="w-full border px-4 py-2 rounded-md"
-                required
               />
+              {errors.name && (
+                <p className="text-sm text-primary">{errors.name}</p>
+              )}
             </div>
 
             <div>
@@ -100,8 +114,10 @@ const AddCustomerPage = () => {
                 onChange={handleChange}
                 placeholder="Masukan Email Pelanggan"
                 className="w-full border px-4 py-2 rounded-md"
-                required
               />
+              {errors.email && (
+                <p className="text-sm text-primary">{errors.email}</p>
+              )}
             </div>
 
             <div>
@@ -113,8 +129,10 @@ const AddCustomerPage = () => {
                 onChange={handleChange}
                 placeholder="Masukan Kata Sandi"
                 className="w-full border px-4 py-2 rounded-md"
-                required
               />
+              {errors.password && (
+                <p className="text-sm text-primary">{errors.password}</p>
+              )}
             </div>
 
             <div>
@@ -151,7 +169,7 @@ const AddCustomerPage = () => {
                 className={`${
                   loading
                     ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-red-600 hover:bg-red-700"
+                    : "bg-primary hover:bg-red-700"
                 } text-white px-6 py-2 rounded-md`}
               >
                 {loading ? "Menyimpan..." : "Simpan"}

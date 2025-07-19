@@ -4,7 +4,7 @@ const Stat = ({ title, value, icon }) => {
       <div className="flex items-center justify-between">
         <div>
           <p className="text-gray-500 text-sm">{title}</p>
-          <h2 className="text-2xl font-bold text-gray-800">{value}</h2>
+          <h2 className="text-xl font-bold text-gray-800 mt-2">{value}</h2>
         </div>
         {icon}
       </div>

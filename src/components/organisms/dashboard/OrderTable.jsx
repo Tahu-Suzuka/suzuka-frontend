@@ -62,7 +62,7 @@ const OrderTable = ({
                     : order.orderStatus === "Selesai"
                     ? "bg-green-100 text-green-700"
                     : order.orderStatus === "Dibatalkan"
-                    ? "bg-red-100 text-red-700"
+                    ? "bg-red-100 text-primary"
                     : order.orderStatus === "Menunggu Pembayaran"
                     ? "bg-orange-100 text-orange-700"
                     : "bg-yellow-100 text-yellow-700"

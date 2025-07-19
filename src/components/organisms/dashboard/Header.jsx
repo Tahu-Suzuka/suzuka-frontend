@@ -54,7 +54,7 @@ const Header = () => {
             </button>
             <button
               onClick={handleLogout}
-              className="mt-1 flex w-full items-center rounded px-3 py-2 text-red-600 hover:bg-red-50"
+              className="mt-1 flex w-full items-center rounded px-3 py-2 text-primary hover:bg-red-50"
             >
               <IoLogOutOutline className="mr-2" /> Keluar
             </button>

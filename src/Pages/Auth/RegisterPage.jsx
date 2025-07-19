@@ -21,7 +21,7 @@ export default function RegisterPage() {
             </h2>
           </div>
         </div>
-        {/* Right */}
+
         <Register />
       </div>
     </div>

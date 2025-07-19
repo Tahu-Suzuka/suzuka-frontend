@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import ScrollToTop from "./layouts/ScrollToTop.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 // Auth
@@ -58,6 +59,7 @@ import ForbiddenPage from "./Pages/Error/ForbiddenPage.jsx";
 const App = () => {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         {/* Dashboard Layout */}
         <Route

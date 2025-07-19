@@ -6,7 +6,6 @@ import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 import Table from "../../../components/atoms/Table";
 import Pagination from "../../../components/atoms/Pagination";
-import Filter from "../../../components/atoms/Filter";
 import Alert from "../../../components/atoms/Alert";
 import { ProductService } from "../../../services/ProductService";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -14,19 +13,10 @@ import "react-lazy-load-image-component/src/effects/blur.css";
 
 const ProductDashboardPage = () => {
   const navigate = useNavigate();
-  const [sortBy, setSortBy] = useState("");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
-
-  const sortOptions = [
-    { value: "menungguPembayaran", label: "Menunggu Pembayaran" },
-    { value: "diproses", label: "Diproses" },
-    { value: "dikirim", label: "Dikirim" },
-    { value: "selesai", label: "Selesai" },
-    { value: "dibatalkan", label: "Dibatalkan" },
-  ];
 
   const fetchProducts = async () => {
     try {
@@ -86,7 +76,6 @@ const ProductDashboardPage = () => {
       <div className="flex w-full justify-between items-center">
         <h1 className="text-xl font-bold text-gray-800">Daftar Produk</h1>
         <div className="flex flex-auto justify-end gap-4">
-          <Filter value={sortBy} onChange={setSortBy} options={sortOptions} />
           <Button
             width="w-52"
             className="rounded-md flex items-center justify-center gap-2 py-2"

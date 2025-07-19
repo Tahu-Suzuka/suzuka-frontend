@@ -120,7 +120,7 @@ const EditCategoryPage = () => {
                 <button
                   type="button"
                   onClick={handleRemoveImage}
-                  className="absolute -top-2 -right-2 bg-white border border-gray-300 rounded-full w-7 h-7 flex items-center justify-center text-red-600 hover:bg-gray-100"
+                  className="absolute -top-2 -right-2 bg-white border border-gray-300 rounded-full w-7 h-7 flex items-center justify-center text-primary hover:bg-gray-100"
                   title="Hapus gambar"
                 >
                   <IoIosClose className="w-8 h-8" />
@@ -145,7 +145,7 @@ const EditCategoryPage = () => {
           <div className="text-end">
             <button
               type="submit"
-              className="bg-red-600 text-white px-6 py-2 rounded-md hover:bg-red-700"
+              className="bg-primary text-white px-6 py-2 rounded-md hover:bg-red-700"
               disabled={loading}
             >
               {loading ? "Menyimpan..." : "Simpan Perubahan"}

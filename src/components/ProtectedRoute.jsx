@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import { UserService } from "../services/UserService";
 
 const ProtectedRoute = ({ children }) => {
-  const [isAllowed, setIsAllowed] = useState(null); // null = loading, true/false = hasil
+  const [isAllowed, setIsAllowed] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

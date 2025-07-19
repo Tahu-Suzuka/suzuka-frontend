@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaTruck, FaTicketAlt, FaStar } from "react-icons/fa";
+import { ProductService } from "../services/ProductService";
+import { CartService } from "../services/CartService";
+import { OrderService } from "../services/OrderService";
+import { ReviewService } from "../services/ReviewService";
 import Button from "../components/atoms/Button";
 import Header from "../components/atoms/Header";
 import Card from "../components/atoms/Card";
 import Review from "../components/atoms/Review";
 import Modal from "react-modal";
 import Slider from "react-slick";
-import { ProductService } from "../services/ProductService";
-import { CartService } from "../services/CartService";
-import { OrderService } from "../services/OrderService";
 import Alert from "../components/atoms/Alert";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
@@ -26,8 +27,10 @@ const DetailProductPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [relatedProducts, setRelatedProducts] = useState([]);
-
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [reviews, setReviews] = useState([]);
+  const [ratingAverage, setRatingAverage] = useState(0);
+  const [totalReview, setTotalReview] = useState(0);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -44,6 +47,29 @@ const DetailProductPage = () => {
       }
     };
     fetchProduct();
+  }, [id]);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const res = await ReviewService.getReviewByProduct(id);
+        const reviewList = res.data || [];
+        setReviews(reviewList);
+        setTotalReview(reviewList.length);
+
+        if (reviewList.length > 0) {
+          const avg =
+            reviewList.reduce((sum, r) => sum + r.rating, 0) /
+            reviewList.length;
+          setRatingAverage(avg);
+        } else {
+          setRatingAverage(0);
+        }
+      } catch (err) {
+        console.error("Gagal ambil review:", err);
+      }
+    };
+    fetchReviews();
   }, [id]);
 
   useEffect(() => {
@@ -109,21 +135,15 @@ const DetailProductPage = () => {
 
     try {
       if (!selectedVariation) return alert("Variasi tidak dipilih.");
-
-      // --- PERUBAHAN DI SINI ---
       const payload = {
         items: [{ variationId: selectedVariation.id, quantity }],
-        note: "", // Tambahkan note kosong
-        voucher: null, // Tambahkan voucher null
+        note: "",
+        voucher: null,
       };
-      // --- BATAS PERUBAHAN ---
-
       const orderRes = await OrderService.createBuyNowOrder(payload);
       const orderId = orderRes?.data?.id;
-
-      if (!orderId) {
+      if (!orderId)
         throw new Error("Gagal mendapatkan ID pesanan dari server.");
-      }
 
       sessionStorage.setItem("checkoutMode", "buyNow");
       sessionStorage.setItem(
@@ -144,7 +164,6 @@ const DetailProductPage = () => {
         ])
       );
       sessionStorage.setItem("buyNowOrderId", orderId);
-
       navigate("/checkout");
     } catch (error) {
       console.error("Error Buy Now:", error);
@@ -152,13 +171,28 @@ const DetailProductPage = () => {
     }
   };
 
-  if (loading) return <p className="text-center py-10">Memuat...</p>;
+  if (loading)
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <img
+          src="/images/loading.gif"
+          alt="Loading..."
+          className="w-64 lg:w-72 h-auto object-contain"
+        />
+      </div>
+    );
+
   if (!product)
-    return <p className="text-center py-10">Produk tidak ditemukan.</p>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-white">
+        <p className="text-lg font-semibold">Produk tidak ditemukan.</p>
+      </div>
+    );
 
   const thumbnails = [
-    product.mainImage,
-    ...(product.additionalImages || []),
+    product.additionalImage1,
+    product.additionalImage2,
+    product.additionalImage3,
   ].filter(Boolean);
 
   const sliderSettings = {
@@ -180,7 +214,6 @@ const DetailProductPage = () => {
           onConfirm={() => setShowSuccessAlert(false)}
         />
       )}
-
       <Header imageSrc="/images/product/header.png" title="Detail Produk" />
       <div className="px-6 lg:px-20 pb-40">
         <div className="max-w-6xl mx-auto bg-white rounded-md px-6 py-10 flex flex-col lg:flex-row gap-6 mt-6">
@@ -206,12 +239,22 @@ const DetailProductPage = () => {
           </div>
           <div className="flex-1">
             <h1 className="text-2xl font-bold mb-2">{product.product_name}</h1>
-            <div className="flex items-center gap-1 text-primary mb-1">
-              {[...Array(5)].map((_, i) => (
-                <FaStar key={i} className="text-lg" />
+            <div className="flex items-center gap-1 mb-1">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <FaStar
+                  key={i}
+                  className={`text-lg ${
+                    i < Math.round(ratingAverage)
+                      ? "text-yellow-400"
+                      : "text-gray-300"
+                  }`}
+                />
               ))}
-              <span className="text-sm text-black ml-1">3 Review</span>
+              <span className="text-sm text-gray-700 ml-1">
+                ({totalReview} Ulasan)
+              </span>
             </div>
+
             <p className="text-gray-700 mb-4">{product.description}</p>
             <div className="mb-4 text-xl font-bold">
               Rp {price.toLocaleString("id-ID")}
@@ -244,9 +287,8 @@ const DetailProductPage = () => {
                 </button>
               </div>
             </div>
-            <div className="mb-4 text-lg">
-              <span className="font-medium">Total</span> : Rp{" "}
-              {total.toLocaleString("id-ID")}
+            <div className="mb-4 text-lg font-medium">
+              Total : Rp {total.toLocaleString("id-ID")}
             </div>
             <div className="flex gap-4 mb-4">
               <Button
@@ -264,8 +306,8 @@ const DetailProductPage = () => {
               />
             </div>
             <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
-              <FaTruck className="text-lg text-secondary" /> Pengiriman sesuai
-              dengan tanggal yang anda tentukan
+              <FaTruck className="text-lg text-secondary" /> Pemesanan hanya
+              bisa dilakukan untuk wilayah Bandung dan sekitarnya.
             </div>
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <FaTicketAlt className="text-lg text-secondary" /> Anda dapat
@@ -288,8 +330,9 @@ const DetailProductPage = () => {
                   name={p.product_name}
                   image={p.mainImage || "/images/default.png"}
                   price={p.variations?.[0]?.price || 0}
+                  ratingAverage={p.ratingAverage}
                   showButton={false}
-                  showRating={false}
+                  showRating={true}
                   showHorizontalLayout={true}
                   onClick={() => navigate(`/produk/${p.id}`)}
                 />

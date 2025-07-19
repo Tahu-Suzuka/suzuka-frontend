@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaPrint, FaPlus } from "react-icons/fa";
+import { OrderService } from "../../../services/OrderService";
+import { ReportService } from "../../../services/ReportService";
 import Button from "../../../components/atoms/Button";
 import OrderTable from "../../../components/organisms/dashboard/OrderTable";
 import Pagination from "../../../components/atoms/Pagination";
 import Filter from "../../../components/atoms/Filter";
-import { OrderService } from "../../../services/OrderService";
-import { ReportService } from "../../../services/ReportService";
 
 const OrderDashboardPage = () => {
   const [sortBy, setSortBy] = useState("");
@@ -40,8 +40,8 @@ const OrderDashboardPage = () => {
         status: sortBy,
       });
 
-      const ordersData = response.data || []; // ambil dari "data"
-      const totalPagesData = response.pagination?.totalPages || 1; // ambil dari "pagination"
+      const ordersData = response.data || [];
+      const totalPagesData = response.pagination?.totalPages || 1;
 
       setOrders(ordersData);
       setTotalPages(totalPagesData);

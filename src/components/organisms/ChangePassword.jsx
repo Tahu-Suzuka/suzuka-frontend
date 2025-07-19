@@ -42,7 +42,7 @@ const ChangePassword = () => {
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");
-      setShowAlert(true); // ✅ Tampilkan Alert saat sukses
+      setShowAlert(true);
     } catch (err) {
       const errorMsg =
         err.response?.data?.message || "Gagal mengubah kata sandi.";

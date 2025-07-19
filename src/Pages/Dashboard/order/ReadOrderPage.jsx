@@ -13,7 +13,6 @@ const ReadOrderPage = () => {
     const fetchOrder = async () => {
       try {
         const res = await OrderService.getByIdAdmin(id);
-        // jika response: { message, data: { ... } }
         setOrder(res.data);
       } catch (err) {
         console.error("Gagal mengambil data pesanan:", err);

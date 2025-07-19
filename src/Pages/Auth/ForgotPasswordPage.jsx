@@ -7,7 +7,6 @@ const ForgotPasswordPage = () => {
   return (
     <div className="lg:overflow-hidden min-h-screen ">
       <div className="flex flex-col md:flex-row h-screen -translate-y-2 bg-white">
-        {/* Right */}
         <div className="hidden md:block md:w-1/2 relative">
           <div className="absolute inset-9 bg-secondary rounded-b-full mx-16 -my-7 left-20"></div>
           <div className="absolute inset-1 bg-primary rounded-b-full mx-32 my-1 flex flex-col items-center justify-center ">
@@ -22,7 +21,6 @@ const ForgotPasswordPage = () => {
             />
           </div>
         </div>
-        {/* Left  */}
         <ForgotPassword />
       </div>
     </div>

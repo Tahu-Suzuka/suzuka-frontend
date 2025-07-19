@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Button from "../atoms/Button";
 
 const WaveFooter = ({ showGrayBackground = false }) => {
@@ -67,9 +68,30 @@ const WaveFooter = ({ showGrayBackground = false }) => {
                 INFORMASI UMUM
               </h1>
               <ul className="space-y-1 text-sm lg:text-base">
-                <li>Tentang Kami</li>
-                <li>Syarat dan Ketentuan</li>
-                <li>Kebijakan Privasi</li>
+                <li>
+                  <Link
+                    to="/"
+                    className="hover:text-gray-300 transition-colors"
+                  >
+                    Beranda
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/about"
+                    className="hover:text-gray-300 transition-colors"
+                  >
+                    Tentang Kami
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/product"
+                    className="hover:text-gray-300 transition-colors"
+                  >
+                    Produk Kami
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>
@@ -77,9 +99,9 @@ const WaveFooter = ({ showGrayBackground = false }) => {
                 LOKASI
               </h1>
               <p className="text-sm lg:text-base">
-                Jl. Cibuntu No. 123,
+                Jl. Aki Padma Selatan No. 23, RT.02/RW.07,
                 <br />
-                Bandung
+                Babakan, Kec. Babakan Ciparay, Kota Bandung.
               </p>
             </div>
             <div>
@@ -87,7 +109,7 @@ const WaveFooter = ({ showGrayBackground = false }) => {
                 KONTAK KAMI
               </h1>
               <p className="text-sm lg:text-base">
-                08xxxxxxxxx
+                0851-7116-5176
                 <br />
                 tahusuzuka@gmail.com
               </p>

@@ -93,7 +93,7 @@ const EditVoucherPage = () => {
 
       await VoucherService.update(id, payload, token);
       setAlert({ show: true, message: "Voucher berhasil diperbarui!" });
-      setTimeout(() => navigate("/dashboard/voucher"), 1500);
+      setTimeout(() => navigate("/dashboard/voucherDashboard"), 1500);
     } catch (err) {
       setAlert({
         show: true,

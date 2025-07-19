@@ -3,15 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
+import { UserService } from "../../../services/UserService";
+import { API_URL } from "../../../services/API";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 import Button from "../../../components/atoms/Button";
 import Table from "../../../components/atoms/Table";
 import SearchBar from "../../../components/atoms/SearchBar";
 import Pagination from "../../../components/atoms/Pagination";
 import Alert from "../../../components/atoms/Alert";
-import { UserService } from "../../../services/UserService";
-import { API_URL } from "../../../services/API";
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import "react-lazy-load-image-component/src/effects/blur.css";
 
 const CustomerPage = () => {
   const navigate = useNavigate();
@@ -20,8 +20,6 @@ const CustomerPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
-
-  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
@@ -29,8 +27,8 @@ const CustomerPage = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await UserService.getAll(token);
-      setCustomers(res.data || []);
+      const customerRes = await UserService.getAll(token);
+      setCustomers(customerRes.data || []);
     } catch (err) {
       console.error("Gagal mengambil data pelanggan:", err);
       alert("Gagal memuat data pelanggan");
@@ -73,16 +71,8 @@ const CustomerPage = () => {
     return `${API_URL}${path}`;
   };
 
-  const headers = [
-    "No",
-    "Nama",
-    "Email",
-    "No. Telepon",
-    "Jumlah Pesanan",
-    "Aksi",
-  ];
+  const headers = ["No", "Nama", "Email", "No. Telepon", "Aksi"];
 
-  // Search + Pagination logic
   const filteredCustomers = customers.filter((cust) =>
     cust.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -147,9 +137,6 @@ const CustomerPage = () => {
               </td>
               <td className="py-2 px-4">{customer.email}</td>
               <td className="py-2 px-4">{customer.phone || "-"}</td>
-              <td className="py-2 px-4 text-center">
-                {customer.orderCount || 0}
-              </td>
               <td className="py-2 px-4 flex gap-3">
                 <button
                   className="text-green-500 hover:text-green-700"

@@ -156,36 +156,14 @@ const VoucherPage = () => {
               <td className="px-4 py-2">{formatRupiah(voucher.value)}</td>
               <td className="px-4 py-2">{formatTanggal(voucher.validUntil)}</td>
               <td className="px-4 py-2">
-                <select
-                  className="capitalize rounded px-2 py-1 text-xs font-medium border"
-                  value={voucher.isActive ? "aktif" : "kedaluwarsa"}
-                  onChange={async (e) => {
-                    const token = localStorage.getItem("token");
-                    const newStatus = e.target.value === "aktif";
-                    try {
-                      await VoucherService.update(
-                        voucher.id,
-                        { isActive: newStatus },
-                        token
-                      );
-                      fetchData();
-                    } catch (error) {
-                      setAlert({
-                        show: true,
-                        message: "Gagal mengubah status voucher.",
-                        onCancel: () => setAlert({ ...alert, show: false }),
-                      });
-                    }
-                  }}
-                  style={{
-                    backgroundColor: voucher.isActive ? "#d1fae5" : "#fee2e2",
-                    color: voucher.isActive ? "#047857" : "#b91c1c",
-                    borderColor: voucher.isActive ? "#a7f3d0" : "#fecaca",
-                  }}
+                <span
+                  className={`capitalize rounded px-2 py-1 text-xs font-medium ${
+                    badgeStatusClasses[getStatus(voucher)] ||
+                    "bg-gray-100 text-gray-700"
+                  }`}
                 >
-                  <option value="aktif">Aktif</option>
-                  <option value="kedaluwarsa">Kedaluwarsa</option>
-                </select>
+                  {getStatus(voucher)}
+                </span>
               </td>
 
               <td className="flex gap-3 px-4 py-2">

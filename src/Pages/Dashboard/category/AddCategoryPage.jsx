@@ -12,11 +12,13 @@ const AddCategoryPage = () => {
     preview: null,
   });
 
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
+    setErrors((prev) => ({ ...prev, [name]: "" }));
     if (name === "gambar" && files.length > 0) {
       const file = files[0];
       setForm((prev) => ({
@@ -40,6 +42,15 @@ const AddCategoryPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const newErrors = {};
+    if (!form.nama) newErrors.nama = "Nama kategori wajib diisi";
+    if (!form.gambar) newErrors.gambar = "Gambar wajib diunggah";
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) return;
+
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
@@ -59,7 +70,6 @@ const AddCategoryPage = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="bg-white rounded-lg p-6 md:p-10 shadow-md">
-        {/* Tombol Kembali */}
         <button
           onClick={() => navigate(-1)}
           className="text-primary font-semibold text-sm mb-6"
@@ -67,9 +77,7 @@ const AddCategoryPage = () => {
           &lt; Kembali
         </button>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Nama Kategori */}
           <div>
             <label className="block font-semibold mb-1">Nama Kategori</label>
             <input
@@ -79,11 +87,12 @@ const AddCategoryPage = () => {
               onChange={handleChange}
               placeholder="Masukkan Nama Kategori"
               className="w-full border px-4 py-2 rounded-md"
-              required
             />
+            {errors.nama && (
+              <p className="text-sm text-primary">{errors.nama}</p>
+            )}
           </div>
 
-          {/* Unggah Foto */}
           <div>
             <label className="block font-semibold mb-1">Unggah Foto</label>
             {form.preview && (
@@ -91,7 +100,7 @@ const AddCategoryPage = () => {
                 <button
                   type="button"
                   onClick={handleRemoveImage}
-                  className="absolute -top-2 -right-2 bg-white border border-gray-300 rounded-full w-7 h-7 flex items-center justify-center text-red-600 hover:bg-gray-100"
+                  className="absolute -top-2 -right-2 bg-white border border-gray-300 rounded-full w-7 h-7 flex items-center justify-center text-primary hover:bg-gray-100"
                   title="Hapus gambar"
                 >
                   <IoIosClose className="w-8 h-8" />
@@ -110,13 +119,15 @@ const AddCategoryPage = () => {
               onChange={handleChange}
               className="w-full border px-4 py-2 rounded-md"
             />
+            {errors.gambar && (
+              <p className="text-sm text-primary">{errors.gambar}</p>
+            )}
           </div>
 
-          {/* Tombol Submit */}
           <div className="text-end">
             <button
               type="submit"
-              className="bg-red-600 text-white px-6 py-2 rounded-md hover:bg-red-700"
+              className="bg-primary text-white px-6 py-2 rounded-md hover:bg-red-700"
               disabled={loading}
             >
               {loading ? "Menyimpan..." : "Simpan"}
@@ -125,7 +136,6 @@ const AddCategoryPage = () => {
         </form>
       </div>
 
-      {/* ✅ ALERT Berhasil */}
       {showAlert && (
         <Alert
           message="Kategori berhasil ditambahkan!"

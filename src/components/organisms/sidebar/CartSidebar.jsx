@@ -153,7 +153,7 @@ const CartSidebar = ({ onClose, refresh }) => {
 
         <div className="flex-1 overflow-y-auto px-4 pt-4 space-y-4">
           {items.map((item) => (
-            <div key={item.id} className="flex items-start gap-3 border-b pb-4">
+            <div key={item.id} className="flex items-start gap-3 pb-4">
               <LazyLoadImage
                 src={item.image}
                 alt={item.name}

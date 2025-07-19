@@ -49,4 +49,13 @@ export const ReportService = {
     });
     return response.data;
   },
+
+  getProductSalesYearly: async (page = 1) => {
+    const token = localStorage.getItem("token");
+    const response = await axios.get(`${API_URL}/reports/product-sales`, {
+      headers: { Authorization: `Bearer ${token}` },
+      params: { period: "month", page, limit: 20 }, // Sesuai backend default limit 5
+    });
+    return response.data;
+  },
 };

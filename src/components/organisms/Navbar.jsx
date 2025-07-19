@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Menu, X, ShoppingCart } from "lucide-react";
 import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
@@ -16,7 +14,6 @@ const NavbarLinks = [
   { name: "Beranda", link: "/" },
   { name: "Tentang Kami", link: "/about" },
   { name: "Produk", link: "/product" },
-  { name: "Kontak", link: "/contact" },
 ];
 
 const Navbar = () => {
@@ -27,7 +24,6 @@ const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const location = useLocation();
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -73,7 +69,7 @@ const Navbar = () => {
             <LazyLoadImage
               src="/images/logo/logo.png"
               alt="Logo"
-              className="w-10 h-10 "
+              className="w-10 h-10"
               effect="blur"
             />
           </Link>
@@ -106,7 +102,7 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-4 z-50">
-          {isLoggedIn && (
+          {isLoggedIn && user?.role !== "admin" && (
             <div
               className="relative cursor-pointer"
               onClick={() => setIsCartOpen(true)}
@@ -158,31 +154,48 @@ const Navbar = () => {
                       <p className="text-sm font-bold truncate">{user?.name}</p>
                     </div>
                     <ul className="py-1">
-                      <li>
-                        <Link
-                          to="/profile"
-                          onClick={() => setIsDropdownOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100"
-                        >
-                          <CgProfile className="text-lg" />
-                          <span className="text-sm">Profil Saya</span>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          to="/profile"
-                          onClick={() => {
-                            setIsDropdownOpen(false);
-                            navigate("/profile", {
-                              state: { initialMenu: "pesanan" },
-                            });
-                          }}
-                          className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100"
-                        >
-                          <LuNotebookText className="text-lg" />
-                          <span className="text-sm">Pesanan Saya</span>
-                        </Link>
-                      </li>
+                      {user?.role === "admin" ? (
+                        <>
+                          <li>
+                            <Link
+                              to="/dashboard"
+                              onClick={() => setIsDropdownOpen(false)}
+                              className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100"
+                            >
+                              <CgProfile className="text-lg" />
+                              <span className="text-sm">Dashboard</span>
+                            </Link>
+                          </li>
+                        </>
+                      ) : (
+                        <>
+                          <li>
+                            <Link
+                              to="/profile"
+                              onClick={() => setIsDropdownOpen(false)}
+                              className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100"
+                            >
+                              <CgProfile className="text-lg" />
+                              <span className="text-sm">Profil Saya</span>
+                            </Link>
+                          </li>
+                          <li>
+                            <Link
+                              to="/order"
+                              onClick={() => {
+                                setIsDropdownOpen(false);
+                                navigate("/order", {
+                                  state: { initialMenu: "pesanan" },
+                                });
+                              }}
+                              className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100"
+                            >
+                              <LuNotebookText className="text-lg" />
+                              <span className="text-sm">Pesanan Saya</span>
+                            </Link>
+                          </li>
+                        </>
+                      )}
                       <li
                         onClick={handleLogout}
                         className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 cursor-pointer text-primary"
@@ -199,7 +212,7 @@ const Navbar = () => {
 
           <div className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
             {isOpen ? (
-              <X className="text-black" />
+              <X className="text-black cursor-pointer" />
             ) : (
               <Menu
                 className={`${
@@ -234,25 +247,32 @@ const Navbar = () => {
                 </Link>
               ) : (
                 <div className="space-y-4">
-                  <Link
-                    to="/profile"
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-3 text-black font-semibold"
-                  >
-                    <CgProfile className="text-xl" /> Profil Saya
-                  </Link>
-                  <Link
-                    to="/profile"
-                    onClick={() => {
-                      setIsOpen(false);
-                      navigate("/profile", {
-                        state: { initialMenu: "pesanan" },
-                      });
-                    }}
-                    className="flex items-center gap-3 text-black font-semibold"
-                  >
-                    <LuNotebookText className="text-xl" /> Pesanan Saya
-                  </Link>
+                  {user?.role === "admin" ? (
+                    <Link
+                      to="/dashboard"
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 text-black font-semibold"
+                    >
+                      <CgProfile className="text-xl" /> Dashboard
+                    </Link>
+                  ) : (
+                    <>
+                      <Link
+                        to="/profile"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center gap-3 text-black font-semibold"
+                      >
+                        <CgProfile className="text-xl" /> Profil Saya
+                      </Link>
+                      <Link
+                        to="/order"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center gap-3 text-black font-semibold"
+                      >
+                        <LuNotebookText className="text-xl" /> Pesanan Saya
+                      </Link>
+                    </>
+                  )}
                   <div
                     onClick={handleLogout}
                     className="flex items-center gap-3 text-primary font-semibold cursor-pointer"

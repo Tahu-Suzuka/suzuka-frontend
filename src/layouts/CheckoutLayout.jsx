@@ -1,10 +1,28 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Outlet, Link } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 
 const CheckoutLayout = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center w-screen h-screen bg-gray-100 z-[9999]">
+        <img
+          src="/images/loading.gif"
+          alt="Loading..."
+          className="w-64 lg:w-72 h-auto object-contain"
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="bg-gray-100 min-h-screen pb-10">
       {/* Header */}
@@ -17,7 +35,7 @@ const CheckoutLayout = () => {
             effect="blur"
           />
         </Link>
-        <h1 className="text-lg lg:text-xl font-bold text-red-600">
+        <h1 className="text-lg lg:text-xl font-bold text-primary">
           Total Pembayaran
         </h1>
       </div>

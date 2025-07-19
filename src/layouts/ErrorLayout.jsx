@@ -9,7 +9,7 @@ const ErrorLayout = ({ imageSrc, code, description }) => {
         alt={`Error ${code}`}
         className="w-64 h-64 object-contain"
       />
-      <h1 className="text-5xl font-bold text-red-500">{code}</h1>
+      <h1 className="text-5xl font-bold text-primary">{code}</h1>
       <p className="text-gray-500 max-w-md">{description}</p>
       <Link
         to="/"
