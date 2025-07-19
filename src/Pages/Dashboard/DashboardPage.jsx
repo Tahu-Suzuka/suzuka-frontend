@@ -13,7 +13,7 @@ import { ReportService } from "../../services/ReportService";
 const DashboardPage = () => {
   const [orders, setOrders] = useState([]);
   const [stats, setStats] = useState({
-    monthlyRevenue: 0,
+    monthlyRevenue: "Rp 0",
     totalOrders: 0,
     totalReviews: 0,
     totalCustomers: 0,
@@ -23,25 +23,34 @@ const DashboardPage = () => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
-        const [ordersRes, usersRes, reviewsRes, salesRes] = await Promise.all([
-          OrderService.getAllOrders(),
+
+        const [
+          completedOrdersRes,
+          allOrdersRes,
+          usersRes,
+          reviewsRes,
+          salesRes,
+        ] = await Promise.all([
+          OrderService.getAll({ page: 1, limit: 1, status: "selesai" }),
+          OrderService.getAll({ page: 1, limit: 5 }),
           UserService.getAll(token),
-          ReviewService.getAllReviews(),
+          ReviewService.getAllReviews({ page: 1, limit: 1 }),
           ReportService.getMonthlySalesData(),
         ]);
 
-        const allOrders = ordersRes.data || [];
-        const allUsers = usersRes.data || [];
-        const allReviews = reviewsRes?.data || [];
+        const completedOrdersCount =
+          completedOrdersRes?.pagination?.totalItems || 0;
+        const ordersData = allOrdersRes?.data || [];
+        const usersPagination = usersRes?.pagination;
+        const reviewsPagination = reviewsRes?.pagination;
+        const revenue = salesRes?.data?.totalOverallRevenue || "Rp 0";
 
-        const monthlyRevenue = salesRes?.data?.totalOverallRevenue || "Rp 0";
-
-        setOrders(allOrders);
+        setOrders(ordersData);
         setStats({
-          monthlyRevenue,
-          totalOrders: allOrders.length,
-          totalReviews: allReviews.length,
-          totalCustomers: allUsers.length,
+          monthlyRevenue: revenue,
+          totalOrders: completedOrdersCount,
+          totalReviews: reviewsPagination?.totalItems || 0,
+          totalCustomers: usersPagination?.totalItems || 0,
         });
       } catch (err) {
         console.error("Gagal memuat data dashboard:", err);
@@ -60,7 +69,7 @@ const DashboardPage = () => {
           icon={<IoStatsChart className="text-3xl text-primary" />}
         />
         <Stat
-          title="Jumlah Pesanan"
+          title="Jumlah Pesanan Selesai"
           value={stats.totalOrders}
           icon={<TbFileInvoice className="text-3xl text-primary" />}
         />

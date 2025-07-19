@@ -56,4 +56,14 @@ export const UserService = {
     });
     return res.data.data;
   },
+
+  getAllPaginated: async (page = 1, limit = 6, token) => {
+    const res = await axios.get(
+      `${API_URL}/users?page=${page}&limit=${limit}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    return res.data;
+  },
 };

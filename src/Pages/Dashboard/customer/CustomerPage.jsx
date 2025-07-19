@@ -21,14 +21,17 @@ const CustomerPage = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 6;
 
-  const fetchCustomers = async () => {
+  const fetchCustomers = async (page) => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const customerRes = await UserService.getAll(token);
-      setCustomers(customerRes.data || []);
+      const res = await UserService.getAllPaginated(page, itemsPerPage, token);
+
+      setCustomers(res.data || []);
+      setTotalPages(res.pagination?.totalPages || 1);
     } catch (err) {
       console.error("Gagal mengambil data pelanggan:", err);
       alert("Gagal memuat data pelanggan");
@@ -38,8 +41,8 @@ const CustomerPage = () => {
   };
 
   useEffect(() => {
-    fetchCustomers();
-  }, []);
+    fetchCustomers(currentPage);
+  }, [currentPage]);
 
   const confirmDelete = (id) => {
     setSelectedId(id);
@@ -50,7 +53,7 @@ const CustomerPage = () => {
     try {
       const token = localStorage.getItem("token");
       await UserService.delete(selectedId, token);
-      setCustomers((prev) => prev.filter((item) => item.id !== selectedId));
+      fetchCustomers(currentPage);
     } catch (err) {
       console.error("Gagal menghapus pelanggan:", err);
       alert("Gagal menghapus pelanggan");
@@ -72,17 +75,6 @@ const CustomerPage = () => {
   };
 
   const headers = ["No", "Nama", "Email", "No. Telepon", "Aksi"];
-
-  const filteredCustomers = customers.filter((cust) =>
-    cust.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const totalPages = Math.ceil(filteredCustomers.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentData = filteredCustomers.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
 
   return (
     <div className="space-y-6 bg-white p-6 rounded-lg shadow">
@@ -119,42 +111,52 @@ const CustomerPage = () => {
         <p className="text-center text-gray-500 py-10">Memuat data...</p>
       ) : (
         <Table headers={headers}>
-          {currentData.map((customer, idx) => (
-            <tr key={customer.id} className="border-t">
-              <td className="py-2 px-4">{startIndex + idx + 1}</td>
-              <td className="py-2 px-4">
-                <div className="flex items-center gap-3">
-                  <LazyLoadImage
-                    src={getFullImageUrl(customer.image)}
-                    alt={customer.name}
-                    className="w-10 h-10 object-cover rounded"
-                    effect="blur"
-                  />
-                  <span className="text-sm font-medium text-gray-800">
-                    {customer.name}
-                  </span>
-                </div>
-              </td>
-              <td className="py-2 px-4">{customer.email}</td>
-              <td className="py-2 px-4">{customer.phone || "-"}</td>
-              <td className="py-2 px-4 flex gap-3">
-                <button
-                  className="text-green-500 hover:text-green-700"
-                  onClick={() =>
-                    navigate(`/dashboard/edit-customer/${customer.id}`)
-                  }
-                >
-                  <FiEdit className="w-5 h-5" />
-                </button>
-                <button
-                  className="text-primary hover:text-red-800"
-                  onClick={() => confirmDelete(customer.id)}
-                >
-                  <MdDelete className="w-5 h-5" />
-                </button>
+          {customers.length === 0 ? (
+            <tr>
+              <td colSpan={headers.length} className="py-4 text-center">
+                Tidak ada data pelanggan.
               </td>
             </tr>
-          ))}
+          ) : (
+            customers.map((customer, idx) => (
+              <tr key={customer.id} className="border-t">
+                <td className="py-2 px-4">
+                  {(currentPage - 1) * itemsPerPage + idx + 1}
+                </td>
+                <td className="py-2 px-4">
+                  <div className="flex items-center gap-3">
+                    <LazyLoadImage
+                      src={getFullImageUrl(customer.image)}
+                      alt={customer.name}
+                      className="w-10 h-10 object-cover rounded"
+                      effect="blur"
+                    />
+                    <span className="text-sm font-medium text-gray-800">
+                      {customer.name}
+                    </span>
+                  </div>
+                </td>
+                <td className="py-2 px-4">{customer.email}</td>
+                <td className="py-2 px-4">{customer.phone || "-"}</td>
+                <td className="py-2 px-4 flex gap-3">
+                  <button
+                    className="text-green-500 hover:text-green-700"
+                    onClick={() =>
+                      navigate(`/dashboard/edit-customer/${customer.id}`)
+                    }
+                  >
+                    <FiEdit className="w-5 h-5" />
+                  </button>
+                  <button
+                    className="text-primary hover:text-red-800"
+                    onClick={() => confirmDelete(customer.id)}
+                  >
+                    <MdDelete className="w-5 h-5" />
+                  </button>
+                </td>
+              </tr>
+            ))
+          )}
         </Table>
       )}
 

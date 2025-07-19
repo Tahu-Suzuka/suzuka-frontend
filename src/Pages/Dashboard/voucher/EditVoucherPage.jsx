@@ -103,7 +103,7 @@ const EditVoucherPage = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md max-w-4xl mx-auto">
+    <div className="bg-white p-6 rounded-lg shadow-md  mx-auto">
       <button
         onClick={() => navigate(-1)}
         className="text-primary text-sm flex font-semibold items-center gap-1 mb-4"

@@ -239,7 +239,7 @@ const DetailProductPage = () => {
           </div>
           <div className="flex-1">
             <h1 className="text-2xl font-bold mb-2">{product.product_name}</h1>
-            <div className="flex items-center gap-1 mb-1">
+            <div className="flex items-center gap-1 mb-3">
               {Array.from({ length: 5 }).map((_, i) => (
                 <FaStar
                   key={i}

@@ -32,7 +32,7 @@ const AppLayout = () => {
       <main id="maincontent" className="flex-grow">
         <Outlet />
       </main>
-      <div className="-mt-28">
+      <div className="-mt-48">
         {isDetailProductPage ? (
           <WaveFooter showGrayBackground={true} />
         ) : (
