@@ -9,7 +9,7 @@ const AboutShort = () => {
       <div className="flex flex-col lg:flex-row items-center gap-8 relative z-10">
         <div className="relative w-full lg:w-[40%]">
           {/* Blob */}
-          <LazyLoadImage
+          <img
             src="/images/about/blob.png"
             alt="Blob"
             className="absolute w-[82%] z-0 pointer-events-none hidden lg:block"
@@ -25,10 +25,8 @@ const AboutShort = () => {
         </div>
 
         <div className="lg:w-[65%]">
-          <h5 className="text-primary text-sm font-bold uppercase mb-2">
-            Tentang Kami
-          </h5>
-          <h2 className="text-2xl lg:text-3xl font-bold mb-4">
+          <h5 className="text-primary text-sm font-bold  mb-2">Tentang Kami</h5>
+          <h2 className="text-xl lg:text-3xl font-bold mb-4">
             Dari Cibuntu, untuk Anda.
           </h2>
           <p className="text-sm lg:text-base leading-relaxed text-gray-700 text-justify ">

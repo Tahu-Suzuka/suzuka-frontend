@@ -5,6 +5,7 @@ import { ProductService } from "../services/ProductService";
 import { CartService } from "../services/CartService";
 import { OrderService } from "../services/OrderService";
 import { ReviewService } from "../services/ReviewService";
+import { getAuthToken } from "../services/getAuthToken"; // Import fungsi getAuthToken
 import Button from "../components/atoms/Button";
 import Header from "../components/atoms/Header";
 import Card from "../components/atoms/Card";
@@ -14,6 +15,7 @@ import Slider from "react-slick";
 import Alert from "../components/atoms/Alert";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
+
 Modal.setAppElement("#root");
 
 const DetailProductPage = () => {
@@ -31,6 +33,7 @@ const DetailProductPage = () => {
   const [reviews, setReviews] = useState([]);
   const [ratingAverage, setRatingAverage] = useState(0);
   const [totalReview, setTotalReview] = useState(0);
+  const [note, setNote] = useState(""); // State untuk note (opsional, jika ingin ada input note di halaman detail produk)
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -42,6 +45,7 @@ const DetailProductPage = () => {
         }
       } catch (err) {
         console.error("Gagal ambil detail produk:", err);
+        // Pertimbangkan untuk menampilkan pesan error ke pengguna
       } finally {
         setLoading(false);
       }
@@ -67,6 +71,7 @@ const DetailProductPage = () => {
         }
       } catch (err) {
         console.error("Gagal ambil review:", err);
+        // Pertimbangkan untuk menampilkan pesan error ke pengguna
       }
     };
     fetchReviews();
@@ -108,43 +113,59 @@ const DetailProductPage = () => {
   const total = price * quantity;
 
   const handleAddToCart = async () => {
-    const token = localStorage.getItem("token");
+    const token = getAuthToken(); // Gunakan getAuthToken()
     if (!token) {
+      alert("Anda harus login untuk menambahkan produk ke keranjang.");
       navigate("/login");
       return;
     }
 
     try {
-      if (!selectedVariation) return alert("Variasi tidak dipilih.");
+      if (!selectedVariation) {
+        alert("Variasi produk belum dipilih.");
+        return;
+      }
       await CartService.addItems([
         { variationId: selectedVariation.id, quantity },
       ]);
       setShowSuccessAlert(true);
     } catch (err) {
       console.error("Gagal tambah ke keranjang:", err);
-      alert("Gagal menambahkan ke keranjang.");
+      alert(err.response?.data?.message || "Gagal menambahkan ke keranjang.");
     }
   };
 
   const handleBuyNow = async () => {
-    const token = localStorage.getItem("token");
+    const token = getAuthToken(); // Pastikan Anda mengambil token di sini
     if (!token) {
+      alert("Anda harus login untuk melanjutkan pembelian.");
       navigate("/login");
       return;
     }
 
     try {
-      if (!selectedVariation) return alert("Variasi tidak dipilih.");
+      if (!selectedVariation) {
+        alert("Variasi produk belum dipilih.");
+        return;
+      }
+
+      // Payload untuk OrderService.createBuyNowOrder
       const payload = {
         items: [{ variationId: selectedVariation.id, quantity }],
-        note: "",
-        voucher: null,
+        note: note, // Menggunakan state note dari DetailProductPage
+        // Perbaikan: Ubah voucherCode dari `null` menjadi `""` (string kosong)
+        voucherCode: "", // <--- PERBAIKAN DI SINI!
       };
-      const orderRes = await OrderService.createBuyNowOrder(payload);
-      const orderId = orderRes?.data?.id;
-      if (!orderId)
-        throw new Error("Gagal mendapatkan ID pesanan dari server.");
 
+      // Panggil createBuyNowOrder dengan payload DAN token
+      const orderRes = await OrderService.createBuyNowOrder(payload, token);
+      const orderId = orderRes?.data?.id;
+
+      if (!orderId) {
+        throw new Error("Gagal mendapatkan ID pesanan dari server.");
+      }
+
+      // Simpan data yang diperlukan di sessionStorage untuk CheckoutPage
       sessionStorage.setItem("checkoutMode", "buyNow");
       sessionStorage.setItem(
         "buyNowItems",
@@ -157,17 +178,26 @@ const DetailProductPage = () => {
               product: {
                 product_name: product.product_name,
                 mainImage: product.mainImage,
+                // Tambahkan properti lain dari produk yang mungkin dibutuhkan di CheckoutPage
               },
             },
             quantity,
           },
         ])
       );
-      sessionStorage.setItem("buyNowOrderId", orderId);
+      // Anda tidak perlu menyimpan orderId di sessionStorage jika itu hanya untuk navigasi langsung ke pembayaran Midtrans.
+      // Jika orderId dibutuhkan di CheckoutPage untuk proses lain (misal, menampilkan order yang baru dibuat), baru simpan.
+      // sessionStorage.setItem("buyNowOrderId", orderId); // Ini bisa dihapus jika tidak digunakan
+
       navigate("/checkout");
     } catch (error) {
       console.error("Error Buy Now:", error);
-      alert(error.response?.data?.message || "Gagal proses beli sekarang.");
+      // Pastikan Anda mengakses pesan error yang benar
+      alert(
+        error.response?.data?.message ||
+          error.message ||
+          "Gagal proses beli sekarang."
+      );
     }
   };
 
@@ -315,11 +345,53 @@ const DetailProductPage = () => {
             </div>
           </div>
         </div>
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6 mb-20 lg-mb-0">
           <div className="col-span-2">
             <Review productId={id} />
           </div>
+
           <div className="bg-white rounded-md p-6 hidden lg:block self-start">
+            <div className="bg-white rounded-md mb-6">
+              <div className="relative w-full">
+                <img
+                  src="/images/product/voucher.png"
+                  alt="Voucher Banner"
+                  className="w-full h-auto object-cover rounded-2xl"
+                />
+
+                <div className="absolute inset-0 flex flex-col justify-center px-2">
+                  <h1 className="text-lg font-bold text-white pl-28">
+                    VOUCHER DISKON
+                  </h1>
+                  <div className="mb-2 pl-40">
+                    <span className="text-lg font-bold text-white ">
+                      Rp 5000
+                    </span>
+                  </div>
+                  <div className="pl-36">
+                    <p className="text-xs text-white">
+                      *Minimal pembelian 30rb
+                    </p>
+                  </div>
+                  {/* Kode Voucher */}
+                  <div className="mt-2">
+                    <div className="bg-white rounded-md overflow-hidden max-w-full">
+                      <div className="flex text-xs">
+                        <div className="bg-gray-200 px-4 py-2 text-gray-700 font-medium whitespace-nowrap">
+                          <span>Kode</span>
+                        </div>
+
+                        <div className="bg-gray-800 flex-1 px-2 py-2 text-white flex items-center justify-center min-w-0">
+                          <p className="font-bold text-xs truncate">
+                            GRANDOPENINGSUZUKA
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
             <h1 className="text-xl font-bold mb-6 text-center">
               Produk Serupa
             </h1>

@@ -26,7 +26,6 @@ const Hero = () => {
 
   return (
     <div className="relative w-full h-[500px]">
-      {/* Background Slider */}
       {images.map((image, index) => (
         <LazyLoadImage
           key={index}
@@ -42,8 +41,8 @@ const Hero = () => {
       <div className="absolute inset-0 flex items-center justify-center text-center px-6 z-10">
         <div className="text-white max-w-xl">
           <p className="text-secondary font-bold mb-4">SEJAK TAHUN 1989</p>
-          <h1 className="text-5xl font-bold mb-3 ">Tahu Cibuntu Suzuka</h1>
-          <p className="text-sm md:text-base leading-relaxed mb-6 font-roboto">
+          <h1 className="text-4xl lg:text-5xl font-bold mb-3 ">Tahu Suzuka</h1>
+          <p className="text-sm lg:text-base leading-relaxed mb-6">
             Nikmati berbagai varian tahu kami yang dibuat dengan bahan yang
             berkualitas dan proses higienis ciri khas Bandung Cibuntu.
           </p>

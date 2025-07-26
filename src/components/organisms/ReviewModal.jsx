@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaStar, FaRegStar, FaCamera } from "react-icons/fa";
+import { IoIosClose } from "react-icons/io";
 import { ReviewService } from "../../services/ReviewService";
 import Alert from "../../components/atoms/Alert";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -30,6 +31,11 @@ const ReviewModal = ({ isOpen, onClose, items, onAfterSubmit }) => {
     setReviews((prev) => {
       const updated = [...prev];
       updated[index][field] = value;
+
+      if (field === "photo" && value) {
+        updated[index]["preview"] = URL.createObjectURL(value);
+      }
+
       return updated;
     });
   };
@@ -79,7 +85,17 @@ const ReviewModal = ({ isOpen, onClose, items, onAfterSubmit }) => {
     <div className="fixed -inset-7 z-50 bg-black bg-opacity-60 flex items-center justify-center px-4">
       <div className="bg-white rounded-md w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-lg">
         <div className="p-6 space-y-6">
-          <h2 className="text-xl font-semibold">Nilai Produk</h2>
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold">Nilai Produk</h2>
+            <button
+              type="button"
+              onClick={onClose}
+              className="text-gray-400 hover:text-primary transition"
+              aria-label="Tutup"
+            >
+              <IoIosClose size={32} />
+            </button>
+          </div>
 
           {reviews.map((r, index) => (
             <div key={r.productId || index} className="border-t pt-4 space-y-3">
@@ -136,6 +152,28 @@ const ReviewModal = ({ isOpen, onClose, items, onAfterSubmit }) => {
                   className="hidden"
                 />
               </label>
+
+              {r.preview && (
+                <div className="relative mt-2 w-24 h-24">
+                  <img
+                    src={r.preview}
+                    alt="Preview Foto"
+                    className="w-full h-full object-cover rounded-md border border-gray-300"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const updated = [...reviews];
+                      updated[index].photo = null;
+                      updated[index].preview = null;
+                      setReviews(updated);
+                    }}
+                    className="absolute -top-2 -right-2 bg-white border border-gray-300 rounded-full p-[2px] hover:bg-red-100 transition"
+                  >
+                    <IoIosClose className="text-red-500" size={18} />
+                  </button>
+                </div>
+              )}
             </div>
           ))}
 
@@ -152,7 +190,7 @@ const ReviewModal = ({ isOpen, onClose, items, onAfterSubmit }) => {
               Nanti Saja
             </button>
             <button
-              className="w-full sm:w-auto bg-primary text-white px-6 py-2 rounded-md hover:bg-primary"
+              className="w-full sm:w-auto bg-primary text-white px-6 py-2 rounded-md hover:bg-red-500"
               onClick={handleSubmit}
               disabled={loading}
             >

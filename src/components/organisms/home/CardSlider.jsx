@@ -97,7 +97,7 @@ const CardSlider = () => {
   }
 
   return (
-    <div className="relative px-4 lg:px-16">
+    <div className="relative px-10 lg:px-16">
       <Slider {...settings}>
         {categories.map((category) => (
           <div

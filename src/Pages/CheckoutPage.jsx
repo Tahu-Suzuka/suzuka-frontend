@@ -3,14 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { FaTicketAlt } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { MdSpeakerNotes } from "react-icons/md";
-import Button from "../components/atoms/Button";
-import Alert from "../components/atoms/Alert";
 import { CartService } from "../services/CartService";
 import { UserService } from "../services/UserService";
 import { OrderService } from "../services/OrderService";
 import { VoucherService } from "../services/VoucherService";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
+import Button from "../components/atoms/Button";
+import Alert from "../components/atoms/Alert";
+import { getAuthToken } from "../services/getAuthToken"; // Pastikan ini diimpor jika digunakan
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
@@ -20,7 +21,6 @@ const CheckoutPage = () => {
   const [profile, setProfile] = useState(null);
   const [showCloseAlert, setShowCloseAlert] = useState(false);
   const [note, setNote] = useState("");
-
   const [voucherCode, setVoucherCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const [appliedVoucher, setAppliedVoucher] = useState(null);
@@ -42,6 +42,9 @@ const CheckoutPage = () => {
 
     return () => {
       if (script && document.body.contains(script)) {
+        // Membersihkan script jika komponen di-unmount,
+        // namun untuk Midtrans Snap, seringkali tidak perlu dihapus
+        // karena digunakan secara global. Baris ini bisa dikosongkan.
       }
     };
   }, []);
@@ -50,7 +53,7 @@ const CheckoutPage = () => {
     const handleBeforeUnload = (event) => {
       if (cartItems.length > 0) {
         event.preventDefault();
-        event.returnValue = "";
+        event.returnValue = ""; // Standard untuk menampilkan prompt konfirmasi
       }
     };
     window.addEventListener("beforeunload", handleBeforeUnload);
@@ -79,6 +82,7 @@ const CheckoutPage = () => {
         setProfile(profileRes);
       } catch (error) {
         console.error("Gagal mengambil data checkout:", error);
+        // Tambahkan penanganan error di UI jika perlu
       } finally {
         setLoading(false);
       }
@@ -137,7 +141,13 @@ const CheckoutPage = () => {
     }
 
     try {
-      const token = localStorage.getItem("token");
+      const token = getAuthToken();
+      if (!token) {
+        alert("Autentikasi diperlukan. Silakan login kembali.");
+        navigate("/login");
+        return;
+      }
+
       let orderId;
 
       const payload = {
@@ -146,14 +156,14 @@ const CheckoutPage = () => {
           quantity: item.quantity,
         })),
         note: note,
-        voucher: appliedVoucher ? appliedVoucher.code : null,
+        voucherCode: appliedVoucher ? appliedVoucher.code : "",
       };
 
       if (checkoutMode === "cart") {
         const orderRes = await OrderService.createFromCart(payload, token);
         orderId = orderRes?.data?.id;
       } else {
-        const orderRes = await OrderService.createBuyNowOrder(payload);
+        const orderRes = await OrderService.createBuyNowOrder(payload, token);
         orderId = orderRes?.data?.id;
       }
 
@@ -174,10 +184,14 @@ const CheckoutPage = () => {
               initialTab: "Menunggu Pembayaran",
             },
           }),
-        onError: () => alert("Pembayaran gagal."),
+        onError: (error) => {
+          console.error("Midtrans payment error:", error);
+          alert("Pembayaran gagal. Silakan coba lagi.");
+        },
         onClose: () => setShowCloseAlert(true),
       });
     } catch (error) {
+      console.error("Kesalahan umum saat pembayaran:", error);
       alert(
         error.response?.data?.message || "Terjadi kesalahan saat pembayaran."
       );
@@ -363,12 +377,12 @@ const CheckoutPage = () => {
               <span>Biaya Layanan</span>
               <span>Rp{serviceFee.toLocaleString("id-ID")}</span>
             </div>
-            <div className="flex justify-between  font-medium">
+            <div className="flex justify-between font-medium">
               <span>Total Diskon</span>
               <span>-Rp{discount.toLocaleString("id-ID")}</span>
             </div>
             <hr />
-            <div className="flex justify-between font-semibold text-base lg:text-lg text-red-600">
+            <div className="flex justify-between font-semibold text-base lg:text-lg text-primary">
               <span>Total Pembayaran</span>
               <span>Rp{total.toLocaleString("id-ID")}</span>
             </div>

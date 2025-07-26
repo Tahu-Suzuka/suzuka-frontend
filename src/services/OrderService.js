@@ -117,28 +117,56 @@ export const OrderService = {
     return response.data;
   },
 
-  createFromCart: async () => {
-    const token = localStorage.getItem("token");
-    const response = await axios.post(
-      `${API_URL}/orders/from-cart`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+  createFromCart: async (payload, token) => {
+    // Menerima payload
+    try {
+      const response = await axios.post(
+        `${API_URL}/orders/from-cart`,
+        payload, // Mengirim payload
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      const errData = error?.response?.data;
+      console.error("Error creating order from cart:", errData);
+      let message = "Gagal membuat pesanan dari keranjang";
+      if (Array.isArray(errData?.errors) && errData.errors.length > 0) {
+        const first = errData.errors[0];
+        message = first.message || JSON.stringify(first);
+      } else if (errData?.message) {
+        message = errData.message;
       }
-    );
-    return response.data;
+      throw new Error(message);
+    }
   },
 
-  createBuyNowOrder: async (payload) => {
-    const token = localStorage.getItem("token");
-    const response = await axios.post(`${API_URL}/orders`, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
+  createBuyNowOrder: async (payload, token) => {
+    // Menerima payload dan token
+    try {
+      const response = await axios.post(`${API_URL}/orders`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Menggunakan token
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
+    } catch (error) {
+      const errData = error?.response?.data;
+      console.error("Error creating buy now order:", errData);
+      let message = "Gagal membuat pesanan 'Beli Sekarang'";
+      if (Array.isArray(errData?.errors) && errData.errors.length > 0) {
+        const first = errData.errors[0];
+        message = first.message || JSON.stringify(first);
+      } else if (errData?.message) {
+        message = errData.message;
+      }
+      throw new Error(message);
+    }
   },
 
   createPayment: async (orderId) => {

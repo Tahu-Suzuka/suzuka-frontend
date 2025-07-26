@@ -68,19 +68,19 @@ const Review = () => {
   }
 
   return (
-    <div className="px-6 lg:px-16 pb-20">
+    <div className="px-6 lg:px-20 pb-32">
       <Title subtitle="Ulasan" title="Apa Kata Pelanggan Kami" />
       {reviews.length > 0 ? (
         <Slider {...settings}>
           {reviews.map((review) => (
             <div key={review.id} className="px-2 pt-12">
-              <div className="relative bg-white border shadow rounded-xl p-6 pt-16 text-center h-[250px] flex flex-col justify-between">
+              <div className="relative bg-white border shadow rounded-xl p-6 pt-16 text-center lg:h-[250px] flex flex-col justify-between">
                 <div>
                   <div className="absolute -top-10 left-1/2 -translate-x-1/2">
                     <LazyLoadImage
                       src={getFullImageUrl(review.user?.image)}
                       alt={review.user?.name}
-                      className="w-24 h-24 rounded-full border-4 border-white object-cover shadow-lg bg-white"
+                      className="w-24 h-24 rounded-full border-2 object-cover shadow-lg bg-white"
                       effect="blur"
                     />
                   </div>
@@ -92,12 +92,12 @@ const Review = () => {
                   </p>
                 </div>
 
-                <div className="flex justify-center mt-4 text-yellow-400">
+                <div className="flex justify-center mt-4 text-secondary">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <FaStar
                       key={i}
                       className={
-                        i < review.rating ? "text-yellow-400" : "text-gray-300"
+                        i < review.rating ? "text-secondary" : "text-gray-300"
                       }
                     />
                   ))}

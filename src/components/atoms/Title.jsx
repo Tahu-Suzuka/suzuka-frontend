@@ -4,7 +4,7 @@ const Title = ({ subtitle, title }) => {
   return (
     <div className="flex flex-col items-center justify-center pb-5 lg:pb-10 px-16">
       {subtitle && (
-        <p className="text-secondary font-bold text-base lg:text-lg lg:pb-2">
+        <p className="text-primary font-bold text-base lg:text-lg lg:pb-2">
           {subtitle}
         </p>
       )}
